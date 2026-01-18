@@ -16,6 +16,7 @@ import {
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { config } from '@/lib/config';
+import { useTheme } from '@/components/theme/ThemeProvider';
 
 interface HeaderProps {
   isDemo?: boolean;
@@ -56,14 +57,9 @@ function NavLink({
  */
 export function Header({ isDemo = false }: HeaderProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [isDark, setIsDark] = useState(false);
+  const { resolvedTheme, toggleTheme } = useTheme();
   const basePath = isDemo ? '/demo' : '';
-
-  const toggleTheme = () => {
-    const newDark = !isDark;
-    setIsDark(newDark);
-    document.documentElement.classList.toggle('dark', newDark);
-  };
+  const isDark = resolvedTheme === 'dark';
 
   const closeMobileMenu = () => setMobileMenuOpen(false);
 
