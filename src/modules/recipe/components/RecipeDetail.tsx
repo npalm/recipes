@@ -206,9 +206,14 @@ export function RecipeDetail({ recipe, isDemo = false }: RecipeDetailProps) {
                     <span className="text-xl">💡</span>
                     Tips & Notes
                   </h2>
-                  <p className="text-sm leading-relaxed text-amber-900/80 dark:text-amber-100/80">
-                    {recipe.notes}
-                  </p>
+                  <ul className="space-y-2 text-sm leading-relaxed text-amber-900/80 dark:text-amber-100/80">
+                    {recipe.notes.split('\n').filter(line => line.trim()).map((note, index) => (
+                      <li key={index} className="flex gap-2">
+                        <span className="text-amber-600 dark:text-amber-400">•</span>
+                        <span>{note.replace(/^[-•]\s*/, '')}</span>
+                      </li>
+                    ))}
+                  </ul>
                 </CardContent>
               </Card>
             )}
@@ -217,7 +222,7 @@ export function RecipeDetail({ recipe, isDemo = false }: RecipeDetailProps) {
             {recipe.sources.length > 0 && (
               <Card className="mt-6 border-0 shadow-sm">
                 <CardContent className="p-6">
-                  <h2 className="mb-4 text-lg font-semibold">Sources</h2>
+                  <h2 className="mb-4 text-lg font-semibold">Inspired by</h2>
                   <ul className="space-y-2">
                     {recipe.sources.map((source, index) => (
                       <li key={index}>
@@ -274,9 +279,14 @@ export function RecipeDetail({ recipe, isDemo = false }: RecipeDetailProps) {
                     <span className="text-xl">💡</span>
                     Tips & Notes
                   </h2>
-                  <p className="text-sm leading-relaxed text-amber-900/80 dark:text-amber-100/80">
-                    {recipe.notes}
-                  </p>
+                  <ul className="space-y-2 text-sm leading-relaxed text-amber-900/80 dark:text-amber-100/80">
+                    {recipe.notes.split('\n').filter(line => line.trim()).map((note, index) => (
+                      <li key={index} className="flex gap-2">
+                        <span className="text-amber-600 dark:text-amber-400">•</span>
+                        <span>{note.replace(/^[-•]\s*/, '')}</span>
+                      </li>
+                    ))}
+                  </ul>
                 </CardContent>
               </Card>
             )}
@@ -285,7 +295,7 @@ export function RecipeDetail({ recipe, isDemo = false }: RecipeDetailProps) {
             {recipe.sources.length > 0 && (
               <Card className="mt-6 border-0 shadow-sm">
                 <CardContent className="p-6">
-                  <h2 className="mb-4 text-lg font-semibold">Sources</h2>
+                  <h2 className="mb-4 text-lg font-semibold">Inspired by</h2>
                   <ul className="space-y-2">
                     {recipe.sources.map((source, index) => (
                       <li key={index}>
