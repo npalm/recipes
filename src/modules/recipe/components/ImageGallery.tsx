@@ -2,6 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
+import { ChevronLeft, ChevronRight, ImageIcon } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 import { config } from '@/lib/config';
 
 interface ImageGalleryProps {
@@ -41,22 +43,34 @@ export function ImageGallery({
   autoRotate = true,
 }: ImageGalleryProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [isHovered, setIsHovered] = useState(false);
 
-  // Auto-rotate images
+  // Auto-rotate images (pause on hover)
   useEffect(() => {
-    if (!autoRotate || images.length <= 1) return;
+    if (!autoRotate || images.length <= 1 || isHovered) return;
 
     const interval = setInterval(() => {
       setCurrentIndex((prev) => (prev + 1) % images.length);
     }, config.imageRotationInterval);
 
     return () => clearInterval(interval);
-  }, [autoRotate, images.length]);
+  }, [autoRotate, images.length, isHovered]);
+
+  const goToPrevious = () => {
+    setCurrentIndex((prev) => (prev - 1 + images.length) % images.length);
+  };
+
+  const goToNext = () => {
+    setCurrentIndex((prev) => (prev + 1) % images.length);
+  };
 
   if (images.length === 0) {
     return (
-      <div className="flex aspect-video w-full items-center justify-center rounded-lg bg-muted">
-        <span className="text-muted-foreground">No image available</span>
+      <div className="flex aspect-[16/9] w-full items-center justify-center bg-gradient-to-br from-muted to-muted/50">
+        <div className="text-center">
+          <ImageIcon className="mx-auto mb-2 h-12 w-12 text-muted-foreground/50" />
+          <span className="text-sm text-muted-foreground">No image available</span>
+        </div>
       </div>
     );
   }
@@ -65,16 +79,47 @@ export function ImageGallery({
   const imageSrc = getImageSrc(currentImage, slug, isDemo);
 
   return (
-    <div className="relative aspect-video w-full overflow-hidden rounded-lg">
+    <div
+      className="group relative aspect-[16/9] w-full overflow-hidden bg-muted"
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
       <Image
         src={imageSrc}
         alt={`${title} - Image ${currentIndex + 1}`}
         fill
-        className="object-cover transition-opacity duration-500"
-        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+        className="object-cover transition-transform duration-700"
+        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1200px"
         priority={currentIndex === 0}
         unoptimized={isExternalUrl(currentImage)}
       />
+
+      {/* Gradient overlay */}
+      <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent" />
+
+      {/* Navigation arrows */}
+      {images.length > 1 && (
+        <>
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={goToPrevious}
+            className="absolute left-4 top-1/2 h-10 w-10 -translate-y-1/2 rounded-full bg-white/90 text-gray-800 opacity-0 shadow-lg transition-all hover:bg-white group-hover:opacity-100"
+            aria-label="Previous image"
+          >
+            <ChevronLeft className="h-5 w-5" />
+          </Button>
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={goToNext}
+            className="absolute right-4 top-1/2 h-10 w-10 -translate-y-1/2 rounded-full bg-white/90 text-gray-800 opacity-0 shadow-lg transition-all hover:bg-white group-hover:opacity-100"
+            aria-label="Next image"
+          >
+            <ChevronRight className="h-5 w-5" />
+          </Button>
+        </>
+      )}
 
       {/* Image indicators */}
       {images.length > 1 && (
@@ -83,14 +128,21 @@ export function ImageGallery({
             <button
               key={index}
               onClick={() => setCurrentIndex(index)}
-              className={`h-2 w-2 rounded-full transition-colors ${
+              className={`h-2.5 w-2.5 rounded-full transition-all ${
                 index === currentIndex
-                  ? 'bg-white'
+                  ? 'w-6 bg-white'
                   : 'bg-white/50 hover:bg-white/75'
               }`}
               aria-label={`View image ${index + 1}`}
             />
           ))}
+        </div>
+      )}
+
+      {/* Image counter */}
+      {images.length > 1 && (
+        <div className="absolute right-4 top-4 rounded-full bg-black/60 px-3 py-1 text-xs font-medium text-white backdrop-blur-sm">
+          {currentIndex + 1} / {images.length}
         </div>
       )}
     </div>
@@ -113,8 +165,8 @@ export function RecipeThumbnail({
 }) {
   if (images.length === 0) {
     return (
-      <div className="flex aspect-video w-full items-center justify-center bg-muted">
-        <span className="text-sm text-muted-foreground">No image</span>
+      <div className="flex aspect-[4/3] w-full items-center justify-center bg-gradient-to-br from-muted to-muted/50">
+        <ImageIcon className="h-8 w-8 text-muted-foreground/40" />
       </div>
     );
   }
@@ -123,18 +175,19 @@ export function RecipeThumbnail({
   const imageSrc = getImageSrc(firstImage, slug, isDemo);
 
   return (
-    <div className="relative aspect-video w-full overflow-hidden">
+    <div className="relative aspect-[4/3] w-full overflow-hidden bg-muted">
       <Image
         src={imageSrc}
         alt={title}
         fill
-        className="object-cover transition-transform duration-300 group-hover:scale-105"
-        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+        className="object-cover transition-transform duration-500 group-hover:scale-110"
+        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 400px"
         unoptimized={isExternalUrl(firstImage)}
       />
       {images.length > 1 && (
-        <div className="absolute right-2 top-2 rounded-full bg-black/60 px-2 py-0.5 text-xs text-white">
-          +{images.length - 1}
+        <div className="absolute right-3 top-3 flex items-center gap-1 rounded-full bg-black/60 px-2 py-1 text-xs font-medium text-white backdrop-blur-sm">
+          <ImageIcon className="h-3 w-3" />
+          {images.length}
         </div>
       )}
     </div>

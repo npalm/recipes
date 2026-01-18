@@ -1,15 +1,27 @@
 'use client';
 
 import Link from 'next/link';
-import { Clock, Users, ChefHat, Calendar, ExternalLink, Printer } from 'lucide-react';
+import {
+  Clock,
+  Users,
+  ChefHat,
+  Calendar,
+  ExternalLink,
+  Printer,
+  ArrowLeft,
+  Timer,
+  Flame,
+} from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
+import { Card, CardContent } from '@/components/ui/card';
 import { Recipe } from '@/modules/recipe/domain';
 import { ImageGallery } from './ImageGallery';
 import { IngredientList } from './IngredientList';
 import { InstructionList } from './InstructionList';
 import { formatTime, formatDate } from '@/modules/shared/utils';
+import { difficultyConfig } from './RecipeCard';
 
 interface RecipeDetailProps {
   recipe: Recipe;
@@ -21,161 +33,217 @@ interface RecipeDetailProps {
  */
 export function RecipeDetail({ recipe, isDemo = false }: RecipeDetailProps) {
   const basePath = isDemo ? '/demo' : '';
-
-  const difficultyColors = {
-    easy: 'bg-green-100 text-green-800',
-    medium: 'bg-amber-100 text-amber-800',
-    hard: 'bg-red-100 text-red-800',
-  };
+  const difficulty = difficultyConfig[recipe.difficulty];
 
   const handlePrint = () => {
     window.print();
   };
 
   return (
-    <article className="mx-auto max-w-4xl">
-      {/* Header Image */}
-      <ImageGallery
-        images={recipe.images}
-        slug={recipe.slug}
-        title={recipe.title}
-        isDemo={isDemo}
-        autoRotate={recipe.headerImageRotation}
-      />
-
-      {/* Title and Meta */}
-      <div className="mt-6">
-        <div className="flex items-start justify-between gap-4">
-          <div>
-            <h1 className="text-3xl font-bold tracking-tight md:text-4xl">
-              {recipe.title}
-            </h1>
-            {recipe.status === 'draft' && (
-              <Badge variant="secondary" className="mt-2 bg-yellow-100 text-yellow-800">
-                Draft
-              </Badge>
-            )}
-          </div>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={handlePrint}
-            className="hidden print:hidden md:flex"
-          >
-            <Printer className="mr-2 h-4 w-4" />
-            Print
-          </Button>
-        </div>
-
-        {/* Meta info */}
-        <div className="mt-4 flex flex-wrap gap-4 text-sm text-muted-foreground">
-          <span className="flex items-center gap-1">
-            <Users className="h-4 w-4" />
-            {recipe.servings} servings
-          </span>
-          <span className="flex items-center gap-1">
-            <Clock className="h-4 w-4" />
-            {formatTime(recipe.totalTime ?? recipe.prepTime + recipe.cookTime)}
-          </span>
-          <Badge
-            variant="secondary"
-            className={`${difficultyColors[recipe.difficulty]} border-0`}
-          >
-            <ChefHat className="mr-1 h-3 w-3" />
-            {recipe.difficulty}
-          </Badge>
-        </div>
-
-        {/* Time breakdown */}
-        <div className="mt-2 flex gap-4 text-sm text-muted-foreground">
-          <span>Prep: {formatTime(recipe.prepTime)}</span>
-          <span>Cook: {formatTime(recipe.cookTime)}</span>
-        </div>
-
-        {/* Tags */}
-        {recipe.tags.length > 0 && (
-          <div className="mt-4 flex flex-wrap gap-2">
-            {recipe.tags.map((tag) => (
-              <Link key={tag} href={`${basePath}/search?tag=${tag}`}>
-                <Badge variant="outline" className="cursor-pointer hover:bg-accent">
-                  {tag}
-                </Badge>
-              </Link>
-            ))}
-          </div>
-        )}
-
-        {/* Description */}
-        {recipe.description && (
-          <p className="mt-6 text-lg text-muted-foreground">{recipe.description}</p>
-        )}
+    <article className="mx-auto max-w-5xl">
+      {/* Back navigation */}
+      <div className="mb-6 print:hidden">
+        <Button variant="ghost" size="sm" asChild className="-ml-3">
+          <Link href={`${basePath}/`}>
+            <ArrowLeft className="mr-2 h-4 w-4" />
+            Back to recipes
+          </Link>
+        </Button>
       </div>
 
-      <Separator className="my-8" />
+      {/* Header section with image */}
+      <div className="mb-8 overflow-hidden rounded-2xl bg-card shadow-sm">
+        <ImageGallery
+          images={recipe.images}
+          slug={recipe.slug}
+          title={recipe.title}
+          isDemo={isDemo}
+          autoRotate={recipe.headerImageRotation}
+        />
 
-      {/* Main content grid */}
-      <div className="grid gap-8 md:grid-cols-3">
-        {/* Ingredients */}
-        <div className="md:col-span-1">
-          <h2 className="mb-4 text-xl font-semibold">Ingredients</h2>
-          <IngredientList
-            ingredients={recipe.ingredients}
-            defaultServings={recipe.servings}
-          />
+        <div className="p-6 md:p-8">
+          {/* Title row */}
+          <div className="flex flex-wrap items-start justify-between gap-4">
+            <div className="flex-1">
+              <div className="mb-3 flex flex-wrap items-center gap-2">
+                {recipe.status === 'draft' && (
+                  <Badge className="bg-yellow-500 text-white">Draft</Badge>
+                )}
+                <Badge
+                  variant="secondary"
+                  className={`${difficulty.className} flex items-center gap-0.5 border-0`}
+                >
+                  {difficulty.icon}
+                  <span className="ml-1">{difficulty.label}</span>
+                </Badge>
+              </div>
+              <h1 className="text-3xl font-bold tracking-tight md:text-4xl lg:text-5xl">
+                {recipe.title}
+              </h1>
+            </div>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handlePrint}
+              className="hidden print:hidden md:flex"
+            >
+              <Printer className="mr-2 h-4 w-4" />
+              Print
+            </Button>
+          </div>
+
+          {/* Description */}
+          {recipe.description && (
+            <p className="mt-4 text-lg leading-relaxed text-muted-foreground">
+              {recipe.description}
+            </p>
+          )}
+
+          {/* Quick stats */}
+          <div className="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-4">
+            <div className="flex items-center gap-3 rounded-xl bg-muted/50 p-4">
+              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">
+                <Users className="h-5 w-5 text-primary" />
+              </div>
+              <div>
+                <p className="text-2xl font-bold">{recipe.servings}</p>
+                <p className="text-xs text-muted-foreground">Servings</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-3 rounded-xl bg-muted/50 p-4">
+              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-500/10">
+                <Timer className="h-5 w-5 text-blue-500" />
+              </div>
+              <div>
+                <p className="text-2xl font-bold">{formatTime(recipe.prepTime)}</p>
+                <p className="text-xs text-muted-foreground">Prep time</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-3 rounded-xl bg-muted/50 p-4">
+              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-orange-500/10">
+                <Flame className="h-5 w-5 text-orange-500" />
+              </div>
+              <div>
+                <p className="text-2xl font-bold">{formatTime(recipe.cookTime)}</p>
+                <p className="text-xs text-muted-foreground">Cook time</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-3 rounded-xl bg-muted/50 p-4">
+              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-green-500/10">
+                <Clock className="h-5 w-5 text-green-500" />
+              </div>
+              <div>
+                <p className="text-2xl font-bold">
+                  {formatTime(recipe.totalTime ?? recipe.prepTime + recipe.cookTime)}
+                </p>
+                <p className="text-xs text-muted-foreground">Total time</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Tags */}
+          {recipe.tags.length > 0 && (
+            <div className="mt-6 flex flex-wrap gap-2">
+              {recipe.tags.map((tag) => (
+                <Link key={tag} href={`${basePath}/search?tag=${tag}`}>
+                  <Badge
+                    variant="outline"
+                    className="cursor-pointer transition-colors hover:bg-primary hover:text-primary-foreground"
+                  >
+                    {tag}
+                  </Badge>
+                </Link>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Main content */}
+      <div className="grid gap-8 lg:grid-cols-12">
+        {/* Ingredients sidebar */}
+        <div className="lg:col-span-4">
+          <Card className="sticky top-24 border-0 shadow-sm">
+            <CardContent className="p-6">
+              <h2 className="mb-6 flex items-center gap-2 text-xl font-semibold">
+                <ChefHat className="h-5 w-5 text-primary" />
+                Ingredients
+              </h2>
+              <IngredientList
+                ingredients={recipe.ingredients}
+                defaultServings={recipe.servings}
+              />
+            </CardContent>
+          </Card>
         </div>
 
         {/* Instructions */}
-        <div className="md:col-span-2">
-          <h2 className="mb-4 text-xl font-semibold">Instructions</h2>
-          <InstructionList instructions={recipe.instructions} />
+        <div className="lg:col-span-8">
+          <Card className="border-0 shadow-sm">
+            <CardContent className="p-6 md:p-8">
+              <h2 className="mb-6 text-xl font-semibold">Instructions</h2>
+              <InstructionList instructions={recipe.instructions} />
+            </CardContent>
+          </Card>
+
+          {/* Notes */}
+          {recipe.notes && (
+            <Card className="mt-6 border-0 bg-amber-50 shadow-sm dark:bg-amber-950/20">
+              <CardContent className="p-6">
+                <h2 className="mb-4 flex items-center gap-2 text-lg font-semibold text-amber-800 dark:text-amber-200">
+                  <span className="text-xl">💡</span>
+                  Tips & Notes
+                </h2>
+                <p className="text-sm leading-relaxed text-amber-900/80 dark:text-amber-100/80">
+                  {recipe.notes}
+                </p>
+              </CardContent>
+            </Card>
+          )}
+
+          {/* Sources */}
+          {recipe.sources.length > 0 && (
+            <Card className="mt-6 border-0 shadow-sm">
+              <CardContent className="p-6">
+                <h2 className="mb-4 text-lg font-semibold">Sources</h2>
+                <ul className="space-y-2">
+                  {recipe.sources.map((source, index) => (
+                    <li key={index}>
+                      <a
+                        href={source.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-2 text-sm text-primary transition-colors hover:underline"
+                      >
+                        <ExternalLink className="h-4 w-4" />
+                        {source.title || source.url}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </CardContent>
+            </Card>
+          )}
         </div>
       </div>
 
-      {/* Notes */}
-      {recipe.notes && (
-        <>
-          <Separator className="my-8" />
-          <div>
-            <h2 className="mb-4 text-xl font-semibold">Notes</h2>
-            <div className="rounded-lg bg-muted p-4 text-sm">{recipe.notes}</div>
-          </div>
-        </>
-      )}
-
-      {/* Sources */}
-      {recipe.sources.length > 0 && (
-        <>
-          <Separator className="my-8" />
-          <div>
-            <h2 className="mb-4 text-xl font-semibold">Sources</h2>
-            <ul className="space-y-2">
-              {recipe.sources.map((source, index) => (
-                <li key={index}>
-                  <a
-                    href={source.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1 text-sm text-primary hover:underline"
-                  >
-                    <ExternalLink className="h-3 w-3" />
-                    {source.title || source.url}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </>
-      )}
-
-      {/* Dates */}
-      <div className="mt-8 flex gap-4 text-xs text-muted-foreground">
-        <span className="flex items-center gap-1">
-          <Calendar className="h-3 w-3" />
-          Created: {formatDate(recipe.createdAt)}
-        </span>
-        {recipe.updatedAt && (
-          <span>Updated: {formatDate(recipe.updatedAt)}</span>
-        )}
+      {/* Footer meta */}
+      <div className="mt-8 flex flex-wrap items-center justify-between gap-4 border-t pt-6 text-sm text-muted-foreground">
+        <div className="flex items-center gap-4">
+          <span className="flex items-center gap-1">
+            <Calendar className="h-4 w-4" />
+            Created: {formatDate(recipe.createdAt)}
+          </span>
+          {recipe.updatedAt && (
+            <span>Last updated: {formatDate(recipe.updatedAt)}</span>
+          )}
+        </div>
+        <Button variant="outline" size="sm" asChild className="print:hidden">
+          <Link href={`${basePath}/`}>
+            <ArrowLeft className="mr-2 h-4 w-4" />
+            Back to recipes
+          </Link>
+        </Button>
       </div>
     </article>
   );

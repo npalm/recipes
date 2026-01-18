@@ -48,13 +48,28 @@ function extractSection(
   content: string,
   sectionName: string
 ): string | undefined {
-  // Match ## Section Name (case insensitive)
+  // Match ## Section Name and capture content until next ## heading or end of content
   const regex = new RegExp(
-    `^##\\s+${sectionName}\\s*$([\\s\\S]*?)(?=^##\\s|$)`,
-    'im'
+    `^##\\s+${sectionName}\\s*\\n([\\s\\S]*?)(?=^##\\s|\\Z)`,
+    'm'
   );
   const match = content.match(regex);
-  return match ? match[1].trim() : undefined;
+  
+  // If \Z doesn't work (it's not standard JS), try alternative approach
+  if (!match) {
+    // Alternative: split by headings and find the right section
+    const sections = content.split(/^(##\s+.+)$/m);
+    for (let i = 0; i < sections.length; i++) {
+      const heading = sections[i];
+      if (heading && new RegExp(`^##\\s+${sectionName}\\s*$`, 'i').test(heading)) {
+        const sectionContent = sections[i + 1];
+        return sectionContent ? sectionContent.trim() : undefined;
+      }
+    }
+    return undefined;
+  }
+  
+  return match[1].trim();
 }
 
 /**
