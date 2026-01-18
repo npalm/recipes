@@ -23,10 +23,10 @@ Juicy, flavorful chicken tacos inspired by Mexican street vendors. Marinated chi
 
 ### For the Chicken
 
-- 1.5 lbs boneless chicken thighs {scale}
-- 3 tablespoons vegetable oil {scale}
+- 680g boneless chicken thighs {scale}
+- 45ml vegetable oil {scale}
 - 3 cloves garlic, minced {scale}
-- 2 tablespoons lime juice {scale}
+- 30ml lime juice {scale}
 - 1 tablespoon chili powder {scale}
 - 1 teaspoon cumin {scale}
 - 1 teaspoon smoked paprika {scale}
@@ -37,7 +37,7 @@ Juicy, flavorful chicken tacos inspired by Mexican street vendors. Marinated chi
 
 - 12 small corn tortillas {scale}
 - 1 white onion, finely diced {scale}
-- 1/2 cup fresh cilantro, chopped {scale}
+- 25g fresh cilantro, chopped {scale}
 - 2 limes, cut into wedges {scale}
 - Salsa verde or roja
 - Crumbled queso fresco (optional)
@@ -46,7 +46,7 @@ Juicy, flavorful chicken tacos inspired by Mexican street vendors. Marinated chi
 
 1. In a bowl, combine oil, garlic, lime juice, chili powder, cumin, paprika, oregano, salt, and pepper. Add chicken thighs and marinate for at least 30 minutes (or up to overnight in the refrigerator).
 
-2. Heat a cast iron skillet or grill pan over medium-high heat. Cook the chicken thighs for 5-6 minutes per side until charred and cooked through (internal temperature of 165°F).
+2. Heat a cast iron skillet or grill pan over medium-high heat. Cook the chicken thighs for 5-6 minutes per side until charred and cooked through (internal temperature of 75°C).
 
 3. Let the chicken rest for 5 minutes, then chop into small pieces.
 

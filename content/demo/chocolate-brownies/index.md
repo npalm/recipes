@@ -21,19 +21,19 @@ Rich, fudgy chocolate brownies with a crackly top and gooey center. These are th
 
 ## Ingredients
 
-- 1 cup unsalted butter {scale}
-- 2 cups sugar {scale}
+- 225g unsalted butter {scale}
+- 400g sugar {scale}
 - 4 large eggs {scale}
-- 1 cup cocoa powder {scale}
+- 100g cocoa powder {scale}
 - 1/2 teaspoon salt {scale}
 - 1 teaspoon baking powder {scale}
 - 1 teaspoon vanilla extract {scale}
-- 1 cup all-purpose flour {scale}
-- 1 cup chocolate chips (optional) {scale}
+- 125g all-purpose flour {scale}
+- 175g chocolate chips (optional) {scale}
 
 ## Instructions
 
-1. Preheat your oven to 350°F (175°C). Line a 9x13 inch baking pan with parchment paper and grease lightly.
+1. Preheat your oven to 175°C. Line a 23x33cm baking pan with parchment paper and grease lightly.
 
 2. Melt the butter in a medium saucepan over low heat. Remove from heat and stir in the sugar.
 
@@ -52,6 +52,6 @@ Rich, fudgy chocolate brownies with a crackly top and gooey center. These are th
 ## Notes
 
 - For extra fudgy brownies, slightly underbake them.
-- Add 1 cup of chopped walnuts or pecans for crunch.
+- Add 100g of chopped walnuts or pecans for crunch.
 - Store in an airtight container at room temperature for up to 5 days.
 - These freeze beautifully for up to 3 months.

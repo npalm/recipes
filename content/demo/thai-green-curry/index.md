@@ -21,18 +21,18 @@ A fragrant and creamy Thai green curry with tender chicken and crisp vegetables.
 
 ## Ingredients
 
-- 1.5 lbs chicken thighs, cut into pieces {scale}
-- 2 tablespoons green curry paste {scale}
+- 680g chicken thighs, cut into pieces {scale}
+- 30g green curry paste {scale}
 - 400ml coconut milk {scale}
-- 1 cup chicken broth {scale}
-- 1 tablespoon fish sauce {scale}
-- 1 tablespoon palm sugar or brown sugar {scale}
+- 240ml chicken broth {scale}
+- 15ml fish sauce {scale}
+- 15g palm sugar or brown sugar {scale}
 - 1 red bell pepper, sliced {scale}
-- 1 cup Thai eggplant, quartered {scale}
-- 1 cup bamboo shoots {scale}
-- 1/2 cup Thai basil leaves {scale}
+- 150g Thai eggplant, quartered {scale}
+- 150g bamboo shoots {scale}
+- 20g Thai basil leaves {scale}
 - 2-3 kaffir lime leaves {scale}
-- 2 tablespoons vegetable oil {scale}
+- 30ml vegetable oil {scale}
 - Jasmine rice for serving
 
 ## Instructions

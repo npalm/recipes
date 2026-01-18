@@ -23,25 +23,25 @@ Thailand's most famous noodle dish - sweet, sour, and savory rice noodles stir-f
 
 ### For the Sauce
 
-- 3 tablespoons tamarind paste {scale}
-- 3 tablespoons fish sauce {scale}
-- 2 tablespoons palm sugar or brown sugar {scale}
-- 1 tablespoon rice vinegar {scale}
+- 45ml tamarind paste {scale}
+- 45ml fish sauce {scale}
+- 30g palm sugar or brown sugar {scale}
+- 15ml rice vinegar {scale}
 
 ### For the Pad Thai
 
-- 8 oz flat rice noodles (pad thai noodles) {scale}
-- 8 oz large shrimp, peeled and deveined {scale}
-- 4 oz firm tofu, pressed and cubed {scale}
-- 3 tablespoons vegetable oil {scale}
+- 225g flat rice noodles (pad thai noodles) {scale}
+- 225g large shrimp, peeled and deveined {scale}
+- 115g firm tofu, pressed and cubed {scale}
+- 45ml vegetable oil {scale}
 - 3 cloves garlic, minced {scale}
 - 2 shallots, thinly sliced {scale}
 - 2 eggs {scale}
-- 1 cup bean sprouts {scale}
-- 3 green onions, cut into 2-inch pieces {scale}
-- 1/4 cup roasted peanuts, chopped {scale}
-- 1/4 cup dried shrimp (optional) {scale}
-- 2 tablespoons preserved radish, chopped (optional) {scale}
+- 100g bean sprouts {scale}
+- 3 green onions, cut into 5cm pieces {scale}
+- 35g roasted peanuts, chopped {scale}
+- 30g dried shrimp (optional) {scale}
+- 30g preserved radish, chopped (optional) {scale}
 
 ### For Serving
 
@@ -56,9 +56,9 @@ Thailand's most famous noodle dish - sweet, sour, and savory rice noodles stir-f
 
 2. Mix together all sauce ingredients in a small bowl until the sugar dissolves. Set aside.
 
-3. Heat a wok or large skillet over high heat. Add 1 tablespoon oil. Cook the tofu until golden on all sides, about 3 minutes. Remove and set aside.
+3. Heat a wok or large skillet over high heat. Add 15ml oil. Cook the tofu until golden on all sides, about 3 minutes. Remove and set aside.
 
-4. Add another tablespoon of oil. Cook the shrimp until pink, about 2 minutes. Remove and set aside with the tofu.
+4. Add another 15ml of oil. Cook the shrimp until pink, about 2 minutes. Remove and set aside with the tofu.
 
 5. Add the remaining oil to the wok. Add garlic and shallots, stir-fry for 30 seconds until fragrant.
 

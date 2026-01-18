@@ -22,31 +22,31 @@ A crisp and creamy Caesar salad with homemade dressing, garlicky croutons, and p
 ## Ingredients
 
 - 2 heads romaine lettuce, chopped {scale}
-- 1 cup homemade croutons {scale}
-- 1/2 cup freshly grated Parmesan cheese {scale}
+- 100g homemade croutons {scale}
+- 50g freshly grated Parmesan cheese {scale}
 - 2-3 anchovy fillets (optional) {scale}
 
 ### For the Dressing
 
 - 2 cloves garlic, minced {scale}
 - 2 anchovy fillets, mashed {scale}
-- 2 tablespoons fresh lemon juice {scale}
+- 30ml fresh lemon juice {scale}
 - 1 teaspoon Dijon mustard {scale}
 - 1 teaspoon Worcestershire sauce {scale}
 - 1 egg yolk {scale}
-- 1/2 cup extra virgin olive oil {scale}
+- 120ml extra virgin olive oil {scale}
 - Salt and black pepper to taste
 
 ### For the Croutons
 
-- 3 cups cubed day-old bread {scale}
-- 3 tablespoons olive oil {scale}
+- 150g cubed day-old bread {scale}
+- 45ml olive oil {scale}
 - 2 cloves garlic, minced {scale}
 - Salt to taste
 
 ## Instructions
 
-1. Make the croutons: Preheat oven to 375°F (190°C). Toss bread cubes with olive oil, garlic, and salt. Spread on a baking sheet and bake for 10-12 minutes until golden and crispy. Set aside to cool.
+1. Make the croutons: Preheat oven to 190°C. Toss bread cubes with olive oil, garlic, and salt. Spread on a baking sheet and bake for 10-12 minutes until golden and crispy. Set aside to cool.
 
 2. Make the dressing: In a large wooden bowl, mash the garlic and anchovies together with a fork until it forms a paste.
 

@@ -21,12 +21,12 @@ The classic Roman pasta dish made with eggs, cheese, guanciale, and black pepper
 
 ## Ingredients
 
-- 1 lb spaghetti or rigatoni {scale}
-- 8 oz guanciale or pancetta, cut into small cubes {scale}
+- 450g spaghetti or rigatoni {scale}
+- 225g guanciale or pancetta, cut into small cubes {scale}
 - 4 large egg yolks {scale}
 - 2 whole eggs {scale}
-- 1 cup freshly grated Pecorino Romano cheese {scale}
-- 1/2 cup freshly grated Parmigiano-Reggiano {scale}
+- 100g freshly grated Pecorino Romano cheese {scale}
+- 50g freshly grated Parmigiano-Reggiano {scale}
 - Freshly ground black pepper (generous amount)
 - Salt for pasta water
 
@@ -38,7 +38,7 @@ The classic Roman pasta dish made with eggs, cheese, guanciale, and black pepper
 
 3. Cut the guanciale into small cubes or strips. Place in a cold skillet, then turn heat to medium. Cook slowly until the fat renders and the meat is crispy, about 8-10 minutes.
 
-4. Cook the pasta in the boiling water until al dente, about 1 minute less than package directions. Reserve 1 cup of pasta water before draining.
+4. Cook the pasta in the boiling water until al dente, about 1 minute less than package directions. Reserve 240ml of pasta water before draining.
 
 5. Remove the skillet from heat and let it cool for 1 minute (this is crucial - if too hot, the eggs will scramble).
 

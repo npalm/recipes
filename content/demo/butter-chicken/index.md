@@ -23,30 +23,30 @@ Rich, creamy, and aromatic - this butter chicken (murgh makhani) rivals any rest
 
 ### For the Chicken Marinade
 
-- 2 lbs boneless chicken thighs, cut into chunks {scale}
-- 1 cup plain yogurt {scale}
-- 2 tablespoons lemon juice {scale}
+- 900g boneless chicken thighs, cut into chunks {scale}
+- 240ml plain yogurt {scale}
+- 30ml lemon juice {scale}
 - 2 teaspoons garam masala {scale}
 - 1 teaspoon turmeric {scale}
 - 1 teaspoon cumin {scale}
 - 1 teaspoon paprika {scale}
 - 1 teaspoon salt {scale}
 - 4 cloves garlic, minced {scale}
-- 1 inch ginger, grated {scale}
+- 2.5cm ginger, grated {scale}
 
 ### For the Sauce
 
-- 4 tablespoons butter {scale}
+- 60g butter {scale}
 - 1 large onion, finely diced {scale}
 - 4 cloves garlic, minced {scale}
-- 1 inch ginger, grated {scale}
+- 2.5cm ginger, grated {scale}
 - 2 teaspoons garam masala {scale}
 - 1 teaspoon cumin {scale}
 - 1 teaspoon coriander {scale}
 - 1/2 teaspoon chili powder (adjust to taste) {scale}
-- 1 can (14 oz) crushed tomatoes {scale}
-- 1 cup heavy cream {scale}
-- 2 tablespoons honey or sugar {scale}
+- 400g crushed tomatoes {scale}
+- 240ml heavy cream {scale}
+- 30ml honey or 30g sugar {scale}
 - 1 teaspoon salt {scale}
 - Fresh cilantro for garnish
 
@@ -54,7 +54,7 @@ Rich, creamy, and aromatic - this butter chicken (murgh makhani) rivals any rest
 
 1. Combine all marinade ingredients in a large bowl. Add chicken pieces and coat thoroughly. Cover and refrigerate for at least 2 hours, preferably overnight.
 
-2. Preheat oven to 425°F (220°C). Arrange marinated chicken on a baking sheet lined with foil. Bake for 15-20 minutes until charred on edges and cooked through.
+2. Preheat oven to 220°C. Arrange marinated chicken on a baking sheet lined with foil. Bake for 15-20 minutes until charred on edges and cooked through.
 
 3. While chicken bakes, make the sauce. Melt butter in a large deep pan over medium heat. Add onion and cook until soft and golden, about 8 minutes.
 

@@ -24,18 +24,18 @@ A rich and creamy beef stroganoff with tender strips of beef, earthy mushrooms, 
 
 ## Ingredients
 
-- 2 lbs beef sirloin, cut into thin strips {scale}
-- 1 lb cremini mushrooms, sliced {scale}
+- 900g beef sirloin, cut into thin strips {scale}
+- 450g cremini mushrooms, sliced {scale}
 - 1 large onion, thinly sliced {scale}
 - 4 cloves garlic, minced {scale}
-- 2 tablespoons butter {scale}
-- 2 tablespoons olive oil {scale}
-- 1/4 cup brandy or cognac (optional) {scale}
-- 2 cups beef broth {scale}
-- 2 tablespoons tomato paste {scale}
+- 30g butter {scale}
+- 30ml olive oil {scale}
+- 60ml brandy or cognac (optional) {scale}
+- 480ml beef broth {scale}
+- 30g tomato paste {scale}
 - 1 tablespoon Dijon mustard {scale}
-- 1 cup sour cream {scale}
-- 2 tablespoons all-purpose flour {scale}
+- 240ml sour cream {scale}
+- 30g all-purpose flour {scale}
 - Salt and pepper to taste
 - Fresh parsley, chopped, for garnish
 - Egg noodles for serving
@@ -44,7 +44,7 @@ A rich and creamy beef stroganoff with tender strips of beef, earthy mushrooms, 
 
 1. Season the beef strips generously with salt and pepper.
 
-2. Heat 1 tablespoon each of butter and oil in a large skillet over high heat. Working in batches, sear the beef strips for 1-2 minutes per side until browned. Transfer to a plate and set aside.
+2. Heat 15g butter and 15ml oil in a large skillet over high heat. Working in batches, sear the beef strips for 1-2 minutes per side until browned. Transfer to a plate and set aside.
 
 3. Reduce heat to medium. Add the remaining butter and oil to the pan. Add the onions and cook for 5 minutes until softened.
 
