@@ -106,7 +106,25 @@ function printSetupInstructions(): void {
   console.log(chalk.dim(`    export RECIPE_ANTHROPIC_MODEL="${DEFAULT_MODELS.anthropic}"  # optional`));
   console.log('');
 
-  console.log(chalk.underline('Option 3: Ollama (Local)'));
+  console.log(chalk.underline('Option 3: GitHub Models'));
+  console.log('  Uses GitHub Models (GPT-4o, Llama, Mistral, etc.)');
+  console.log('  Set the following environment variables:');
+  console.log(chalk.dim('    export GITHUB_TOKEN="your-github-token"'));
+  console.log(chalk.dim('    # Or use: export GITHUB_TOKEN=$(gh auth token)'));
+  console.log(chalk.dim(`    export RECIPE_COPILOT_MODEL="${DEFAULT_MODELS.copilot}"  # optional`));
+  console.log(chalk.dim('    # Available models: gpt-4o, gpt-4o-mini, Llama-3.1-70B-Instruct, Mistral-Large-2411'));
+  console.log('');
+
+  console.log(chalk.underline('Option 4: AWS Bedrock'));
+  console.log('  Set the following environment variables:');
+  console.log(chalk.dim('    export AWS_ACCESS_KEY_ID="your-access-key"'));
+  console.log(chalk.dim('    export AWS_SECRET_ACCESS_KEY="your-secret-key"'));
+  console.log(chalk.dim('    export AWS_REGION="us-east-1"  # optional'));
+  console.log(chalk.dim(`    export RECIPE_BEDROCK_MODEL="${DEFAULT_MODELS.bedrock}"  # optional`));
+  console.log(chalk.dim('    # Or use API key format: export RECIPE_BEDROCK_API_KEY="accessKeyId:secretAccessKey"'));
+  console.log('');
+
+  console.log(chalk.underline('Option 5: Ollama (Local)'));
   console.log('  Set the following environment variables:');
   console.log(chalk.dim('    export RECIPE_AI_PROVIDER="ollama"'));
   console.log(chalk.dim(`    export RECIPE_OLLAMA_MODEL="${DEFAULT_MODELS.ollama}"  # optional`));

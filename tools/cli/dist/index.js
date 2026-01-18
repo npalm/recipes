@@ -234,6 +234,248 @@ var OllamaProvider = class {
   }
 };
 
+// src/providers/bedrock.ts
+async function signRequest(method, url, body, region, credentials) {
+  const service = "bedrock";
+  const now = /* @__PURE__ */ new Date();
+  const amzDate = now.toISOString().replace(/[:-]|\.\d{3}/g, "");
+  const dateStamp = amzDate.slice(0, 8);
+  const host = url.hostname;
+  const canonicalUri = url.pathname;
+  const canonicalQuerystring = url.search.slice(1);
+  const headers = {
+    host,
+    "x-amz-date": amzDate,
+    "content-type": "application/json"
+  };
+  if (credentials.sessionToken) {
+    headers["x-amz-security-token"] = credentials.sessionToken;
+  }
+  const signedHeaders = Object.keys(headers).sort().join(";");
+  const canonicalHeaders = Object.keys(headers).sort().map((key) => `${key}:${headers[key]}
+`).join("");
+  const encoder = new TextEncoder();
+  const payloadHash = await crypto.subtle.digest("SHA-256", encoder.encode(body)).then((buf) => Array.from(new Uint8Array(buf)).map((b) => b.toString(16).padStart(2, "0")).join(""));
+  const canonicalRequest = [
+    method,
+    canonicalUri,
+    canonicalQuerystring,
+    canonicalHeaders,
+    signedHeaders,
+    payloadHash
+  ].join("\n");
+  const algorithm = "AWS4-HMAC-SHA256";
+  const credentialScope = `${dateStamp}/${region}/${service}/aws4_request`;
+  const canonicalRequestHash = await crypto.subtle.digest("SHA-256", encoder.encode(canonicalRequest)).then((buf) => Array.from(new Uint8Array(buf)).map((b) => b.toString(16).padStart(2, "0")).join(""));
+  const stringToSign = [algorithm, amzDate, credentialScope, canonicalRequestHash].join("\n");
+  const getSignatureKey = async (key, dateStamp2, region2, service2) => {
+    const kDate = await hmacSha256(`AWS4${key}`, dateStamp2);
+    const kRegion = await hmacSha256(kDate, region2);
+    const kService = await hmacSha256(kRegion, service2);
+    const kSigning = await hmacSha256(kService, "aws4_request");
+    return kSigning;
+  };
+  const hmacSha256 = async (key, data) => {
+    const keyData = typeof key === "string" ? encoder.encode(key) : key;
+    const cryptoKey = await crypto.subtle.importKey(
+      "raw",
+      keyData,
+      { name: "HMAC", hash: "SHA-256" },
+      false,
+      ["sign"]
+    );
+    return crypto.subtle.sign("HMAC", cryptoKey, encoder.encode(data));
+  };
+  const signingKey = await getSignatureKey(credentials.secretAccessKey, dateStamp, region, service);
+  const signatureBuffer = await hmacSha256(signingKey, stringToSign);
+  const signature = Array.from(new Uint8Array(signatureBuffer)).map((b) => b.toString(16).padStart(2, "0")).join("");
+  const authorizationHeader = `${algorithm} Credential=${credentials.accessKeyId}/${credentialScope}, SignedHeaders=${signedHeaders}, Signature=${signature}`;
+  const requestHeaders = new Headers();
+  requestHeaders.set("Content-Type", "application/json");
+  requestHeaders.set("X-Amz-Date", amzDate);
+  requestHeaders.set("Authorization", authorizationHeader);
+  if (credentials.sessionToken) {
+    requestHeaders.set("X-Amz-Security-Token", credentials.sessionToken);
+  }
+  return requestHeaders;
+}
+var BedrockProvider = class {
+  type = "bedrock";
+  model;
+  region;
+  credentials;
+  constructor(config) {
+    let accessKeyId;
+    let secretAccessKey;
+    let sessionToken;
+    if (config.apiKey) {
+      const parts = config.apiKey.split(":");
+      if (parts.length >= 2) {
+        accessKeyId = parts[0];
+        secretAccessKey = parts[1];
+        sessionToken = parts[2];
+      }
+    }
+    accessKeyId = accessKeyId || process.env.AWS_ACCESS_KEY_ID;
+    secretAccessKey = secretAccessKey || process.env.AWS_SECRET_ACCESS_KEY;
+    sessionToken = sessionToken || process.env.AWS_SESSION_TOKEN;
+    if (!accessKeyId || !secretAccessKey) {
+      throw new Error(
+        'AWS credentials required. Either:\n  - Set AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY environment variables\n  - Or set RECIPE_BEDROCK_API_KEY in format "accessKeyId:secretAccessKey[:sessionToken]"'
+      );
+    }
+    this.credentials = { accessKeyId, secretAccessKey, sessionToken };
+    this.region = process.env.AWS_REGION || process.env.AWS_DEFAULT_REGION || "us-east-1";
+    this.model = config.model || "anthropic.claude-3-5-sonnet-20241022-v2:0";
+  }
+  async complete(options) {
+    const messages = [];
+    for (const msg of options.messages) {
+      if (msg.role === "system") {
+        continue;
+      }
+      messages.push({
+        role: msg.role,
+        content: [{ text: msg.content }]
+      });
+    }
+    let systemPrompt = options.systemPrompt || "";
+    const systemMessages = options.messages.filter((m) => m.role === "system");
+    if (systemMessages.length > 0) {
+      systemPrompt = systemMessages.map((m) => m.content).join("\n\n") + (systemPrompt ? "\n\n" + systemPrompt : "");
+    }
+    const body = {
+      messages,
+      inferenceConfig: {
+        maxTokens: options.maxTokens || 4096,
+        temperature: options.temperature ?? 0.7
+      }
+    };
+    if (systemPrompt) {
+      body.system = [{ text: systemPrompt }];
+    }
+    const endpoint = `https://bedrock-runtime.${this.region}.amazonaws.com/model/${encodeURIComponent(this.model)}/converse`;
+    const url = new URL(endpoint);
+    const bodyString = JSON.stringify(body);
+    const headers = await signRequest("POST", url, bodyString, this.region, this.credentials);
+    const response = await fetch(endpoint, {
+      method: "POST",
+      headers,
+      body: bodyString
+    });
+    if (!response.ok) {
+      const error = await response.text();
+      throw new Error(`AWS Bedrock API error: ${response.status} - ${error}`);
+    }
+    const data = await response.json();
+    const textContent = data.output.message.content.map((block) => block.text).join("");
+    return {
+      content: textContent,
+      usage: {
+        promptTokens: data.usage.inputTokens,
+        completionTokens: data.usage.outputTokens,
+        totalTokens: data.usage.totalTokens
+      },
+      model: this.model,
+      raw: data
+    };
+  }
+  async healthCheck() {
+    try {
+      await this.complete({
+        messages: [{ role: "user", content: "Hi" }],
+        maxTokens: 1
+      });
+      return true;
+    } catch {
+      return false;
+    }
+  }
+};
+
+// src/providers/copilot.ts
+var CopilotProvider = class {
+  type = "copilot";
+  model;
+  token;
+  baseUrl;
+  constructor(config) {
+    const token = config.apiKey || process.env.GITHUB_TOKEN;
+    if (!token) {
+      throw new Error(
+        "GitHub token required for GitHub Models. Set GITHUB_TOKEN environment variable.\nYou can use: export GITHUB_TOKEN=$(gh auth token)"
+      );
+    }
+    this.token = token;
+    this.model = config.model || "gpt-4o";
+    this.baseUrl = config.baseUrl || "https://models.inference.ai.azure.com";
+  }
+  async complete(options) {
+    const messages = [];
+    if (options.systemPrompt) {
+      messages.push({
+        role: "system",
+        content: options.systemPrompt
+      });
+    }
+    for (const msg of options.messages) {
+      messages.push({
+        role: msg.role,
+        content: msg.content
+      });
+    }
+    const body = {
+      model: this.model,
+      messages,
+      max_tokens: options.maxTokens || 4096,
+      temperature: options.temperature ?? 0.7
+    };
+    const response = await fetch(`${this.baseUrl}/chat/completions`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${this.token}`
+      },
+      body: JSON.stringify(body)
+    });
+    if (!response.ok) {
+      const error = await response.text();
+      throw new Error(`GitHub Models API error: ${response.status} - ${error}`);
+    }
+    const data = await response.json();
+    const textContent = data.choices[0]?.message?.content || "";
+    return {
+      content: textContent,
+      usage: data.usage ? {
+        promptTokens: data.usage.prompt_tokens,
+        completionTokens: data.usage.completion_tokens,
+        totalTokens: data.usage.total_tokens
+      } : void 0,
+      model: data.model,
+      raw: data
+    };
+  }
+  async healthCheck() {
+    try {
+      const response = await fetch(`${this.baseUrl}/chat/completions`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${this.token}`
+        },
+        body: JSON.stringify({
+          model: this.model,
+          messages: [{ role: "user", content: "Hi" }],
+          max_tokens: 1
+        })
+      });
+      return response.ok;
+    } catch {
+      return false;
+    }
+  }
+};
+
 // src/providers/index.ts
 function createProvider(config) {
   switch (config.type) {
@@ -243,6 +485,10 @@ function createProvider(config) {
       return new AnthropicProvider(config);
     case "ollama":
       return new OllamaProvider(config);
+    case "bedrock":
+      return new BedrockProvider(config);
+    case "copilot":
+      return new CopilotProvider(config);
     default:
       throw new Error(`Unknown provider type: ${config.type}`);
   }
@@ -250,7 +496,9 @@ function createProvider(config) {
 var DEFAULT_MODELS = {
   openai: "gpt-4-turbo-preview",
   anthropic: "claude-3-5-sonnet-latest",
-  ollama: "llama3.2"
+  ollama: "llama3.2",
+  bedrock: "anthropic.claude-3-5-sonnet-20241022-v2:0",
+  copilot: "gpt-4o"
 };
 function getProviderFromEnv() {
   const providerType = process.env.RECIPE_AI_PROVIDER;
@@ -260,6 +508,30 @@ function getProviderFromEnv() {
       model: process.env.RECIPE_OLLAMA_MODEL || DEFAULT_MODELS.ollama,
       baseUrl: process.env.RECIPE_OLLAMA_URL || "http://localhost:11434"
     };
+  }
+  if (providerType === "copilot" || process.env.GITHUB_TOKEN && !process.env.ANTHROPIC_API_KEY && !process.env.OPENAI_API_KEY) {
+    const token = process.env.GITHUB_TOKEN;
+    if (token) {
+      return {
+        type: "copilot",
+        apiKey: token,
+        model: process.env.RECIPE_COPILOT_MODEL || DEFAULT_MODELS.copilot
+      };
+    }
+    if (providerType === "copilot") {
+      return null;
+    }
+  }
+  if (providerType === "bedrock") {
+    const apiKey = process.env.RECIPE_BEDROCK_API_KEY;
+    if (apiKey || process.env.AWS_ACCESS_KEY_ID && process.env.AWS_SECRET_ACCESS_KEY) {
+      return {
+        type: "bedrock",
+        apiKey,
+        model: process.env.RECIPE_BEDROCK_MODEL || DEFAULT_MODELS.bedrock
+      };
+    }
+    return null;
   }
   if (providerType === "anthropic" || process.env.ANTHROPIC_API_KEY) {
     const apiKey = process.env.ANTHROPIC_API_KEY;
@@ -965,7 +1237,23 @@ function printSetupInstructions() {
   console.log(chalk4.dim('    export ANTHROPIC_API_KEY="your-api-key"'));
   console.log(chalk4.dim(`    export RECIPE_ANTHROPIC_MODEL="${DEFAULT_MODELS.anthropic}"  # optional`));
   console.log("");
-  console.log(chalk4.underline("Option 3: Ollama (Local)"));
+  console.log(chalk4.underline("Option 3: GitHub Models"));
+  console.log("  Uses GitHub Models (GPT-4o, Llama, Mistral, etc.)");
+  console.log("  Set the following environment variables:");
+  console.log(chalk4.dim('    export GITHUB_TOKEN="your-github-token"'));
+  console.log(chalk4.dim("    # Or use: export GITHUB_TOKEN=$(gh auth token)"));
+  console.log(chalk4.dim(`    export RECIPE_COPILOT_MODEL="${DEFAULT_MODELS.copilot}"  # optional`));
+  console.log(chalk4.dim("    # Available models: gpt-4o, gpt-4o-mini, Llama-3.1-70B-Instruct, Mistral-Large-2411"));
+  console.log("");
+  console.log(chalk4.underline("Option 4: AWS Bedrock"));
+  console.log("  Set the following environment variables:");
+  console.log(chalk4.dim('    export AWS_ACCESS_KEY_ID="your-access-key"'));
+  console.log(chalk4.dim('    export AWS_SECRET_ACCESS_KEY="your-secret-key"'));
+  console.log(chalk4.dim('    export AWS_REGION="us-east-1"  # optional'));
+  console.log(chalk4.dim(`    export RECIPE_BEDROCK_MODEL="${DEFAULT_MODELS.bedrock}"  # optional`));
+  console.log(chalk4.dim('    # Or use API key format: export RECIPE_BEDROCK_API_KEY="accessKeyId:secretAccessKey"'));
+  console.log("");
+  console.log(chalk4.underline("Option 5: Ollama (Local)"));
   console.log("  Set the following environment variables:");
   console.log(chalk4.dim('    export RECIPE_AI_PROVIDER="ollama"'));
   console.log(chalk4.dim(`    export RECIPE_OLLAMA_MODEL="${DEFAULT_MODELS.ollama}"  # optional`));

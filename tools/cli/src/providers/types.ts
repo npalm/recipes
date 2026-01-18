@@ -8,7 +8,7 @@
 /**
  * Supported AI provider types
  */
-export type ProviderType = 'openai' | 'anthropic' | 'ollama';
+export type ProviderType = 'openai' | 'anthropic' | 'ollama' | 'bedrock' | 'copilot';
 
 /**
  * Message role in a conversation
