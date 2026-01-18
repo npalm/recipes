@@ -11,6 +11,7 @@ import {
   ArrowLeft,
   Timer,
   Flame,
+  Layers,
 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -20,6 +21,7 @@ import { Recipe } from '@/modules/recipe/domain';
 import { ImageGallery } from './ImageGallery';
 import { IngredientList } from './IngredientList';
 import { InstructionList } from './InstructionList';
+import { ComponentIngredientList, ComponentInstructionList } from './ComponentList';
 import { formatTime, formatDate } from '@/modules/shared/utils';
 import { difficultyConfig } from './RecipeCard';
 
@@ -160,72 +162,151 @@ export function RecipeDetail({ recipe, isDemo = false }: RecipeDetailProps) {
       </div>
 
       {/* Main content */}
-      <div className="grid gap-8 lg:grid-cols-12">
-        {/* Ingredients sidebar */}
-        <div className="lg:col-span-4">
-          <Card className="sticky top-24 border-0 shadow-sm">
-            <CardContent className="p-6">
-              <h2 className="mb-6 flex items-center gap-2 text-xl font-semibold">
-                <ChefHat className="h-5 w-5 text-primary" />
-                Ingredients
-              </h2>
-              <IngredientList
-                ingredients={recipe.ingredients}
-                defaultServings={recipe.servings}
-              />
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Instructions */}
-        <div className="lg:col-span-8">
-          <Card className="border-0 shadow-sm">
-            <CardContent className="p-6 md:p-8">
-              <h2 className="mb-6 text-xl font-semibold">Instructions</h2>
-              <InstructionList instructions={recipe.instructions} />
-            </CardContent>
-          </Card>
-
-          {/* Notes */}
-          {recipe.notes && (
-            <Card className="mt-6 border-0 bg-amber-50 shadow-sm dark:bg-amber-950/20">
+      {recipe.components && recipe.components.length > 0 ? (
+        /* Component-based recipe layout */
+        <div className="grid gap-8 lg:grid-cols-12">
+          {/* Ingredients sidebar */}
+          <div className="lg:col-span-4">
+            <Card className="sticky top-24 border-0 shadow-sm">
               <CardContent className="p-6">
-                <h2 className="mb-4 flex items-center gap-2 text-lg font-semibold text-amber-800 dark:text-amber-200">
-                  <span className="text-xl">💡</span>
-                  Tips & Notes
+                <h2 className="mb-6 flex items-center gap-2 text-xl font-semibold">
+                  <Layers className="h-5 w-5 text-primary" />
+                  Ingredients
+                  <Badge variant="secondary" className="ml-auto">
+                    {recipe.components.length} parts
+                  </Badge>
                 </h2>
-                <p className="text-sm leading-relaxed text-amber-900/80 dark:text-amber-100/80">
-                  {recipe.notes}
-                </p>
+                <ComponentIngredientList
+                  components={recipe.components}
+                  defaultServings={recipe.servings}
+                />
               </CardContent>
             </Card>
-          )}
+          </div>
 
-          {/* Sources */}
-          {recipe.sources.length > 0 && (
-            <Card className="mt-6 border-0 shadow-sm">
-              <CardContent className="p-6">
-                <h2 className="mb-4 text-lg font-semibold">Sources</h2>
-                <ul className="space-y-2">
-                  {recipe.sources.map((source, index) => (
-                    <li key={index}>
-                      <a
-                        href={source.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center gap-2 text-sm text-primary transition-colors hover:underline"
-                      >
-                        <ExternalLink className="h-4 w-4" />
-                        {source.title || source.url}
-                      </a>
-                    </li>
-                  ))}
-                </ul>
+          {/* Instructions */}
+          <div className="lg:col-span-8">
+            <Card className="border-0 shadow-sm">
+              <CardContent className="p-6 md:p-8">
+                <h2 className="mb-6 flex items-center gap-2 text-xl font-semibold">
+                  Instructions
+                  <Badge variant="secondary" className="ml-2">
+                    {recipe.components.length} parts
+                  </Badge>
+                </h2>
+                <ComponentInstructionList components={recipe.components} />
               </CardContent>
             </Card>
-          )}
+
+            {/* Notes */}
+            {recipe.notes && (
+              <Card className="mt-6 border-0 bg-amber-50 shadow-sm dark:bg-amber-950/20">
+                <CardContent className="p-6">
+                  <h2 className="mb-4 flex items-center gap-2 text-lg font-semibold text-amber-800 dark:text-amber-200">
+                    <span className="text-xl">💡</span>
+                    Tips & Notes
+                  </h2>
+                  <p className="text-sm leading-relaxed text-amber-900/80 dark:text-amber-100/80">
+                    {recipe.notes}
+                  </p>
+                </CardContent>
+              </Card>
+            )}
+
+            {/* Sources */}
+            {recipe.sources.length > 0 && (
+              <Card className="mt-6 border-0 shadow-sm">
+                <CardContent className="p-6">
+                  <h2 className="mb-4 text-lg font-semibold">Sources</h2>
+                  <ul className="space-y-2">
+                    {recipe.sources.map((source, index) => (
+                      <li key={index}>
+                        <a
+                          href={source.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-2 text-sm text-primary transition-colors hover:underline"
+                        >
+                          <ExternalLink className="h-4 w-4" />
+                          {source.title || source.url}
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                </CardContent>
+              </Card>
+            )}
+          </div>
         </div>
-      </div>
+      ) : (
+        /* Simple recipe layout */
+        <div className="grid gap-8 lg:grid-cols-12">
+          {/* Ingredients sidebar */}
+          <div className="lg:col-span-4">
+            <Card className="sticky top-24 border-0 shadow-sm">
+              <CardContent className="p-6">
+                <h2 className="mb-6 flex items-center gap-2 text-xl font-semibold">
+                  <ChefHat className="h-5 w-5 text-primary" />
+                  Ingredients
+                </h2>
+                <IngredientList
+                  ingredients={recipe.ingredients}
+                  defaultServings={recipe.servings}
+                />
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Instructions */}
+          <div className="lg:col-span-8">
+            <Card className="border-0 shadow-sm">
+              <CardContent className="p-6 md:p-8">
+                <h2 className="mb-6 text-xl font-semibold">Instructions</h2>
+                <InstructionList instructions={recipe.instructions} />
+              </CardContent>
+            </Card>
+
+            {/* Notes */}
+            {recipe.notes && (
+              <Card className="mt-6 border-0 bg-amber-50 shadow-sm dark:bg-amber-950/20">
+                <CardContent className="p-6">
+                  <h2 className="mb-4 flex items-center gap-2 text-lg font-semibold text-amber-800 dark:text-amber-200">
+                    <span className="text-xl">💡</span>
+                    Tips & Notes
+                  </h2>
+                  <p className="text-sm leading-relaxed text-amber-900/80 dark:text-amber-100/80">
+                    {recipe.notes}
+                  </p>
+                </CardContent>
+              </Card>
+            )}
+
+            {/* Sources */}
+            {recipe.sources.length > 0 && (
+              <Card className="mt-6 border-0 shadow-sm">
+                <CardContent className="p-6">
+                  <h2 className="mb-4 text-lg font-semibold">Sources</h2>
+                  <ul className="space-y-2">
+                    {recipe.sources.map((source, index) => (
+                      <li key={index}>
+                        <a
+                          href={source.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-2 text-sm text-primary transition-colors hover:underline"
+                        >
+                          <ExternalLink className="h-4 w-4" />
+                          {source.title || source.url}
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                </CardContent>
+              </Card>
+            )}
+          </div>
+        </div>
+      )}
 
       {/* Footer meta */}
       <div className="mt-8 flex flex-wrap items-center justify-between gap-4 border-t pt-6 text-sm text-muted-foreground">

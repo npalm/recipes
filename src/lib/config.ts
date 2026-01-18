@@ -4,6 +4,16 @@
  * Centralized configuration for the recipe app.
  */
 
+/**
+ * Supported unit systems
+ */
+export type UnitSystem = 'metric' | 'imperial';
+
+/**
+ * Supported temperature units
+ */
+export type TemperatureUnit = 'celsius' | 'fahrenheit';
+
 export const config = {
   /** App name */
   appName: 'My Recipes',
@@ -28,6 +38,20 @@ export const config = {
 
   /** Maximum search results */
   maxSearchResults: 20,
+
+  /**
+   * Unit system preference
+   * - 'metric': Use g, kg, ml, l, °C (EU/international standard)
+   * - 'imperial': Use oz, lb, cups, °F (US standard)
+   */
+  unitSystem: 'metric' as UnitSystem,
+
+  /**
+   * Temperature unit preference
+   * - 'celsius': Use °C (EU/international standard)
+   * - 'fahrenheit': Use °F (US standard)
+   */
+  temperatureUnit: 'celsius' as TemperatureUnit,
 
   /** Time thresholds for filtering (in minutes) */
   timeFilters: [

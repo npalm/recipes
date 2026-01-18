@@ -85,15 +85,39 @@ export const ingredientSchema = z.object({
 });
 
 /**
+ * Recipe component schema (sub-recipes like Sauce, Marinade, Assembly)
+ */
+export const recipeComponentSchema = z.object({
+  name: z.string().min(1, 'Component name is required'),
+  ingredients: z.array(ingredientSchema).default([]),
+  instructions: z.array(z.string().min(1)).default([]),
+});
+
+/**
  * Full recipe schema
+ * 
+ * Supports two formats:
+ * 1. Simple recipes: ingredients and instructions at top level
+ * 2. Component-based: organized into named components (ingredients/instructions can be empty)
  */
 export const recipeSchema = recipeFrontmatterSchema.extend({
   description: z.string().default(''),
-  ingredients: z.array(ingredientSchema).min(1, 'At least one ingredient is required'),
-  instructions: z.array(z.string().min(1)).min(1, 'At least one instruction is required'),
+  ingredients: z.array(ingredientSchema).default([]),
+  instructions: z.array(z.string().min(1)).default([]),
+  components: z.array(recipeComponentSchema).optional(),
   notes: z.string().optional(),
   content: z.string(),
-});
+}).refine(
+  (data) => {
+    // Must have either top-level ingredients/instructions OR components
+    const hasTopLevel = data.ingredients.length > 0 || data.instructions.length > 0;
+    const hasComponents = data.components && data.components.length > 0;
+    return hasTopLevel || hasComponents;
+  },
+  {
+    message: 'Recipe must have either ingredients/instructions or components',
+  }
+);
 
 /**
  * Recipe filter schema for search/filtering
@@ -114,6 +138,7 @@ export type RecipeStatusSchema = z.infer<typeof recipeStatusSchema>;
 export type RecipeSourceSchema = z.infer<typeof recipeSourceSchema>;
 export type RecipeFrontmatterSchema = z.infer<typeof recipeFrontmatterSchema>;
 export type IngredientSchema = z.infer<typeof ingredientSchema>;
+export type RecipeComponentSchema = z.infer<typeof recipeComponentSchema>;
 export type RecipeSchema = z.infer<typeof recipeSchema>;
 export type RecipeFiltersSchema = z.infer<typeof recipeFiltersSchema>;
 

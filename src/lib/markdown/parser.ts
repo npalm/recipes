@@ -3,12 +3,14 @@
  *
  * Parses recipe markdown files with frontmatter.
  * Extracts metadata, ingredients, and instructions.
+ * Supports both simple recipes and component-based recipes.
  */
 
 import matter from 'gray-matter';
 import {
   Recipe,
   RecipeMetadata,
+  RecipeComponent,
   recipeFrontmatterSchema,
   safeValidateRecipeFrontmatter,
 } from '@/modules/recipe/domain';
@@ -17,11 +19,18 @@ import { parseIngredientsFromMarkdown } from '@/modules/ingredient/services/pars
 /**
  * Result of parsing a recipe markdown file
  */
+export interface ParsedRecipeComponent {
+  name: string;
+  ingredientsMarkdown: string;
+  instructionsMarkdown: string;
+}
+
 export interface ParsedRecipe {
   metadata: RecipeMetadata;
   description: string;
   ingredientsMarkdown: string;
   instructionsMarkdown: string;
+  components?: ParsedRecipeComponent[];
   notesMarkdown?: string;
   rawContent: string;
 }
@@ -127,6 +136,72 @@ function parseInstructions(markdown: string | undefined): string[] {
 }
 
 /**
+ * Check if content has a ## Components section
+ */
+function hasComponentsSection(content: string): boolean {
+  return /^##\s+Components\s*$/m.test(content);
+}
+
+/**
+ * Extract sub-section from a component (#### level headings)
+ * Used for getting Ingredients or Instructions within a component
+ */
+function extractSubSection(componentContent: string, sectionName: string): string {
+  const sections = componentContent.split(/^(####\s+.+)$/m);
+  for (let i = 0; i < sections.length; i++) {
+    const heading = sections[i];
+    if (heading && new RegExp(`^####\\s+${sectionName}\\s*$`, 'i').test(heading)) {
+      const sectionContent = sections[i + 1];
+      return sectionContent ? sectionContent.trim() : '';
+    }
+  }
+  return '';
+}
+
+/**
+ * Parse the ## Components section into individual components
+ */
+function parseComponentsSection(content: string): ParsedRecipeComponent[] {
+  // Find the Components section
+  const sections = content.split(/^(##\s+.+)$/m);
+  let componentsContent = '';
+  
+  for (let i = 0; i < sections.length; i++) {
+    const heading = sections[i];
+    if (heading && /^##\s+Components\s*$/i.test(heading)) {
+      // Get content until next ## heading
+      componentsContent = sections[i + 1] || '';
+      break;
+    }
+  }
+  
+  if (!componentsContent) return [];
+  
+  // Split by ### headings (component names)
+  const componentSections = componentsContent.split(/^(###\s+.+)$/m);
+  const components: ParsedRecipeComponent[] = [];
+  
+  for (let i = 0; i < componentSections.length; i++) {
+    const heading = componentSections[i];
+    if (heading && /^###\s+(.+)$/.test(heading)) {
+      const nameMatch = heading.match(/^###\s+(.+)$/);
+      if (nameMatch) {
+        const name = nameMatch[1].trim();
+        const componentBody = componentSections[i + 1] || '';
+        
+        components.push({
+          name,
+          ingredientsMarkdown: extractSubSection(componentBody, 'Ingredients'),
+          instructionsMarkdown: extractSubSection(componentBody, 'Instructions'),
+        });
+      }
+    }
+  }
+  
+  return components;
+}
+
+/**
  * Parse a recipe markdown file
  */
 export function parseRecipeMarkdown(
@@ -160,8 +235,29 @@ export function parseRecipeMarkdown(
 
     const metadata = validationResult.data as RecipeMetadata;
 
-    // Extract sections
+    // Extract description (content before first ## heading)
     const description = extractDescription(bodyContent);
+    
+    // Check if this is a component-based recipe
+    const isComponentBased = hasComponentsSection(bodyContent);
+    
+    if (isComponentBased) {
+      // Parse component-based recipe
+      const components = parseComponentsSection(bodyContent);
+      const notesMarkdown = extractSection(bodyContent, 'Notes');
+      
+      return {
+        metadata,
+        description,
+        ingredientsMarkdown: '', // Components have their own ingredients
+        instructionsMarkdown: '', // Components have their own instructions
+        components,
+        notesMarkdown,
+        rawContent: content,
+      };
+    }
+
+    // Parse simple recipe (original format)
     const ingredientsMarkdown = extractSection(bodyContent, 'Ingredients') ?? '';
     const instructionsMarkdown = extractSection(bodyContent, 'Instructions') ?? '';
     const notesMarkdown = extractSection(bodyContent, 'Notes');
@@ -190,6 +286,26 @@ export function parseRecipeMarkdown(
  * Convert parsed recipe to full Recipe object
  */
 export function parsedRecipeToRecipe(parsed: ParsedRecipe): Recipe {
+  // Check if this is a component-based recipe
+  if (parsed.components && parsed.components.length > 0) {
+    const components: RecipeComponent[] = parsed.components.map((comp) => ({
+      name: comp.name,
+      ingredients: parseIngredientsFromMarkdown(comp.ingredientsMarkdown),
+      instructions: parseInstructions(comp.instructionsMarkdown),
+    }));
+
+    return {
+      ...parsed.metadata,
+      description: parsed.description,
+      ingredients: [], // Empty for component-based recipes
+      instructions: [], // Empty for component-based recipes
+      components,
+      notes: parsed.notesMarkdown,
+      content: parsed.rawContent,
+    };
+  }
+
+  // Simple recipe format
   const ingredients = parseIngredientsFromMarkdown(parsed.ingredientsMarkdown);
   const instructions = parseInstructions(parsed.instructionsMarkdown);
 

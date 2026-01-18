@@ -58,12 +58,28 @@ export interface Ingredient {
 }
 
 /**
+ * A recipe component (sub-recipe) with its own ingredients and instructions
+ * Examples: "Sauce", "Marinade", "Dressing", "Assembly"
+ */
+export interface RecipeComponent {
+  name: string; // e.g., "Salsa Verde", "Seasoned Beef", "Assembly"
+  ingredients: Ingredient[];
+  instructions: string[];
+}
+
+/**
  * Full recipe including content
+ * 
+ * Recipes can be either:
+ * 1. Simple: ingredients and instructions at top level
+ * 2. Component-based: organized into named components (e.g., Sauce, Meat, Assembly)
+ *    When components exist, top-level ingredients/instructions are empty
  */
 export interface Recipe extends RecipeMetadata {
   description: string;
   ingredients: Ingredient[];
   instructions: string[]; // Each step as a separate string
+  components?: RecipeComponent[]; // Optional component-based structure
   notes?: string;
   content: string; // Raw markdown content (for rendering)
 }
