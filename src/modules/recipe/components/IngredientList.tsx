@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { Minus, Plus, RotateCcw, Users } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/button';
 import { Ingredient } from '@/modules/recipe/domain';
 import {
@@ -22,6 +23,7 @@ export function IngredientList({
   ingredients,
   defaultServings,
 }: IngredientListProps) {
+  const t = useTranslations();
   const [servings, setServings] = useState(defaultServings);
   const [checkedItems, setCheckedItems] = useState<Set<number>>(new Set());
 
@@ -62,7 +64,7 @@ export function IngredientList({
       <div className="mb-6 rounded-xl bg-muted/50 p-4">
         <div className="mb-2 flex items-center gap-2 text-sm font-medium">
           <Users className="h-4 w-4 text-primary" />
-          Servings
+          {t('recipe.servings')}
         </div>
         <div className="flex items-center justify-between gap-4">
           <div className="flex items-center gap-2">
@@ -72,7 +74,7 @@ export function IngredientList({
               className="h-9 w-9 rounded-full"
               onClick={decrement}
               disabled={servings <= config.minServings}
-              aria-label="Decrease servings"
+              aria-label={t('recipe.decreaseServings')}
             >
               <Minus className="h-4 w-4" />
             </Button>
@@ -83,7 +85,7 @@ export function IngredientList({
               className="h-9 w-9 rounded-full"
               onClick={increment}
               disabled={servings >= config.maxServings}
-              aria-label="Increase servings"
+              aria-label={t('recipe.increaseServings')}
             >
               <Plus className="h-4 w-4" />
             </Button>
@@ -96,13 +98,13 @@ export function IngredientList({
               className="text-muted-foreground"
             >
               <RotateCcw className="mr-1 h-3 w-3" />
-              Reset
+              {t('common.reset')}
             </Button>
           )}
         </div>
         {isModified && (
           <p className="mt-2 text-xs text-muted-foreground">
-            Original recipe serves {defaultServings}
+            {t('recipe.originalServes', { count: defaultServings })}
           </p>
         )}
       </div>
@@ -173,7 +175,7 @@ export function IngredientList({
             onClick={() => setCheckedItems(new Set())}
             className="w-full text-muted-foreground"
           >
-            Clear {checkedItems.size} checked item{checkedItems.size !== 1 ? 's' : ''}
+            {t('recipe.clearCheckedItems', { count: checkedItems.size })}
           </Button>
         </div>
       )}

@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { Check } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 
 interface InstructionListProps {
   instructions: string[];
@@ -11,11 +12,12 @@ interface InstructionListProps {
  * Recipe instruction list with step completion tracking
  */
 export function InstructionList({ instructions }: InstructionListProps) {
+  const t = useTranslations();
   const [completedSteps, setCompletedSteps] = useState<Set<number>>(new Set());
 
   if (instructions.length === 0) {
     return (
-      <p className="text-muted-foreground">No instructions available.</p>
+      <p className="text-muted-foreground">{t('recipe.noInstructions')}</p>
     );
   }
 
@@ -39,9 +41,9 @@ export function InstructionList({ instructions }: InstructionListProps) {
       {completedSteps.size > 0 && (
         <div className="mb-6">
           <div className="mb-2 flex items-center justify-between text-sm">
-            <span className="font-medium">Progress</span>
+            <span className="font-medium">{t('recipe.progress')}</span>
             <span className="text-muted-foreground">
-              {completedSteps.size} of {instructions.length} steps
+              {t('recipe.stepsCount', { completed: completedSteps.size, total: instructions.length })}
             </span>
           </div>
           <div className="h-2 overflow-hidden rounded-full bg-muted">
@@ -72,8 +74,8 @@ export function InstructionList({ instructions }: InstructionListProps) {
                 }`}
                 aria-label={
                   isCompleted
-                    ? `Mark step ${index + 1} as incomplete`
-                    : `Mark step ${index + 1} as complete`
+                    ? t('recipe.markStepIncomplete', { number: index + 1 })
+                    : t('recipe.markStepComplete', { number: index + 1 })
                 }
               >
                 {isCompleted ? (
@@ -101,10 +103,10 @@ export function InstructionList({ instructions }: InstructionListProps) {
         <div className="mt-8 rounded-xl bg-green-50 p-6 text-center dark:bg-green-950/20">
           <div className="mb-2 text-4xl">🎉</div>
           <h3 className="text-lg font-semibold text-green-800 dark:text-green-200">
-            All done!
+            {t('recipe.allDone')}
           </h3>
           <p className="text-sm text-green-700 dark:text-green-300">
-            Enjoy your delicious creation!
+            {t('recipe.enjoyCreation')}
           </p>
         </div>
       )}

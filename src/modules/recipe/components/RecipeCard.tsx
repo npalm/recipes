@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { Clock, ChefHat, Flame } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { RecipeCard as RecipeCardType, Difficulty } from '@/modules/recipe/domain';
@@ -9,17 +10,17 @@ import { formatTime, truncate } from '@/modules/shared/utils';
 /**
  * Difficulty badge configuration
  */
-const difficultyConfig: Record<
+const getDifficultyConfig = (t: (key: string) => string): Record<
   Difficulty,
   { label: string; className: string; icon: React.ReactNode }
-> = {
+> => ({
   easy: {
-    label: 'Easy',
+    label: t('recipe.difficultyLevels.easy'),
     className: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400',
     icon: <Flame className="h-3 w-3" />,
   },
   medium: {
-    label: 'Medium',
+    label: t('recipe.difficultyLevels.medium'),
     className: 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400',
     icon: (
       <>
@@ -29,7 +30,7 @@ const difficultyConfig: Record<
     ),
   },
   hard: {
-    label: 'Hard',
+    label: t('recipe.difficultyLevels.hard'),
     className: 'bg-rose-100 text-rose-700 dark:bg-rose-900/30 dark:text-rose-400',
     icon: (
       <>
@@ -39,7 +40,7 @@ const difficultyConfig: Record<
       </>
     ),
   },
-};
+});
 
 interface RecipeCardProps {
   recipe: RecipeCardType;
@@ -49,7 +50,9 @@ interface RecipeCardProps {
  * Recipe card for grid display
  */
 export function RecipeCard({ recipe }: RecipeCardProps) {
+  const t = useTranslations();
   const href = `/recipe/${recipe.slug}`;
+  const difficultyConfig = getDifficultyConfig(t);
   const difficulty = difficultyConfig[recipe.difficulty];
 
   return (
@@ -73,7 +76,7 @@ export function RecipeCard({ recipe }: RecipeCardProps) {
           {/* Draft indicator */}
           {recipe.status === 'draft' && (
             <div className="absolute right-3 top-3">
-              <Badge className="bg-yellow-500 text-white shadow-sm">Draft</Badge>
+              <Badge className="bg-yellow-500 text-white shadow-sm">{t('recipe.draft')}</Badge>
             </div>
           )}
         </div>
@@ -128,15 +131,17 @@ export function RecipeCard({ recipe }: RecipeCardProps) {
  * Grid of recipe cards
  */
 export function RecipeGrid({ recipes }: { recipes: RecipeCardType[] }) {
+  const t = useTranslations();
+  
   if (recipes.length === 0) {
     return (
       <div className="flex min-h-[300px] flex-col items-center justify-center rounded-2xl border-2 border-dashed border-muted-foreground/20 bg-muted/30 p-8 text-center">
         <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-muted">
           <ChefHat className="h-8 w-8 text-muted-foreground" />
         </div>
-        <h3 className="mb-2 text-lg font-semibold">No recipes found</h3>
+        <h3 className="mb-2 text-lg font-semibold">{t('search.noResults')}</h3>
         <p className="text-sm text-muted-foreground">
-          Try adjusting your filters or search terms
+          {t('search.tryAdjustingFilters')}
         </p>
       </div>
     );
@@ -151,4 +156,4 @@ export function RecipeGrid({ recipes }: { recipes: RecipeCardType[] }) {
   );
 }
 
-export { difficultyConfig };
+export { getDifficultyConfig };

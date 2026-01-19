@@ -1,11 +1,13 @@
 'use client';
 
 import { useState, useMemo } from 'react';
+import Link from 'next/link';
+import { useTranslations, useLocale } from 'next-intl';
 import { RecipeCard } from '@/modules/recipe/domain';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
-import { GripVertical, X, Share2, Copy, Check, Search } from 'lucide-react';
+import { GripVertical, X, Share2, Copy, Check, Search, Home } from 'lucide-react';
 
 interface DinnerPlannerProps {
   recipes: RecipeCard[];
@@ -18,6 +20,8 @@ interface SelectedRecipe {
 }
 
 export function DinnerPlanner({ recipes }: DinnerPlannerProps) {
+  const t = useTranslations();
+  const locale = useLocale();
   const [dinnerTitle, setDinnerTitle] = useState('');
   const [selectedRecipes, setSelectedRecipes] = useState<SelectedRecipe[]>([]);
   const [shareLink, setShareLink] = useState('');
@@ -84,7 +88,7 @@ export function DinnerPlanner({ recipes }: DinnerPlannerProps) {
     const encoded = btoa(JSON.stringify(dinnerData));
     // URL-encode the base64 string to handle special characters like = + /
     const urlSafe = encodeURIComponent(encoded);
-    const link = `${window.location.origin}/dinner/${urlSafe}`;
+    const link = `${window.location.origin}/${locale}/dinner/${urlSafe}`;
     setShareLink(link);
   };
 
@@ -97,9 +101,17 @@ export function DinnerPlanner({ recipes }: DinnerPlannerProps) {
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="mb-8">
-        <h1 className="text-4xl font-bold tracking-tight">Plan a Dinner</h1>
+        <div className="mb-4">
+          <Button variant="ghost" size="sm" asChild className="-ml-3">
+            <Link href={`/${locale}`}>
+              <Home className="mr-2 h-4 w-4" />
+              {t('navigation.home')}
+            </Link>
+          </Button>
+        </div>
+        <h1 className="text-4xl font-bold tracking-tight">{t('dinner.planTitle')}</h1>
         <p className="mt-2 text-lg text-muted-foreground">
-          Select recipes, arrange them in order, and create a shareable dinner plan.
+          {t('dinner.planDescription')}
         </p>
       </div>
 
@@ -108,14 +120,14 @@ export function DinnerPlanner({ recipes }: DinnerPlannerProps) {
         <div className="lg:col-span-5">
           <Card>
             <CardContent className="p-6">
-              <h2 className="mb-4 text-xl font-semibold">Available Recipes</h2>
+              <h2 className="mb-4 text-xl font-semibold">{t('dinner.availableRecipes')}</h2>
               
               {/* Search Input */}
               <div className="mb-4 relative">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <Input
                   type="text"
-                  placeholder="Search recipes by title or tags..."
+                  placeholder={t('dinner.searchPlaceholder')}
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="pl-10"
@@ -124,14 +136,14 @@ export function DinnerPlanner({ recipes }: DinnerPlannerProps) {
 
               {/* Results count */}
               <div className="mb-2 text-sm text-muted-foreground">
-                {filteredRecipes.length} {filteredRecipes.length === 1 ? 'recipe' : 'recipes'}
-                {searchQuery && ` matching "${searchQuery}"`}
+                {t('dinner.recipesCount', { count: filteredRecipes.length })}
+                {searchQuery && ` ${t('dinner.matchingQuery', { query: searchQuery })}`}
               </div>
 
               <div className="max-h-[600px] space-y-2 overflow-y-auto">
                 {filteredRecipes.length === 0 ? (
                   <p className="text-center text-sm text-muted-foreground py-8">
-                    No recipes found. Try a different search term.
+                    {t('dinner.noRecipesFound')}
                   </p>
                 ) : (
                   filteredRecipes.map((recipe) => (
@@ -157,17 +169,17 @@ export function DinnerPlanner({ recipes }: DinnerPlannerProps) {
         <div className="lg:col-span-7">
           <Card>
             <CardContent className="p-6">
-              <h2 className="mb-4 text-xl font-semibold">Your Dinner Plan</h2>
+              <h2 className="mb-4 text-xl font-semibold">{t('dinner.yourPlan')}</h2>
 
               {/* Title Input */}
               <div className="mb-6">
                 <label htmlFor="dinner-title" className="mb-2 block text-sm font-medium">
-                  Dinner Title
+                  {t('dinner.dinnerTitle')}
                 </label>
                 <Input
                   type="text"
                   id="dinner-title"
-                  placeholder="e.g., Summer Garden Party"
+                  placeholder={t('dinner.dinnerTitlePlaceholder')}
                   value={dinnerTitle}
                   onChange={(e) => setDinnerTitle(e.target.value)}
                 />
@@ -176,12 +188,12 @@ export function DinnerPlanner({ recipes }: DinnerPlannerProps) {
               {/* Selected Recipes */}
               <div>
                 <div className="mb-2 text-sm font-medium">
-                  Courses ({selectedRecipes.length}) - drag to reorder
+                  {t('dinner.coursesCount', { count: selectedRecipes.length })} - {t('dinner.dragToReorder')}
                 </div>
                 <div className="min-h-[200px] space-y-2 rounded-md border-2 border-dashed p-4">
                   {selectedRecipes.length === 0 ? (
                     <p className="text-center text-sm text-muted-foreground py-8">
-                      Click recipes from the left to add them here
+                      {t('dinner.clickToAdd')}
                     </p>
                   ) : (
                     selectedRecipes.map((recipe, index) => (
@@ -222,14 +234,14 @@ export function DinnerPlanner({ recipes }: DinnerPlannerProps) {
                   className="w-full"
                 >
                   <Share2 className="mr-2 h-4 w-4" />
-                  Generate Shareable Link
+                  {t('dinner.generateLink')}
                 </Button>
               </div>
 
               {/* Share Link Display */}
               {shareLink && (
                 <div className="mt-4 rounded-md bg-muted p-4">
-                  <div className="mb-2 text-sm font-medium">Shareable Link</div>
+                  <div className="mb-2 text-sm font-medium">{t('dinner.shareableLink')}</div>
                   <div className="flex gap-2">
                     <Input value={shareLink} readOnly className="flex-1" />
                     <Button onClick={copyToClipboard} variant="outline">
@@ -241,7 +253,7 @@ export function DinnerPlanner({ recipes }: DinnerPlannerProps) {
                     </Button>
                   </div>
                   <p className="mt-2 text-xs text-muted-foreground">
-                    Share this link with others to show your dinner plan
+                    {t('dinner.shareLinkDescription')}
                   </p>
                 </div>
               )}

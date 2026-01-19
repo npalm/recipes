@@ -13,19 +13,33 @@
     "clear": "Clear",
     "next": "Next",
     "previous": "Previous",
-    "back": "Back"
+    "back": "Back",
+    "reset": "Reset",
+    "menu": "Menu"
   },
   "navigation": {
     "home": "Home",
     "recipes": "Recipes",
+    "search": "Search",
     "dinner": "Dinner Generator",
+    "planDinner": "Plan Dinner",
     "about": "About",
     "contact": "Contact"
+  },
+  "theme": {
+    "toggle": "Toggle theme",
+    "lightMode": "Light Mode",
+    "darkMode": "Dark Mode"
   },
   "footer": {
     "rightsReserved": "All rights reserved",
     "madeWith": "Made with",
-    "by": "by"
+    "by": "by",
+    "description": "A personal recipe collection stored as markdown files. Fast, simple, and always yours.",
+    "quickLinks": "Quick Links",
+    "allRecipes": "All Recipes",
+    "aboutText": "Built with Next.js, styled with Tailwind CSS. Recipes stored as markdown in git for easy version control.",
+    "madeWithLove": "Made with love and good food."
   },
   "home": {
     "title": "Welcome to Recipe Collection",
@@ -36,7 +50,16 @@
     "featuredRecipes": "Featured Recipes",
     "recentRecipes": "Recent Recipes",
     "popularRecipes": "Popular Recipes",
-    "noRecipes": "No recipes found"
+    "noRecipes": "No recipes found",
+    "personalCollection": "Personal Recipe Collection",
+    "myRecipes": "My Recipes",
+    "heroDescription": "A curated collection of my favorite recipes. Simple, delicious, and always at your fingertips.",
+    "searchRecipes": "Search Recipes",
+    "recipesCount": "{count} recipes",
+    "latestRecipes": "Latest Recipes",
+    "viewAll": "View all",
+    "noRecipesYet": "No recipes yet",
+    "addFirstRecipe": "Add your first recipe to get started!"
   },
   "recipe": {
     "title": "Recipe",
@@ -65,7 +88,31 @@
     "notFound": "Recipe not found",
     "backToRecipes": "Back to Recipes",
     "gallery": "Gallery",
-    "viewFullImage": "View full image"
+    "viewFullImage": "View full image",
+    "draft": "Draft",
+    "print": "Print",
+    "parts": "parts",
+    "tipsAndNotes": "Tips & Notes",
+    "inspiredBy": "Inspired by",
+    "created": "Created",
+    "lastUpdated": "Last updated",
+    "originalServes": "Original recipe serves {count}",
+    "clearCheckedItems": "Clear {count} checked item(s)",
+    "progress": "Progress",
+    "stepsCount": "{completed} of {total} steps",
+    "allDone": "All done!",
+    "enjoyCreation": "Enjoy your delicious creation!",
+    "noImage": "No image available",
+    "previousImage": "Previous image",
+    "nextImage": "Next image",
+    "viewImage": "View image {number}",
+    "viewFull": "View full recipe",
+    "itemsCount": "{count} item(s)",
+    "stepsCountLabel": "{count} step(s)",
+    "decreaseServings": "Decrease servings",
+    "increaseServings": "Increase servings",
+    "markStepComplete": "Mark step {number} as complete",
+    "markStepIncomplete": "Mark step {number} as incomplete"
   },
   "search": {
     "title": "Search Recipes",
@@ -87,7 +134,11 @@
     "filterByDifficulty": "Filter by Difficulty",
     "filterByCategory": "Filter by Category",
     "filterByTags": "Filter by Tags",
-    "resultsCount": "{count} recipe(s) found"
+    "resultsCount": "{count} recipe(s) found",
+    "tryAdjustingFilters": "Try adjusting your filters or search terms",
+    "clearSearch": "Clear search",
+    "filterByTime": "Filter by Time",
+    "searchDescription": "Find recipes by name, ingredients, or tags"
   },
   "dinner": {
     "title": "Dinner Generator",
@@ -104,14 +155,45 @@
     "generatedPlan": "Your Dinner Plan",
     "day": "Day",
     "noPlansGenerated": "No dinner plans generated yet",
-    "generateFirst": "Click the button above to generate dinner ideas"
+    "generateFirst": "Click the button above to generate dinner ideas",
+    "planTitle": "Plan a Dinner",
+    "planDescription": "Select recipes, arrange them in order, and create a shareable dinner plan.",
+    "availableRecipes": "Available Recipes",
+    "searchPlaceholder": "Search recipes by title or tags...",
+    "recipesCount": "{count} recipe(s)",
+    "matchingQuery": "matching \"{query}\"",
+    "noRecipesFound": "No recipes found. Try a different search term.",
+    "yourPlan": "Your Dinner Plan",
+    "dinnerTitle": "Dinner Title",
+    "dinnerTitlePlaceholder": "e.g., Summer Garden Party",
+    "coursesCount": "Courses ({count})",
+    "dragToReorder": "drag to reorder",
+    "clickToAdd": "Click recipes from the left to add them here",
+    "generateLink": "Generate Shareable Link",
+    "shareableLink": "Shareable Link",
+    "shareLinkDescription": "Share this link with others to show your dinner plan",
+    "createOwn": "Create your own dinner",
+    "courseCount": "{count} course(s)",
+    "courseNumber": "Course {number}",
+    "createYourOwnPlan": "Create Your Own Dinner Plan"
   },
   "time": {
     "minutes": "{count} min",
     "hours": "{count} hr",
     "days": "{count} day",
     "mins": "mins",
-    "hrs": "hrs"
+    "hrs": "hrs",
+    "prep": "prep",
+    "cook": "cook",
+    "quick": "Quick (< 30 min)",
+    "medium": "Medium (< 60 min)",
+    "long": "Long (< 2 hours)",
+    "anyTime": "Any time"
+  },
+  "error": {
+    "somethingWrong": "Something went wrong",
+    "unexpected": "An unexpected error occurred",
+    "tryAgain": "Try again"
   },
   "language": {
     "english": "English",
@@ -124,6 +206,7 @@
     "homeTitle": "Home - Recipe Collection",
     "recipesTitle": "Recipes - Recipe Collection",
     "dinnerTitle": "Dinner Generator - Recipe Collection",
-    "searchTitle": "Search Recipes - Recipe Collection"
+    "searchTitle": "Search Recipes - Recipe Collection",
+    "searchDescription": "Search and filter recipes by name, ingredients, or tags"
   }
 }

@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { config } from '@/lib/config';
 import { debounce } from '@/modules/shared/utils';
+import { useTranslations } from 'next-intl';
 
 interface SearchBarProps {
   initialQuery?: string;
@@ -23,6 +24,7 @@ export function SearchBar({
   placeholder = 'Search recipes...',
   autoFocus = false,
 }: SearchBarProps) {
+  const t = useTranslations();
   const [query, setQuery] = useState(initialQuery);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -57,7 +59,7 @@ export function SearchBar({
         type="search"
         value={query}
         onChange={(e) => setQuery(e.target.value)}
-        placeholder={placeholder}
+        placeholder={placeholder || t('search.placeholder')}
         className="pl-9 pr-9"
       />
       {query && (
@@ -68,7 +70,7 @@ export function SearchBar({
           onClick={handleClear}
         >
           <X className="h-4 w-4" />
-          <span className="sr-only">Clear search</span>
+          <span className="sr-only">{t('search.clearSearch')}</span>
         </Button>
       )}
     </div>

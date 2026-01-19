@@ -1,12 +1,13 @@
 import Link from 'next/link';
 import Image from 'next/image';
+import { useTranslations } from 'next-intl';
 import { Recipe } from '@/modules/recipe/domain';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Clock, ChefHat, ArrowLeft, ImageIcon } from 'lucide-react';
+import { Clock, ChefHat, ArrowLeft, ImageIcon, Home } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { formatTime, formatDate } from '@/modules/shared/utils';
-import { difficultyConfig } from '@/modules/recipe/components/RecipeCard';
+import { getDifficultyConfig } from '@/modules/recipe/components/RecipeCard';
 
 /**
  * Check if an image path is an external URL
@@ -28,25 +29,35 @@ function getImageSrc(image: string, slug: string): string {
 interface DinnerViewProps {
   title: string;
   recipes: Recipe[];
+  locale: string;
 }
 
-export function DinnerView({ title, recipes }: DinnerViewProps) {
+export function DinnerView({ title, recipes, locale }: DinnerViewProps) {
+  const t = useTranslations();
+  const difficultyConfig = getDifficultyConfig(t);
+  
   return (
     <div className="container mx-auto px-4 py-8">
       {/* Header */}
       <div className="mb-8">
-        <div className="mb-4 print:hidden">
+        <div className="mb-4 flex gap-2 print:hidden">
           <Button variant="ghost" size="sm" asChild className="-ml-3">
-            <Link href="/dinner/plan">
+            <Link href={`/${locale}`}>
+              <Home className="mr-2 h-4 w-4" />
+              {t('navigation.home')}
+            </Link>
+          </Button>
+          <Button variant="ghost" size="sm" asChild>
+            <Link href={`/${locale}/dinner/plan`}>
               <ArrowLeft className="mr-2 h-4 w-4" />
-              Create your own dinner
+              {t('dinner.createOwn')}
             </Link>
           </Button>
         </div>
         
         <h1 className="text-4xl font-bold tracking-tight md:text-5xl">{title}</h1>
         <p className="mt-2 text-lg text-muted-foreground">
-          {recipes.length} {recipes.length === 1 ? 'course' : 'courses'}
+          {t('dinner.courseCount', { count: recipes.length })}
         </p>
       </div>
 
@@ -73,7 +84,7 @@ export function DinnerView({ title, recipes }: DinnerViewProps) {
                     </div>
                   </div>
                   {/* Mobile course title hint */}
-                  <span className="text-sm font-medium text-muted-foreground md:hidden">Course {index + 1}</span>
+                  <span className="text-sm font-medium text-muted-foreground md:hidden">{t('dinner.courseNumber', { number: index + 1 })}</span>
                 </div>
 
                 {/* Card Content */}
@@ -82,7 +93,7 @@ export function DinnerView({ title, recipes }: DinnerViewProps) {
                     <div className="flex flex-col md:flex-row min-h-[200px] md:min-h-[220px]">
                       {/* Image Section */}
                       <div className="relative w-full md:w-72 lg:w-80 shrink-0">
-                        <Link href={`/recipe/${recipe.slug}`} className="block h-full">
+                        <Link href={`/${locale}/recipe/${recipe.slug}`} className="block h-full">
                           {recipe.images.length > 0 ? (
                             <div className="relative aspect-[16/9] md:aspect-auto md:h-full w-full overflow-hidden bg-muted md:rounded-l-xl">
                               <Image
@@ -115,7 +126,7 @@ export function DinnerView({ title, recipes }: DinnerViewProps) {
                       <div className="flex-1 p-5 md:p-6 flex flex-col justify-center">
                         {/* Title */}
                         <Link
-                          href={`/recipe/${recipe.slug}`}
+                          href={`/${locale}/recipe/${recipe.slug}`}
                           className="group/title inline-block"
                         >
                           <h2 className="mb-2 text-2xl font-bold tracking-tight transition-colors group-hover/title:text-primary">
@@ -135,12 +146,12 @@ export function DinnerView({ title, recipes }: DinnerViewProps) {
                           <div className="flex items-center gap-1.5 text-blue-500">
                             <Clock className="h-4 w-4" />
                             <span className="font-medium">{formatTime(recipe.prepTime)}</span>
-                            <span className="text-muted-foreground">prep</span>
+                            <span className="text-muted-foreground">{t('time.prep')}</span>
                           </div>
                           <div className="flex items-center gap-1.5 text-orange-500">
                             <Clock className="h-4 w-4" />
                             <span className="font-medium">{formatTime(recipe.cookTime)}</span>
-                            <span className="text-muted-foreground">cook</span>
+                            <span className="text-muted-foreground">{t('time.cook')}</span>
                           </div>
                           <div className="flex items-center gap-1.5">
                             <ChefHat className={`h-4 w-4 ${difficulty.className.includes('emerald') ? 'text-emerald-600' : difficulty.className.includes('amber') ? 'text-amber-600' : 'text-rose-600'}`} />
@@ -165,10 +176,10 @@ export function DinnerView({ title, recipes }: DinnerViewProps) {
 
                         {/* View Recipe Link */}
                         <Link
-                          href={`/recipe/${recipe.slug}`}
+                          href={`/${locale}/recipe/${recipe.slug}`}
                           className="inline-flex items-center gap-1 text-sm font-medium text-primary transition-all hover:gap-2 hover:underline"
                         >
-                          View full recipe
+                          {t('recipe.viewFull')}
                           <span className="transition-transform">→</span>
                         </Link>
                       </div>
@@ -184,7 +195,7 @@ export function DinnerView({ title, recipes }: DinnerViewProps) {
       {/* Footer */}
       <div className="mt-12 text-center print:hidden">
         <Button asChild>
-          <Link href="/dinner/plan">Create Your Own Dinner Plan</Link>
+          <Link href={`/${locale}/dinner/plan`}>{t('dinner.createYourOwnPlan')}</Link>
         </Button>
       </div>
     </div>

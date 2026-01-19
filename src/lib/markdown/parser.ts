@@ -136,10 +136,10 @@ function parseInstructions(markdown: string | undefined): string[] {
 }
 
 /**
- * Check if content has a ## Components section
+ * Check if content has a ## Components section (English or Dutch)
  */
 function hasComponentsSection(content: string): boolean {
-  return /^##\s+Components\s*$/m.test(content);
+  return /^##\s+(Components|Onderdelen)\s*$/m.test(content);
 }
 
 /**
@@ -162,13 +162,13 @@ function extractSubSection(componentContent: string, sectionName: string): strin
  * Parse the ## Components section into individual components
  */
 function parseComponentsSection(content: string): ParsedRecipeComponent[] {
-  // Find the Components section
+  // Find the Components section (English or Dutch)
   const sections = content.split(/^(##\s+.+)$/m);
   let componentsContent = '';
   
   for (let i = 0; i < sections.length; i++) {
     const heading = sections[i];
-    if (heading && /^##\s+Components\s*$/i.test(heading)) {
+    if (heading && /^##\s+(Components|Onderdelen)\s*$/i.test(heading)) {
       // Get content until next ## heading
       componentsContent = sections[i + 1] || '';
       break;
@@ -191,8 +191,8 @@ function parseComponentsSection(content: string): ParsedRecipeComponent[] {
         
         components.push({
           name,
-          ingredientsMarkdown: extractSubSection(componentBody, 'Ingredients'),
-          instructionsMarkdown: extractSubSection(componentBody, 'Instructions'),
+          ingredientsMarkdown: extractSubSection(componentBody, 'Ingredients') || extractSubSection(componentBody, 'Ingrediënten'),
+          instructionsMarkdown: extractSubSection(componentBody, 'Instructions') || extractSubSection(componentBody, 'Bereiding'),
         });
       }
     }
@@ -257,10 +257,10 @@ export function parseRecipeMarkdown(
       };
     }
 
-    // Parse simple recipe (original format)
-    const ingredientsMarkdown = extractSection(bodyContent, 'Ingredients') ?? '';
-    const instructionsMarkdown = extractSection(bodyContent, 'Instructions') ?? '';
-    const notesMarkdown = extractSection(bodyContent, 'Notes');
+    // Parse simple recipe (original format) - support both English and Dutch
+    const ingredientsMarkdown = extractSection(bodyContent, 'Ingredients') || extractSection(bodyContent, 'Ingrediënten') || '';
+    const instructionsMarkdown = extractSection(bodyContent, 'Instructions') || extractSection(bodyContent, 'Bereiding') || '';
+    const notesMarkdown = extractSection(bodyContent, 'Notes') || extractSection(bodyContent, 'Notities');
 
     return {
       metadata,

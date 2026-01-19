@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 import { Layout } from '@/components/layout';
 import { RecipeGrid } from '@/modules/recipe/components';
 import { SearchBar, FilterPanel } from '@/modules/search/components';
@@ -20,6 +21,7 @@ export function SearchPageClient({
 }: SearchPageClientProps) {
   const searchParams = useSearchParams();
   const initialTag = searchParams.get('tag');
+  const t = useTranslations();
 
   const [query, setQuery] = useState('');
   const [filters, setFilters] = useState<RecipeFilters>(() => ({
@@ -57,10 +59,10 @@ export function SearchPageClient({
     <Layout>
       <div className="mb-8">
         <h1 className="text-3xl font-bold tracking-tight md:text-4xl">
-          Search Recipes
+          {t('search.title')}
         </h1>
         <p className="mt-2 text-muted-foreground">
-          Find recipes by name, ingredients, or tags
+          {t('search.searchDescription')}
         </p>
       </div>
 
@@ -68,7 +70,7 @@ export function SearchPageClient({
         {/* Filters sidebar */}
         <aside className="hidden lg:block">
           <div className="sticky top-24">
-            <h2 className="mb-4 font-semibold">Filters</h2>
+            <h2 className="mb-4 font-semibold">{t('search.filters')}</h2>
             <FilterPanel
               filters={filters}
               availableTags={availableTags}
@@ -89,7 +91,7 @@ export function SearchPageClient({
 
           {/* Results count */}
           <p className="mb-4 text-sm text-muted-foreground">
-            {results.length} {results.length === 1 ? 'recipe' : 'recipes'} found
+            {t('search.resultsCount', { count: results.length })}
           </p>
 
           {/* Recipe grid */}

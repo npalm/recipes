@@ -13,19 +13,33 @@
     "clear": "Wissen",
     "next": "Volgende",
     "previous": "Vorige",
-    "back": "Terug"
+    "back": "Terug",
+    "reset": "Herstellen",
+    "menu": "Menu"
   },
   "navigation": {
     "home": "Home",
     "recipes": "Recepten",
+    "search": "Zoeken",
     "dinner": "Diner Generator",
+    "planDinner": "Plan Diner",
     "about": "Over",
     "contact": "Contact"
+  },
+  "theme": {
+    "toggle": "Thema wisselen",
+    "lightMode": "Lichte Modus",
+    "darkMode": "Donkere Modus"
   },
   "footer": {
     "rightsReserved": "Alle rechten voorbehouden",
     "madeWith": "Gemaakt met",
-    "by": "door"
+    "by": "door",
+    "description": "Een persoonlijke receptencollectie opgeslagen als markdown-bestanden. Snel, eenvoudig en altijd van jou.",
+    "quickLinks": "Snelle Links",
+    "allRecipes": "Alle Recepten",
+    "aboutText": "Gebouwd met Next.js, gestyled met Tailwind CSS. Recepten opgeslagen als markdown in git voor eenvoudige versiebeheer.",
+    "madeWithLove": "Gemaakt met liefde en lekker eten."
   },
   "home": {
     "title": "Welkom bij Recepten Collectie",
@@ -36,7 +50,16 @@
     "featuredRecipes": "Uitgelichte Recepten",
     "recentRecipes": "Recente Recepten",
     "popularRecipes": "Populaire Recepten",
-    "noRecipes": "Geen recepten gevonden"
+    "noRecipes": "Geen recepten gevonden",
+    "personalCollection": "Persoonlijke Recepten Collectie",
+    "myRecipes": "Mijn Recepten",
+    "heroDescription": "Een zorgvuldig samengestelde collectie van mijn favoriete recepten. Simpel, heerlijk en altijd bij de hand.",
+    "searchRecipes": "Recepten Zoeken",
+    "recipesCount": "{count} recepten",
+    "latestRecipes": "Laatste Recepten",
+    "viewAll": "Bekijk alles",
+    "noRecipesYet": "Nog geen recepten",
+    "addFirstRecipe": "Voeg je eerste recept toe om te beginnen!"
   },
   "recipe": {
     "title": "Recept",
@@ -65,7 +88,31 @@
     "notFound": "Recept niet gevonden",
     "backToRecipes": "Terug naar Recepten",
     "gallery": "Galerij",
-    "viewFullImage": "Volledig beeld bekijken"
+    "viewFullImage": "Volledig beeld bekijken",
+    "draft": "Concept",
+    "print": "Afdrukken",
+    "parts": "onderdelen",
+    "tipsAndNotes": "Tips & Notities",
+    "inspiredBy": "Geïnspireerd door",
+    "created": "Aangemaakt",
+    "lastUpdated": "Laatst bijgewerkt",
+    "originalServes": "Origineel recept voor {count} personen",
+    "clearCheckedItems": "Wis {count} aangevinkte item(s)",
+    "progress": "Voortgang",
+    "stepsCount": "{completed} van {total} stappen",
+    "allDone": "Klaar!",
+    "enjoyCreation": "Geniet van je heerlijke creatie!",
+    "noImage": "Geen afbeelding beschikbaar",
+    "previousImage": "Vorige afbeelding",
+    "nextImage": "Volgende afbeelding",
+    "viewImage": "Bekijk afbeelding {number}",
+    "viewFull": "Bekijk volledig recept",
+    "itemsCount": "{count} item(s)",
+    "stepsCountLabel": "{count} stap(pen)",
+    "decreaseServings": "Verlaag porties",
+    "increaseServings": "Verhoog porties",
+    "markStepComplete": "Markeer stap {number} als voltooid",
+    "markStepIncomplete": "Markeer stap {number} als niet voltooid"
   },
   "search": {
     "title": "Recepten Zoeken",
@@ -87,7 +134,11 @@
     "filterByDifficulty": "Filteren op Moeilijkheidsgraad",
     "filterByCategory": "Filteren op Categorie",
     "filterByTags": "Filteren op Tags",
-    "resultsCount": "{count} recept(en) gevonden"
+    "resultsCount": "{count} recept(en) gevonden",
+    "tryAdjustingFilters": "Probeer je filters of zoektermen aan te passen",
+    "clearSearch": "Zoekopdracht wissen",
+    "filterByTime": "Filteren op Tijd",
+    "searchDescription": "Zoek recepten op naam, ingrediënten of tags"
   },
   "dinner": {
     "title": "Diner Generator",
@@ -104,14 +155,45 @@
     "generatedPlan": "Jouw Diner Plan",
     "day": "Dag",
     "noPlansGenerated": "Nog geen diner plannen gegenereerd",
-    "generateFirst": "Klik op de knop hierboven om diner ideeën te genereren"
+    "generateFirst": "Klik op de knop hierboven om diner ideeën te genereren",
+    "planTitle": "Plan een Diner",
+    "planDescription": "Selecteer recepten, rangschik ze in volgorde en maak een deelbaar diner plan.",
+    "availableRecipes": "Beschikbare Recepten",
+    "searchPlaceholder": "Zoek recepten op titel of tags...",
+    "recipesCount": "{count} recept(en)",
+    "matchingQuery": "die overeenkomen met \"{query}\"",
+    "noRecipesFound": "Geen recepten gevonden. Probeer een andere zoekterm.",
+    "yourPlan": "Jouw Diner Plan",
+    "dinnerTitle": "Diner Titel",
+    "dinnerTitlePlaceholder": "bijv., Zomer Tuinfeest",
+    "coursesCount": "Gangen ({count})",
+    "dragToReorder": "sleep om te herschikken",
+    "clickToAdd": "Klik op recepten aan de linkerkant om ze hier toe te voegen",
+    "generateLink": "Genereer Deelbare Link",
+    "shareableLink": "Deelbare Link",
+    "shareLinkDescription": "Deel deze link met anderen om jouw diner plan te tonen",
+    "createOwn": "Maak je eigen diner",
+    "courseCount": "{count} gang(en)",
+    "courseNumber": "Gang {number}",
+    "createYourOwnPlan": "Maak Je Eigen Diner Plan"
   },
   "time": {
     "minutes": "{count} min",
     "hours": "{count} uur",
     "days": "{count} dag",
     "mins": "min",
-    "hrs": "uur"
+    "hrs": "uur",
+    "prep": "voorbereiden",
+    "cook": "koken",
+    "quick": "Snel (< 30 min)",
+    "medium": "Gemiddeld (< 60 min)",
+    "long": "Lang (< 2 uur)",
+    "anyTime": "Alle tijden"
+  },
+  "error": {
+    "somethingWrong": "Er is iets misgegaan",
+    "unexpected": "Er is een onverwachte fout opgetreden",
+    "tryAgain": "Probeer opnieuw"
   },
   "language": {
     "english": "English",
@@ -124,6 +206,7 @@
     "homeTitle": "Home - Recepten Collectie",
     "recipesTitle": "Recepten - Recepten Collectie",
     "dinnerTitle": "Diner Generator - Recepten Collectie",
-    "searchTitle": "Recepten Zoeken - Recepten Collectie"
+    "searchTitle": "Recepten Zoeken - Recepten Collectie",
+    "searchDescription": "Zoek en filter recepten op naam, ingrediënten of tags"
   }
 }

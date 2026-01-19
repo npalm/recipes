@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { ChevronDown, ChevronRight, Minus, Plus, RotateCcw, Users, Check } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Ingredient, RecipeComponent } from '@/modules/recipe/domain';
@@ -23,6 +24,7 @@ export function ComponentIngredientList({
   components,
   defaultServings,
 }: ComponentIngredientsProps) {
+  const t = useTranslations();
   const [servings, setServings] = useState(defaultServings);
   const [checkedItems, setCheckedItems] = useState<Set<string>>(new Set());
   const [expandedComponents, setExpandedComponents] = useState<Set<string>>(
@@ -78,7 +80,7 @@ export function ComponentIngredientList({
       <div className="mb-6 rounded-xl bg-muted/50 p-4">
         <div className="mb-2 flex items-center gap-2 text-sm font-medium">
           <Users className="h-4 w-4 text-primary" />
-          Servings
+          {t('recipe.servings')}
         </div>
         <div className="flex items-center justify-between gap-4">
           <div className="flex items-center gap-2">
@@ -88,7 +90,7 @@ export function ComponentIngredientList({
               className="h-9 w-9 rounded-full"
               onClick={decrement}
               disabled={servings <= config.minServings}
-              aria-label="Decrease servings"
+              aria-label={t('recipe.decreaseServings')}
             >
               <Minus className="h-4 w-4" />
             </Button>
@@ -99,7 +101,7 @@ export function ComponentIngredientList({
               className="h-9 w-9 rounded-full"
               onClick={increment}
               disabled={servings >= config.maxServings}
-              aria-label="Increase servings"
+              aria-label={t('recipe.increaseServings')}
             >
               <Plus className="h-4 w-4" />
             </Button>
@@ -112,13 +114,13 @@ export function ComponentIngredientList({
               className="text-muted-foreground"
             >
               <RotateCcw className="mr-1 h-3 w-3" />
-              Reset
+              {t('common.reset')}
             </Button>
           )}
         </div>
         {isModified && (
           <p className="mt-2 text-xs text-muted-foreground">
-            Original recipe serves {defaultServings}
+            {t('recipe.originalServes', { count: defaultServings })}
           </p>
         )}
       </div>
@@ -153,8 +155,7 @@ export function ComponentIngredientList({
                   )}
                   <span className="font-semibold">{component.name}</span>
                   <span className="text-sm text-muted-foreground">
-                    ({component.ingredients.length} item
-                    {component.ingredients.length !== 1 ? 's' : ''})
+                    {t('recipe.itemsCount', { count: component.ingredients.length })}
                   </span>
                 </div>
                 {componentCheckedCount > 0 && (
@@ -236,8 +237,7 @@ export function ComponentIngredientList({
             onClick={() => setCheckedItems(new Set())}
             className="w-full text-muted-foreground"
           >
-            Clear {checkedItems.size} checked item
-            {checkedItems.size !== 1 ? 's' : ''}
+            {t('recipe.clearCheckedItems', { count: checkedItems.size })}
           </Button>
         </div>
       )}
@@ -253,6 +253,7 @@ interface ComponentInstructionsProps {
  * Instruction list grouped by components with step completion tracking
  */
 export function ComponentInstructionList({ components }: ComponentInstructionsProps) {
+  const t = useTranslations();
   const [completedSteps, setCompletedSteps] = useState<Set<string>>(new Set());
   const [expandedComponents, setExpandedComponents] = useState<Set<string>>(
     new Set(components.map((c) => c.name))
@@ -266,7 +267,7 @@ export function ComponentInstructionList({ components }: ComponentInstructionsPr
 
   if (totalSteps === 0) {
     return (
-      <p className="text-muted-foreground">No instructions available.</p>
+      <p className="text-muted-foreground">{t('recipe.noInstructions')}</p>
     );
   }
 
@@ -302,9 +303,9 @@ export function ComponentInstructionList({ components }: ComponentInstructionsPr
       {completedSteps.size > 0 && (
         <div className="mb-6">
           <div className="mb-2 flex items-center justify-between text-sm">
-            <span className="font-medium">Progress</span>
+            <span className="font-medium">{t('recipe.progress')}</span>
             <span className="text-muted-foreground">
-              {completedSteps.size} of {totalSteps} steps
+              {t('recipe.stepsCount', { completed: completedSteps.size, total: totalSteps })}
             </span>
           </div>
           <div className="h-2 overflow-hidden rounded-full bg-muted">
@@ -343,8 +344,7 @@ export function ComponentInstructionList({ components }: ComponentInstructionsPr
                   )}
                   <span className="font-semibold">{component.name}</span>
                   <span className="text-sm text-muted-foreground">
-                    ({component.instructions.length} step
-                    {component.instructions.length !== 1 ? 's' : ''})
+                    {t('recipe.stepsCountLabel', { count: component.instructions.length })}
                   </span>
                 </div>
                 <div className="flex items-center gap-2">
@@ -383,8 +383,8 @@ export function ComponentInstructionList({ components }: ComponentInstructionsPr
                           }`}
                           aria-label={
                             isCompleted
-                              ? `Mark step ${index + 1} as incomplete`
-                              : `Mark step ${index + 1} as complete`
+                              ? t('recipe.markStepIncomplete', { number: index + 1 })
+                              : t('recipe.markStepComplete', { number: index + 1 })
                           }
                         >
                           {isCompleted ? (
@@ -417,10 +417,10 @@ export function ComponentInstructionList({ components }: ComponentInstructionsPr
         <div className="mt-8 rounded-xl bg-green-50 p-6 text-center dark:bg-green-950/20">
           <div className="mb-2 text-4xl">🎉</div>
           <h3 className="text-lg font-semibold text-green-800 dark:text-green-200">
-            All done!
+            {t('recipe.allDone')}
           </h3>
           <p className="text-sm text-green-700 dark:text-green-300">
-            Enjoy your delicious creation!
+            {t('recipe.enjoyCreation')}
           </p>
         </div>
       )}

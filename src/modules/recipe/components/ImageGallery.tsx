@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { ChevronLeft, ChevronRight, ImageIcon } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/button';
 import { config } from '@/lib/config';
 
@@ -39,6 +40,7 @@ export function ImageGallery({
   title,
   autoRotate = true,
 }: ImageGalleryProps) {
+  const t = useTranslations();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
 
@@ -66,7 +68,7 @@ export function ImageGallery({
       <div className="flex aspect-[16/9] w-full items-center justify-center bg-gradient-to-br from-muted to-muted/50">
         <div className="text-center">
           <ImageIcon className="mx-auto mb-2 h-12 w-12 text-muted-foreground/50" />
-          <span className="text-sm text-muted-foreground">No image available</span>
+          <span className="text-sm text-muted-foreground">{t('recipe.noImage')}</span>
         </div>
       </div>
     );
@@ -102,7 +104,7 @@ export function ImageGallery({
             size="icon"
             onClick={goToPrevious}
             className="absolute left-4 top-1/2 h-10 w-10 -translate-y-1/2 rounded-full bg-white/90 text-gray-800 opacity-0 shadow-lg transition-all hover:bg-white group-hover:opacity-100"
-            aria-label="Previous image"
+            aria-label={t('recipe.previousImage')}
           >
             <ChevronLeft className="h-5 w-5" />
           </Button>
@@ -111,7 +113,7 @@ export function ImageGallery({
             size="icon"
             onClick={goToNext}
             className="absolute right-4 top-1/2 h-10 w-10 -translate-y-1/2 rounded-full bg-white/90 text-gray-800 opacity-0 shadow-lg transition-all hover:bg-white group-hover:opacity-100"
-            aria-label="Next image"
+            aria-label={t('recipe.nextImage')}
           >
             <ChevronRight className="h-5 w-5" />
           </Button>
@@ -130,7 +132,7 @@ export function ImageGallery({
                   ? 'w-6 bg-white'
                   : 'bg-white/50 hover:bg-white/75'
               }`}
-              aria-label={`View image ${index + 1}`}
+              aria-label={t('recipe.viewImage', { number: index + 1 })}
             />
           ))}
         </div>

@@ -21,20 +21,20 @@ function decodeDinnerData(encoded: string): DinnerData | null {
 export default async function DinnerPage({
   params,
 }: {
-  params: Promise<{ encoded: string }>;
+  params: Promise<{ encoded: string; locale: string }>;
 }) {
-  const { encoded } = await params;
+  const { encoded, locale } = await params;
   const dinnerData = decodeDinnerData(encoded);
 
   if (!dinnerData) {
     notFound();
   }
 
-  // Fetch all recipes
+  // Fetch all recipes with locale
   const recipes = await Promise.all(
     dinnerData.recipes.map(async (slug) => {
       try {
-        return await getRecipeBySlug(slug);
+        return await getRecipeBySlug(slug, locale);
       } catch {
         return null;
       }
@@ -48,5 +48,5 @@ export default async function DinnerPage({
     notFound();
   }
 
-  return <DinnerView title={dinnerData.title} recipes={validRecipes} />;
+  return <DinnerView title={dinnerData.title} recipes={validRecipes} locale={locale} />;
 }

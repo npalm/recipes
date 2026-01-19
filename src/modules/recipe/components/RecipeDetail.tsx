@@ -13,6 +13,7 @@ import {
   Flame,
   Layers,
 } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
@@ -23,7 +24,7 @@ import { IngredientList } from './IngredientList';
 import { InstructionList } from './InstructionList';
 import { ComponentIngredientList, ComponentInstructionList } from './ComponentList';
 import { formatTime, formatDate } from '@/modules/shared/utils';
-import { difficultyConfig } from './RecipeCard';
+import { getDifficultyConfig } from './RecipeCard';
 
 interface RecipeDetailProps {
   recipe: Recipe;
@@ -33,7 +34,8 @@ interface RecipeDetailProps {
  * Full recipe detail view
  */
 export function RecipeDetail({ recipe }: RecipeDetailProps) {
-  const difficulty = difficultyConfig[recipe.difficulty];
+  const t = useTranslations();
+  const difficulty = getDifficultyConfig(t)[recipe.difficulty];
 
   const handlePrint = () => {
     window.print();
@@ -46,7 +48,7 @@ export function RecipeDetail({ recipe }: RecipeDetailProps) {
         <Button variant="ghost" size="sm" asChild className="-ml-3">
           <Link href="/">
             <ArrowLeft className="mr-2 h-4 w-4" />
-            Back to recipes
+            {t('recipe.backToRecipes')}
           </Link>
         </Button>
       </div>
@@ -66,7 +68,7 @@ export function RecipeDetail({ recipe }: RecipeDetailProps) {
             <div className="flex-1">
               <div className="mb-3 flex flex-wrap items-center gap-2">
                 {recipe.status === 'draft' && (
-                  <Badge className="bg-yellow-500 text-white">Draft</Badge>
+                  <Badge className="bg-yellow-500 text-white">{t('recipe.draft')}</Badge>
                 )}
                 <Badge
                   variant="secondary"
@@ -87,7 +89,7 @@ export function RecipeDetail({ recipe }: RecipeDetailProps) {
               className="hidden print:hidden md:flex"
             >
               <Printer className="mr-2 h-4 w-4" />
-              Print
+              {t('recipe.print')}
             </Button>
           </div>
 
@@ -106,7 +108,7 @@ export function RecipeDetail({ recipe }: RecipeDetailProps) {
               </div>
               <div>
                 <p className="text-2xl font-bold">{recipe.servings}</p>
-                <p className="text-xs text-muted-foreground">Servings</p>
+                <p className="text-xs text-muted-foreground">{t('recipe.servings')}</p>
               </div>
             </div>
             <div className="flex items-center gap-3 rounded-xl bg-muted/50 p-4">
@@ -115,7 +117,7 @@ export function RecipeDetail({ recipe }: RecipeDetailProps) {
               </div>
               <div>
                 <p className="text-2xl font-bold">{formatTime(recipe.prepTime)}</p>
-                <p className="text-xs text-muted-foreground">Prep time</p>
+                <p className="text-xs text-muted-foreground">{t('recipe.prepTime')}</p>
               </div>
             </div>
             <div className="flex items-center gap-3 rounded-xl bg-muted/50 p-4">
@@ -124,7 +126,7 @@ export function RecipeDetail({ recipe }: RecipeDetailProps) {
               </div>
               <div>
                 <p className="text-2xl font-bold">{formatTime(recipe.cookTime)}</p>
-                <p className="text-xs text-muted-foreground">Cook time</p>
+                <p className="text-xs text-muted-foreground">{t('recipe.cookTime')}</p>
               </div>
             </div>
             <div className="flex items-center gap-3 rounded-xl bg-muted/50 p-4">
@@ -135,7 +137,7 @@ export function RecipeDetail({ recipe }: RecipeDetailProps) {
                 <p className="text-2xl font-bold">
                   {formatTime(recipe.totalTime ?? recipe.prepTime + recipe.cookTime)}
                 </p>
-                <p className="text-xs text-muted-foreground">Total time</p>
+                <p className="text-xs text-muted-foreground">{t('recipe.totalTime')}</p>
               </div>
             </div>
           </div>
@@ -168,9 +170,9 @@ export function RecipeDetail({ recipe }: RecipeDetailProps) {
               <CardContent className="p-6">
                 <h2 className="mb-6 flex items-center gap-2 text-xl font-semibold">
                   <Layers className="h-5 w-5 text-primary" />
-                  Ingredients
+                  {t('recipe.ingredients')}
                   <Badge variant="secondary" className="ml-auto">
-                    {recipe.components.length} parts
+                    {t('recipe.parts', { count: recipe.components.length })}
                   </Badge>
                 </h2>
                 <ComponentIngredientList
@@ -186,9 +188,9 @@ export function RecipeDetail({ recipe }: RecipeDetailProps) {
             <Card className="border-0 shadow-sm">
               <CardContent className="p-6 md:p-8">
                 <h2 className="mb-6 flex items-center gap-2 text-xl font-semibold">
-                  Instructions
+                  {t('recipe.instructions')}
                   <Badge variant="secondary" className="ml-2">
-                    {recipe.components.length} parts
+                    {t('recipe.parts', { count: recipe.components.length })}
                   </Badge>
                 </h2>
                 <ComponentInstructionList components={recipe.components} />
@@ -201,7 +203,7 @@ export function RecipeDetail({ recipe }: RecipeDetailProps) {
                 <CardContent className="p-6">
                   <h2 className="mb-4 flex items-center gap-2 text-lg font-semibold text-amber-800 dark:text-amber-200">
                     <span className="text-xl">💡</span>
-                    Tips & Notes
+                    {t('recipe.tipsAndNotes')}
                   </h2>
                   <ul className="space-y-2 text-sm leading-relaxed text-amber-900/80 dark:text-amber-100/80">
                     {recipe.notes.split('\n').filter(line => line.trim()).map((note, index) => (
@@ -219,7 +221,7 @@ export function RecipeDetail({ recipe }: RecipeDetailProps) {
             {recipe.sources.length > 0 && (
               <Card className="mt-6 border-0 shadow-sm">
                 <CardContent className="p-6">
-                  <h2 className="mb-4 text-lg font-semibold">Inspired by</h2>
+                  <h2 className="mb-4 text-lg font-semibold">{t('recipe.inspiredBy')}</h2>
                   <ul className="space-y-2">
                     {recipe.sources.map((source, index) => (
                       <li key={index}>
@@ -249,7 +251,7 @@ export function RecipeDetail({ recipe }: RecipeDetailProps) {
               <CardContent className="p-6">
                 <h2 className="mb-6 flex items-center gap-2 text-xl font-semibold">
                   <ChefHat className="h-5 w-5 text-primary" />
-                  Ingredients
+                  {t('recipe.ingredients')}
                 </h2>
                 <IngredientList
                   ingredients={recipe.ingredients}
@@ -263,7 +265,7 @@ export function RecipeDetail({ recipe }: RecipeDetailProps) {
           <div className="lg:col-span-8">
             <Card className="border-0 shadow-sm">
               <CardContent className="p-6 md:p-8">
-                <h2 className="mb-6 text-xl font-semibold">Instructions</h2>
+                <h2 className="mb-6 text-xl font-semibold">{t('recipe.instructions')}</h2>
                 <InstructionList instructions={recipe.instructions} />
               </CardContent>
             </Card>
@@ -274,7 +276,7 @@ export function RecipeDetail({ recipe }: RecipeDetailProps) {
                 <CardContent className="p-6">
                   <h2 className="mb-4 flex items-center gap-2 text-lg font-semibold text-amber-800 dark:text-amber-200">
                     <span className="text-xl">💡</span>
-                    Tips & Notes
+                    {t('recipe.tipsAndNotes')}
                   </h2>
                   <ul className="space-y-2 text-sm leading-relaxed text-amber-900/80 dark:text-amber-100/80">
                     {recipe.notes.split('\n').filter(line => line.trim()).map((note, index) => (
@@ -292,7 +294,7 @@ export function RecipeDetail({ recipe }: RecipeDetailProps) {
             {recipe.sources.length > 0 && (
               <Card className="mt-6 border-0 shadow-sm">
                 <CardContent className="p-6">
-                  <h2 className="mb-4 text-lg font-semibold">Inspired by</h2>
+                  <h2 className="mb-4 text-lg font-semibold">{t('recipe.inspiredBy')}</h2>
                   <ul className="space-y-2">
                     {recipe.sources.map((source, index) => (
                       <li key={index}>
@@ -320,16 +322,16 @@ export function RecipeDetail({ recipe }: RecipeDetailProps) {
         <div className="flex items-center gap-4">
           <span className="flex items-center gap-1">
             <Calendar className="h-4 w-4" />
-            Created: {formatDate(recipe.createdAt)}
+            {t('recipe.created')}: {formatDate(recipe.createdAt)}
           </span>
           {recipe.updatedAt && (
-            <span>Last updated: {formatDate(recipe.updatedAt)}</span>
+            <span>{t('recipe.lastUpdated')}: {formatDate(recipe.updatedAt)}</span>
           )}
         </div>
         <Button variant="outline" size="sm" asChild className="print:hidden">
           <Link href="/">
             <ArrowLeft className="mr-2 h-4 w-4" />
-            Back to recipes
+            {t('recipe.backToRecipes')}
           </Link>
         </Button>
       </div>

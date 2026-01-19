@@ -1,11 +1,12 @@
 'use client';
 
-import { useLocale } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { useRouter, usePathname } from 'next/navigation';
 import { locales, type Locale } from '@/i18n';
 
 export default function LanguageSwitcher() {
   const locale = useLocale();
+  const t = useTranslations('language');
   const router = useRouter();
   const pathname = usePathname();
 
@@ -15,6 +16,10 @@ export default function LanguageSwitcher() {
     
     // Navigate to the same path with the new locale
     router.push(`/${newLocale}${pathnameWithoutLocale}`);
+  };
+
+  const getLanguageName = (loc: Locale): string => {
+    return loc === 'en' ? t('english') : t('dutch');
   };
 
   return (
@@ -28,7 +33,7 @@ export default function LanguageSwitcher() {
               ? 'bg-blue-600 text-white'
               : 'bg-gray-200 text-gray-700 hover:bg-gray-300 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600'
           }`}
-          aria-label={`Switch to ${loc === 'en' ? 'English' : 'Nederlands'}`}
+          aria-label={t('switchTo', { language: getLanguageName(loc) })}
         >
           {loc.toUpperCase()}
         </button>

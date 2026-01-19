@@ -6,6 +6,7 @@ import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
 import { Difficulty, RecipeFilters } from '@/modules/recipe/domain';
 import { config } from '@/lib/config';
+import { useTranslations } from 'next-intl';
 
 interface FilterPanelProps {
   filters: RecipeFilters;
@@ -21,6 +22,7 @@ export function FilterPanel({
   availableTags,
   onFiltersChange,
 }: FilterPanelProps) {
+  const t = useTranslations();
   const difficulties: Difficulty[] = ['easy', 'medium', 'hard'];
 
   const toggleTag = (tag: string) => {
@@ -63,13 +65,13 @@ export function FilterPanel({
       {/* Clear filters */}
       {hasActiveFilters && (
         <Button variant="ghost" size="sm" onClick={clearFilters} className="w-full">
-          Clear all filters
+          {t('search.clearFilters')}
         </Button>
       )}
 
       {/* Difficulty filter */}
       <div>
-        <Label className="mb-3 block text-sm font-medium">Difficulty</Label>
+        <Label className="mb-3 block text-sm font-medium">{t('search.filterByDifficulty')}</Label>
         <div className="flex flex-wrap gap-2">
           {difficulties.map((difficulty) => {
             const isActive = filters.difficulty?.includes(difficulty);
@@ -80,7 +82,7 @@ export function FilterPanel({
                 className="cursor-pointer capitalize"
                 onClick={() => toggleDifficulty(difficulty)}
               >
-                {difficulty}
+                {t(`recipe.difficultyLevels.${difficulty}`)}
               </Badge>
             );
           })}
@@ -91,13 +93,20 @@ export function FilterPanel({
 
       {/* Time filter */}
       <div>
-        <Label className="mb-3 block text-sm font-medium">Total Time</Label>
+        <Label className="mb-3 block text-sm font-medium">{t('search.filterByTime')}</Label>
         <div className="flex flex-wrap gap-2">
           {config.timeFilters.map(({ label, value }) => {
             const isActive =
               value === Infinity
                 ? filters.maxTotalTime === undefined
                 : filters.maxTotalTime === value;
+            
+            // Map time filter values to translation keys
+            let translationKey = 'time.anyTime';
+            if (value === 30) translationKey = 'time.quick';
+            else if (value === 60) translationKey = 'time.medium';
+            else if (value === 120) translationKey = 'time.long';
+            
             return (
               <Badge
                 key={label}
@@ -105,7 +114,7 @@ export function FilterPanel({
                 className="cursor-pointer"
                 onClick={() => setMaxTime(value)}
               >
-                {label}
+                {t(translationKey)}
               </Badge>
             );
           })}
@@ -117,7 +126,7 @@ export function FilterPanel({
       {/* Tags filter */}
       {availableTags.length > 0 && (
         <div>
-          <Label className="mb-3 block text-sm font-medium">Tags</Label>
+          <Label className="mb-3 block text-sm font-medium">{t('search.filterByTags')}</Label>
           <div className="flex flex-wrap gap-2">
             {availableTags.map((tag) => {
               const isActive = filters.tags?.includes(tag);
@@ -147,6 +156,7 @@ export function InlineFilters({
   availableTags,
   onFiltersChange,
 }: FilterPanelProps) {
+  const t = useTranslations();
   const hasActiveFilters =
     (filters.tags && filters.tags.length > 0) ||
     (filters.difficulty && filters.difficulty.length > 0) ||
@@ -160,7 +170,7 @@ export function InlineFilters({
   return (
     <div className="flex items-center gap-2 overflow-x-auto pb-2">
       <Badge variant="outline" className="flex-shrink-0">
-        Filters {activeCount > 0 && `(${activeCount})`}
+        {t('search.filters')} {activeCount > 0 && `(${activeCount})`}
       </Badge>
       
       {/* Show active filters */}
@@ -187,7 +197,7 @@ export function InlineFilters({
           onClick={() => onFiltersChange({})}
           className="flex-shrink-0 text-xs"
         >
-          Clear
+          {t('common.clear')}
         </Button>
       )}
     </div>

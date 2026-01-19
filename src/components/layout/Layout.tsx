@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 import {
   UtensilsCrossed,
   Search,
@@ -18,6 +19,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { config } from '@/lib/config';
 import { useTheme } from '@/components/theme/ThemeProvider';
+import LanguageSwitcher from './LanguageSwitcher';
 
 /**
  * Navigation link component with active state
@@ -53,6 +55,7 @@ function NavLink({
  * Site Header Component
  */
 export function Header() {
+  const t = useTranslations();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { resolvedTheme, toggleTheme } = useTheme();
   const isDark = resolvedTheme === 'dark';
@@ -78,20 +81,25 @@ export function Header() {
           <nav className="hidden items-center gap-1 md:flex">
             <NavLink href="/">
               <Home className="h-4 w-4" />
-              Recipes
+              {t('navigation.recipes')}
             </NavLink>
             <NavLink href="/search">
               <Search className="h-4 w-4" />
-              Search
+              {t('navigation.search')}
             </NavLink>
             <NavLink href="/dinner/plan">
               <Calendar className="h-4 w-4" />
-              Dinner
+              {t('navigation.dinner')}
             </NavLink>
           </nav>
 
           {/* Actions */}
           <div className="flex items-center gap-2">
+            {/* Language Switcher - Desktop */}
+            <div className="hidden md:block">
+              <LanguageSwitcher />
+            </div>
+
             <Button
               variant="ghost"
               size="icon"
@@ -99,7 +107,7 @@ export function Header() {
               className="hidden h-9 w-9 md:flex"
             >
               {isDark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
-              <span className="sr-only">Toggle theme</span>
+              <span className="sr-only">{t('theme.toggle')}</span>
             </Button>
 
             {/* Mobile menu button */}
@@ -114,7 +122,7 @@ export function Header() {
               ) : (
                 <Menu className="h-5 w-5" />
               )}
-              <span className="sr-only">Menu</span>
+              <span className="sr-only">{t('common.menu')}</span>
             </Button>
           </div>
         </div>
@@ -125,17 +133,23 @@ export function Header() {
             <nav className="container flex flex-col gap-1 py-4">
               <NavLink href="/" onClick={closeMobileMenu}>
                 <Home className="h-4 w-4" />
-                Recipes
+                {t('navigation.recipes')}
               </NavLink>
               <NavLink href="/search" onClick={closeMobileMenu}>
                 <Search className="h-4 w-4" />
-                Search
+                {t('navigation.search')}
               </NavLink>
               <NavLink href="/dinner/plan" onClick={closeMobileMenu}>
                 <Calendar className="h-4 w-4" />
-                Plan Dinner
+                {t('navigation.planDinner')}
               </NavLink>
               <div className="my-2 h-px bg-border" />
+              
+              {/* Language Switcher - Mobile */}
+              <div className="px-3 py-2">
+                <LanguageSwitcher />
+              </div>
+              
               <button
                 onClick={() => {
                   toggleTheme();
@@ -144,7 +158,7 @@ export function Header() {
                 className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground"
               >
                 {isDark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
-                {isDark ? 'Light Mode' : 'Dark Mode'}
+                {isDark ? t('theme.lightMode') : t('theme.darkMode')}
               </button>
             </nav>
           </div>
@@ -158,6 +172,8 @@ export function Header() {
  * Site Footer Component
  */
 export function Footer() {
+  const t = useTranslations();
+  
   return (
     <footer className="border-t bg-muted/30">
       <div className="container py-8 md:py-12">
@@ -171,36 +187,34 @@ export function Footer() {
               <span className="font-bold">{config.appName}</span>
             </div>
             <p className="text-sm text-muted-foreground">
-              A personal recipe collection stored as markdown files.
-              Fast, simple, and always yours.
+              {t('footer.description')}
             </p>
           </div>
 
           {/* Quick Links */}
           <div className="space-y-3">
-            <h4 className="text-sm font-semibold">Quick Links</h4>
+            <h4 className="text-sm font-semibold">{t('footer.quickLinks')}</h4>
             <nav className="flex flex-col gap-2 text-sm">
               <Link
                 href="/"
                 className="text-muted-foreground transition-colors hover:text-foreground"
               >
-                All Recipes
+                {t('footer.allRecipes')}
               </Link>
               <Link
                 href="/search"
                 className="text-muted-foreground transition-colors hover:text-foreground"
               >
-                Search
+                {t('navigation.search')}
               </Link>
             </nav>
           </div>
 
           {/* About */}
           <div className="space-y-3">
-            <h4 className="text-sm font-semibold">About</h4>
+            <h4 className="text-sm font-semibold">{t('navigation.about')}</h4>
             <p className="text-sm text-muted-foreground">
-              Built with Next.js, styled with Tailwind CSS.
-              Recipes stored as markdown in git for easy version control.
+              {t('footer.aboutText')}
             </p>
             <div className="flex gap-2">
               <Button variant="ghost" size="icon" className="h-8 w-8" asChild>
@@ -219,7 +233,7 @@ export function Footer() {
 
         <div className="mt-8 border-t pt-6">
           <p className="text-center text-xs text-muted-foreground">
-            {new Date().getFullYear()} {config.appName}. Made with love and good food.
+            {new Date().getFullYear()} {config.appName}. {t('footer.madeWithLove')}
           </p>
         </div>
       </div>
