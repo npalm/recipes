@@ -50,132 +50,138 @@ export function DinnerView({ title, recipes }: DinnerViewProps) {
         </p>
       </div>
 
-      {/* Courses - Magazine Style */}
-      <div className="space-y-12">
+      {/* Courses - Timeline with Card Stack */}
+      <div className="relative max-w-5xl mx-auto">
         {recipes.map((recipe, index) => {
           const difficulty = difficultyConfig[recipe.difficulty];
+          const isLast = index === recipes.length - 1;
           
           return (
-            <article key={recipe.slug} className="group">
-              {/* Course Number Badge - Positioned absolutely over image */}
-              <div className="relative mb-6">
-                <Badge 
-                  variant="secondary" 
-                  className="absolute -top-3 left-4 z-10 bg-background shadow-lg border-2 px-4 py-1.5 text-base font-semibold"
-                >
-                  Course {index + 1}
-                </Badge>
-              </div>
+            <div key={recipe.slug} className="relative">
+              {/* Timeline Line */}
+              {!isLast && (
+                <div className="absolute left-[52px] top-[80px] bottom-[-40px] w-0.5 bg-gradient-to-b from-primary via-primary/50 to-transparent" />
+              )}
 
-              <Card className="overflow-hidden border-0 shadow-xl transition-all duration-300 hover:shadow-2xl">
-                {/* Hero Image with Overlay Effects */}
-                <Link href={`/recipe/${recipe.slug}`} className="block">
-                  {recipe.images.length > 0 ? (
-                    <div className="relative aspect-video w-full overflow-hidden rounded-t-lg bg-muted">
-                      <Image
-                        src={getImageSrc(recipe.images[0], recipe.slug)}
-                        alt={recipe.title}
-                        fill
-                        className="object-cover transition-all duration-700 group-hover:scale-105 group-hover:brightness-110"
-                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1200px"
-                        priority={index === 0}
-                        unoptimized={isExternalUrl(recipe.images[0])}
-                      />
-                      {/* Gradient overlay for better text contrast */}
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-                      
-                      {/* Image counter badge */}
-                      {recipe.images.length > 1 && (
-                        <div className="absolute right-4 top-4 flex items-center gap-1.5 rounded-full bg-black/70 px-3 py-1.5 text-sm font-medium text-white backdrop-blur-md">
-                          <ImageIcon className="h-4 w-4" />
-                          {recipe.images.length}
-                        </div>
-                      )}
-                    </div>
-                  ) : (
-                    <div className="flex aspect-video w-full items-center justify-center rounded-t-lg bg-gradient-to-br from-muted via-muted/80 to-muted/50">
-                      <ImageIcon className="h-16 w-16 text-muted-foreground/30" />
-                    </div>
-                  )}
-                </Link>
-
-                <CardContent className="p-8 md:p-10">
-                  {/* Recipe Title */}
-                  <Link
-                    href={`/recipe/${recipe.slug}`}
-                    className="group/title inline-block"
-                  >
-                    <h2 className="mb-4 text-3xl font-bold tracking-tight transition-colors group-hover/title:text-primary md:text-4xl">
-                      {recipe.title}
-                    </h2>
-                  </Link>
-                  
-                  {/* Description */}
-                  {recipe.description && (
-                    <p className="mb-6 text-lg leading-relaxed text-muted-foreground">
-                      {recipe.description}
-                    </p>
-                  )}
-
-                  {/* Stats Grid - Without Servings */}
-                  <div className="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-3">
-                    <div className="flex items-center gap-3 rounded-lg border bg-muted/30 p-3 transition-colors hover:bg-muted/50">
-                      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-500/10">
-                        <Clock className="h-5 w-5 text-blue-500" />
-                      </div>
-                      <div>
-                        <div className="text-base font-semibold">{formatTime(recipe.prepTime)}</div>
-                        <div className="text-xs text-muted-foreground">Prep Time</div>
-                      </div>
-                    </div>
-                    
-                    <div className="flex items-center gap-3 rounded-lg border bg-muted/30 p-3 transition-colors hover:bg-muted/50">
-                      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-orange-500/10">
-                        <Clock className="h-5 w-5 text-orange-500" />
-                      </div>
-                      <div>
-                        <div className="text-base font-semibold">{formatTime(recipe.cookTime)}</div>
-                        <div className="text-xs text-muted-foreground">Cook Time</div>
-                      </div>
-                    </div>
-                    
-                    <div className="flex items-center gap-3 rounded-lg border bg-muted/30 p-3 transition-colors hover:bg-muted/50">
-                      <div className={`flex h-10 w-10 items-center justify-center rounded-full ${difficulty.className}`}>
-                        <ChefHat className="h-5 w-5" />
-                      </div>
-                      <div>
-                        <div className="text-base font-semibold">{difficulty.label}</div>
-                        <div className="text-xs text-muted-foreground">Difficulty</div>
-                      </div>
+              {/* Course Card */}
+              <div className="relative flex gap-6 pb-10">
+                {/* Timeline Dot & Course Number */}
+                <div className="relative flex flex-col items-center shrink-0">
+                  <div className="flex h-[104px] w-[104px] items-center justify-center">
+                    <div className="flex h-16 w-16 items-center justify-center rounded-full border-4 border-primary bg-background shadow-lg">
+                      <span className="text-xl font-bold text-primary">{index + 1}</span>
                     </div>
                   </div>
+                </div>
 
-                  {/* Tags */}
-                  {recipe.tags.length > 0 && (
-                    <div className="mb-6 flex flex-wrap gap-2">
-                      {recipe.tags.map((tag) => (
-                        <Badge 
-                          key={tag} 
-                          variant="secondary"
-                          className="px-3 py-1 text-sm font-medium"
+                {/* Card Content */}
+                <Card className="flex-1 overflow-hidden border shadow-lg transition-all duration-300 hover:shadow-xl group">
+                  <CardContent className="p-0">
+                    <div className="flex flex-col gap-0 md:flex-row">
+                      {/* Thumbnail Image */}
+                      <div className="relative md:w-64 shrink-0">
+                        <Link href={`/recipe/${recipe.slug}`} className="block">
+                          {recipe.images.length > 0 ? (
+                            <div className="relative aspect-[4/3] md:aspect-square w-full overflow-hidden bg-muted">
+                              <Image
+                                src={getImageSrc(recipe.images[0], recipe.slug)}
+                                alt={recipe.title}
+                                fill
+                                className="object-cover transition-all duration-500 group-hover:scale-110"
+                                sizes="(max-width: 768px) 100vw, 256px"
+                                unoptimized={isExternalUrl(recipe.images[0])}
+                              />
+                              {/* Image counter badge */}
+                              {recipe.images.length > 1 && (
+                                <div className="absolute right-2 top-2 flex items-center gap-1 rounded-full bg-black/70 px-2 py-1 text-xs font-medium text-white backdrop-blur-sm">
+                                  <ImageIcon className="h-3 w-3" />
+                                  {recipe.images.length}
+                                </div>
+                              )}
+                            </div>
+                          ) : (
+                            <div className="flex aspect-[4/3] md:aspect-square w-full items-center justify-center bg-gradient-to-br from-muted to-muted/50">
+                              <ImageIcon className="h-10 w-10 text-muted-foreground/30" />
+                            </div>
+                          )}
+                        </Link>
+                      </div>
+
+                      {/* Recipe Details */}
+                      <div className="flex-1 p-6">
+                        {/* Course Label */}
+                        <div className="mb-2">
+                          <Badge variant="outline" className="text-xs font-medium">
+                            Course {index + 1}
+                          </Badge>
+                        </div>
+
+                        {/* Title */}
+                        <Link
+                          href={`/recipe/${recipe.slug}`}
+                          className="group/title inline-block"
                         >
-                          {tag}
-                        </Badge>
-                      ))}
-                    </div>
-                  )}
+                          <h2 className="mb-2 text-2xl font-bold tracking-tight transition-colors group-hover/title:text-primary">
+                            {recipe.title}
+                          </h2>
+                        </Link>
+                        
+                        {/* Description */}
+                        {recipe.description && (
+                          <p className="mb-4 text-sm leading-relaxed text-muted-foreground line-clamp-2">
+                            {recipe.description}
+                          </p>
+                        )}
 
-                  {/* View Recipe Button */}
-                  <Link
-                    href={`/recipe/${recipe.slug}`}
-                    className="inline-flex items-center gap-2 text-base font-medium text-primary transition-all hover:gap-3 hover:underline"
-                  >
-                    View full recipe
-                    <span className="transition-transform group-hover:translate-x-1">→</span>
-                  </Link>
-                </CardContent>
-              </Card>
-            </article>
+                        {/* Stats Inline */}
+                        <div className="mb-4 flex flex-wrap items-center gap-3 text-sm">
+                          <div className="flex items-center gap-1.5 text-blue-500">
+                            <Clock className="h-4 w-4" />
+                            <span className="font-medium">{formatTime(recipe.prepTime)}</span>
+                            <span className="text-muted-foreground">prep</span>
+                          </div>
+                          <span className="text-muted-foreground">•</span>
+                          <div className="flex items-center gap-1.5 text-orange-500">
+                            <Clock className="h-4 w-4" />
+                            <span className="font-medium">{formatTime(recipe.cookTime)}</span>
+                            <span className="text-muted-foreground">cook</span>
+                          </div>
+                          <span className="text-muted-foreground">•</span>
+                          <div className="flex items-center gap-1.5">
+                            <ChefHat className={`h-4 w-4 ${difficulty.className.includes('emerald') ? 'text-emerald-600' : difficulty.className.includes('amber') ? 'text-amber-600' : 'text-rose-600'}`} />
+                            <span className="font-medium">{difficulty.label}</span>
+                          </div>
+                        </div>
+
+                        {/* Tags */}
+                        {recipe.tags.length > 0 && (
+                          <div className="mb-4 flex flex-wrap gap-1.5">
+                            {recipe.tags.map((tag) => (
+                              <Badge 
+                                key={tag} 
+                                variant="secondary"
+                                className="px-2 py-0.5 text-xs"
+                              >
+                                {tag}
+                              </Badge>
+                            ))}
+                          </div>
+                        )}
+
+                        {/* View Recipe Link */}
+                        <Link
+                          href={`/recipe/${recipe.slug}`}
+                          className="inline-flex items-center gap-1 text-sm font-medium text-primary transition-all hover:gap-2 hover:underline"
+                        >
+                          View full recipe
+                          <span className="transition-transform">→</span>
+                        </Link>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            </div>
           );
         })}
       </div>
