@@ -58,64 +58,61 @@ export function DinnerView({ title, recipes }: DinnerViewProps) {
           
           return (
             <div key={recipe.slug} className="relative">
-              {/* Timeline Line */}
+              {/* Timeline Line - Hidden on mobile */}
               {!isLast && (
-                <div className="absolute left-[52px] top-[80px] bottom-[-40px] w-0.5 bg-gradient-to-b from-primary via-primary/50 to-transparent" />
+                <div className="absolute left-6 md:left-[52px] top-12 md:top-[52px] bottom-0 w-0.5 bg-gradient-to-b from-primary via-primary/50 to-transparent hidden md:block" />
               )}
 
               {/* Course Card */}
-              <div className="relative flex gap-6 pb-10">
+              <div className="relative flex flex-col md:flex-row gap-4 md:gap-6 pb-8 md:pb-10">
                 {/* Timeline Dot & Course Number */}
-                <div className="relative flex flex-col items-center shrink-0">
-                  <div className="flex h-[104px] w-[104px] items-center justify-center">
-                    <div className="flex h-16 w-16 items-center justify-center rounded-full border-4 border-primary bg-background shadow-lg">
-                      <span className="text-xl font-bold text-primary">{index + 1}</span>
+                <div className="relative flex md:flex-col items-center gap-3 md:gap-0 shrink-0">
+                  <div className="flex h-12 w-12 md:h-[104px] md:w-[104px] items-center justify-center">
+                    <div className="flex h-10 w-10 md:h-16 md:w-16 items-center justify-center rounded-full border-4 border-primary bg-background shadow-lg">
+                      <span className="text-base md:text-xl font-bold text-primary">{index + 1}</span>
                     </div>
                   </div>
+                  {/* Mobile course title hint */}
+                  <span className="text-sm font-medium text-muted-foreground md:hidden">Course {index + 1}</span>
                 </div>
 
                 {/* Card Content */}
-                <Card className="flex-1 overflow-hidden border shadow-lg transition-all duration-300 hover:shadow-xl group">
+                <Card className="flex-1 overflow-hidden border-0 shadow-lg transition-all duration-300 hover:shadow-xl group bg-card rounded-xl">
                   <CardContent className="p-0">
-                    <div className="flex flex-col gap-0 md:flex-row">
-                      {/* Thumbnail Image */}
-                      <div className="relative md:w-64 shrink-0">
-                        <Link href={`/recipe/${recipe.slug}`} className="block">
+                    <div className="flex flex-col md:flex-row min-h-[200px] md:min-h-[220px]">
+                      {/* Image Section */}
+                      <div className="relative w-full md:w-72 lg:w-80 shrink-0">
+                        <Link href={`/recipe/${recipe.slug}`} className="block h-full">
                           {recipe.images.length > 0 ? (
-                            <div className="relative aspect-[4/3] md:aspect-square w-full overflow-hidden bg-muted">
+                            <div className="relative aspect-[16/9] md:aspect-auto md:h-full w-full overflow-hidden bg-muted md:rounded-l-xl">
                               <Image
                                 src={getImageSrc(recipe.images[0], recipe.slug)}
                                 alt={recipe.title}
                                 fill
-                                className="object-cover transition-all duration-500 group-hover:scale-110"
-                                sizes="(max-width: 768px) 100vw, 256px"
+                                className="object-cover transition-all duration-500 group-hover:scale-105"
+                                sizes="(max-width: 768px) 100vw, 320px"
                                 unoptimized={isExternalUrl(recipe.images[0])}
                               />
+                              {/* Subtle gradient overlay */}
+                              <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent md:bg-gradient-to-r md:from-transparent md:to-transparent" />
                               {/* Image counter badge */}
                               {recipe.images.length > 1 && (
-                                <div className="absolute right-2 top-2 flex items-center gap-1 rounded-full bg-black/70 px-2 py-1 text-xs font-medium text-white backdrop-blur-sm">
-                                  <ImageIcon className="h-3 w-3" />
+                                <div className="absolute right-3 top-3 flex items-center gap-1.5 rounded-full bg-black/60 px-2.5 py-1 text-xs font-medium text-white backdrop-blur-sm">
+                                  <ImageIcon className="h-3.5 w-3.5" />
                                   {recipe.images.length}
                                 </div>
                               )}
                             </div>
                           ) : (
-                            <div className="flex aspect-[4/3] md:aspect-square w-full items-center justify-center bg-gradient-to-br from-muted to-muted/50">
-                              <ImageIcon className="h-10 w-10 text-muted-foreground/30" />
+                            <div className="flex aspect-[16/9] md:aspect-auto md:h-full w-full items-center justify-center bg-gradient-to-br from-muted to-muted/50 md:rounded-l-xl">
+                              <ImageIcon className="h-12 w-12 text-muted-foreground/30" />
                             </div>
                           )}
                         </Link>
                       </div>
 
                       {/* Recipe Details */}
-                      <div className="flex-1 p-6">
-                        {/* Course Label */}
-                        <div className="mb-2">
-                          <Badge variant="outline" className="text-xs font-medium">
-                            Course {index + 1}
-                          </Badge>
-                        </div>
-
+                      <div className="flex-1 p-5 md:p-6 flex flex-col justify-center">
                         {/* Title */}
                         <Link
                           href={`/recipe/${recipe.slug}`}
@@ -133,20 +130,18 @@ export function DinnerView({ title, recipes }: DinnerViewProps) {
                           </p>
                         )}
 
-                        {/* Stats Inline */}
-                        <div className="mb-4 flex flex-wrap items-center gap-3 text-sm">
+                        {/* Stats */}
+                        <div className="mb-4 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm">
                           <div className="flex items-center gap-1.5 text-blue-500">
                             <Clock className="h-4 w-4" />
                             <span className="font-medium">{formatTime(recipe.prepTime)}</span>
                             <span className="text-muted-foreground">prep</span>
                           </div>
-                          <span className="text-muted-foreground">•</span>
                           <div className="flex items-center gap-1.5 text-orange-500">
                             <Clock className="h-4 w-4" />
                             <span className="font-medium">{formatTime(recipe.cookTime)}</span>
                             <span className="text-muted-foreground">cook</span>
                           </div>
-                          <span className="text-muted-foreground">•</span>
                           <div className="flex items-center gap-1.5">
                             <ChefHat className={`h-4 w-4 ${difficulty.className.includes('emerald') ? 'text-emerald-600' : difficulty.className.includes('amber') ? 'text-amber-600' : 'text-rose-600'}`} />
                             <span className="font-medium">{difficulty.label}</span>
