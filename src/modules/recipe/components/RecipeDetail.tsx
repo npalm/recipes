@@ -27,14 +27,12 @@ import { difficultyConfig } from './RecipeCard';
 
 interface RecipeDetailProps {
   recipe: Recipe;
-  isDemo?: boolean;
 }
 
 /**
  * Full recipe detail view
  */
-export function RecipeDetail({ recipe, isDemo = false }: RecipeDetailProps) {
-  const basePath = isDemo ? '/demo' : '';
+export function RecipeDetail({ recipe }: RecipeDetailProps) {
   const difficulty = difficultyConfig[recipe.difficulty];
 
   const handlePrint = () => {
@@ -46,7 +44,7 @@ export function RecipeDetail({ recipe, isDemo = false }: RecipeDetailProps) {
       {/* Back navigation */}
       <div className="mb-6 print:hidden">
         <Button variant="ghost" size="sm" asChild className="-ml-3">
-          <Link href={`${basePath}/`}>
+          <Link href="/">
             <ArrowLeft className="mr-2 h-4 w-4" />
             Back to recipes
           </Link>
@@ -59,7 +57,6 @@ export function RecipeDetail({ recipe, isDemo = false }: RecipeDetailProps) {
           images={recipe.images}
           slug={recipe.slug}
           title={recipe.title}
-          isDemo={isDemo}
           autoRotate={recipe.headerImageRotation}
         />
 
@@ -147,7 +144,7 @@ export function RecipeDetail({ recipe, isDemo = false }: RecipeDetailProps) {
           {recipe.tags.length > 0 && (
             <div className="mt-6 flex flex-wrap gap-2">
               {recipe.tags.map((tag) => (
-                <Link key={tag} href={`${basePath}/search?tag=${tag}`}>
+                <Link key={tag} href={`/search?tag=${tag}`}>
                   <Badge
                     variant="outline"
                     className="cursor-pointer transition-colors hover:bg-primary hover:text-primary-foreground"
@@ -330,7 +327,7 @@ export function RecipeDetail({ recipe, isDemo = false }: RecipeDetailProps) {
           )}
         </div>
         <Button variant="outline" size="sm" asChild className="print:hidden">
-          <Link href={`${basePath}/`}>
+          <Link href="/">
             <ArrowLeft className="mr-2 h-4 w-4" />
             Back to recipes
           </Link>

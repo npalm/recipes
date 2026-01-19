@@ -19,10 +19,6 @@ import { Button } from '@/components/ui/button';
 import { config } from '@/lib/config';
 import { useTheme } from '@/components/theme/ThemeProvider';
 
-interface HeaderProps {
-  isDemo?: boolean;
-}
-
 /**
  * Navigation link component with active state
  */
@@ -56,10 +52,9 @@ function NavLink({
 /**
  * Site Header Component
  */
-export function Header({ isDemo = false }: HeaderProps) {
+export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { resolvedTheme, toggleTheme } = useTheme();
-  const basePath = isDemo ? '/demo' : '';
   const isDark = resolvedTheme === 'dark';
 
   const closeMobileMenu = () => setMobileMenuOpen(false);
@@ -70,49 +65,29 @@ export function Header({ isDemo = false }: HeaderProps) {
         <div className="container flex h-16 items-center justify-between">
           {/* Logo */}
           <Link
-            href={`${basePath}/`}
+            href="/"
             className="flex items-center gap-2.5 transition-opacity hover:opacity-80"
           >
             <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary text-primary-foreground">
               <UtensilsCrossed className="h-5 w-5" />
             </div>
-            <div className="flex flex-col">
-              <span className="text-lg font-bold leading-none">{config.appName}</span>
-              {isDemo && (
-                <span className="text-[10px] font-medium uppercase tracking-wider text-amber-600">
-                  Demo Mode
-                </span>
-              )}
-            </div>
+            <span className="text-lg font-bold leading-none">{config.appName}</span>
           </Link>
 
           {/* Desktop Navigation */}
           <nav className="hidden items-center gap-1 md:flex">
-            <NavLink href={`${basePath}/`}>
+            <NavLink href="/">
               <Home className="h-4 w-4" />
               Recipes
             </NavLink>
-            <NavLink href={`${basePath}/search`}>
+            <NavLink href="/search">
               <Search className="h-4 w-4" />
               Search
             </NavLink>
-            {!isDemo && (
-              <NavLink href="/dinner/plan">
-                <Calendar className="h-4 w-4" />
-                Dinner
-              </NavLink>
-            )}
-            {!isDemo ? (
-              <NavLink href="/demo">
-                <BookOpen className="h-4 w-4" />
-                Demo
-              </NavLink>
-            ) : (
-              <NavLink href="/">
-                <Home className="h-4 w-4" />
-                Exit Demo
-              </NavLink>
-            )}
+            <NavLink href="/dinner/plan">
+              <Calendar className="h-4 w-4" />
+              Dinner
+            </NavLink>
           </nav>
 
           {/* Actions */}
@@ -148,31 +123,18 @@ export function Header({ isDemo = false }: HeaderProps) {
         {mobileMenuOpen && (
           <div className="border-t bg-background md:hidden">
             <nav className="container flex flex-col gap-1 py-4">
-              <NavLink href={`${basePath}/`} onClick={closeMobileMenu}>
+              <NavLink href="/" onClick={closeMobileMenu}>
                 <Home className="h-4 w-4" />
                 Recipes
               </NavLink>
-              <NavLink href={`${basePath}/search`} onClick={closeMobileMenu}>
+              <NavLink href="/search" onClick={closeMobileMenu}>
                 <Search className="h-4 w-4" />
                 Search
               </NavLink>
-              {!isDemo && (
-                <NavLink href="/dinner/plan" onClick={closeMobileMenu}>
-                  <Calendar className="h-4 w-4" />
-                  Plan Dinner
-                </NavLink>
-              )}
-              {!isDemo ? (
-                <NavLink href="/demo" onClick={closeMobileMenu}>
-                  <BookOpen className="h-4 w-4" />
-                  View Demo
-                </NavLink>
-              ) : (
-                <NavLink href="/" onClick={closeMobileMenu}>
-                  <Home className="h-4 w-4" />
-                  Exit Demo
-                </NavLink>
-              )}
+              <NavLink href="/dinner/plan" onClick={closeMobileMenu}>
+                <Calendar className="h-4 w-4" />
+                Plan Dinner
+              </NavLink>
               <div className="my-2 h-px bg-border" />
               <button
                 onClick={() => {
@@ -230,12 +192,6 @@ export function Footer() {
               >
                 Search
               </Link>
-              <Link
-                href="/demo"
-                className="text-muted-foreground transition-colors hover:text-foreground"
-              >
-                View Demo
-              </Link>
             </nav>
           </div>
 
@@ -273,16 +229,15 @@ export function Footer() {
 
 interface LayoutProps {
   children: React.ReactNode;
-  isDemo?: boolean;
 }
 
 /**
  * Main Layout Component
  */
-export function Layout({ children, isDemo = false }: LayoutProps) {
+export function Layout({ children }: LayoutProps) {
   return (
     <div className="flex min-h-screen flex-col">
-      <Header isDemo={isDemo} />
+      <Header />
       <main className="flex-1">
         <div className="container py-6 md:py-10">{children}</div>
       </main>

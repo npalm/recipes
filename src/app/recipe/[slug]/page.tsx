@@ -13,7 +13,7 @@ export async function generateMetadata({
   params,
 }: RecipePageProps): Promise<Metadata> {
   const { slug } = await params;
-  const recipeService = createRecipeService(false);
+  const recipeService = createRecipeService();
   const recipe = recipeService.getRecipe(slug);
 
   if (!recipe) {
@@ -29,7 +29,7 @@ export async function generateMetadata({
 }
 
 export async function generateStaticParams() {
-  const recipeService = createRecipeService(false);
+  const recipeService = createRecipeService();
   const recipes = recipeService.getRecipeCards();
 
   return recipes.map((recipe) => ({
@@ -39,7 +39,7 @@ export async function generateStaticParams() {
 
 export default async function RecipePage({ params }: RecipePageProps) {
   const { slug } = await params;
-  const recipeService = createRecipeService(false);
+  const recipeService = createRecipeService();
   const recipe = recipeService.getRecipe(slug);
 
   if (!recipe) {

@@ -43,15 +43,13 @@ const difficultyConfig: Record<
 
 interface RecipeCardProps {
   recipe: RecipeCardType;
-  isDemo?: boolean;
 }
 
 /**
  * Recipe card for grid display
  */
-export function RecipeCard({ recipe, isDemo = false }: RecipeCardProps) {
-  const basePath = isDemo ? '/demo' : '';
-  const href = `${basePath}/recipe/${recipe.slug}`;
+export function RecipeCard({ recipe }: RecipeCardProps) {
+  const href = `/recipe/${recipe.slug}`;
   const difficulty = difficultyConfig[recipe.difficulty];
 
   return (
@@ -62,7 +60,6 @@ export function RecipeCard({ recipe, isDemo = false }: RecipeCardProps) {
             images={recipe.images}
             slug={recipe.slug}
             title={recipe.title}
-            isDemo={isDemo}
           />
           {/* Overlay gradient */}
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 transition-opacity group-hover:opacity-100" />
@@ -130,13 +127,7 @@ export function RecipeCard({ recipe, isDemo = false }: RecipeCardProps) {
 /**
  * Grid of recipe cards
  */
-export function RecipeGrid({
-  recipes,
-  isDemo = false,
-}: {
-  recipes: RecipeCardType[];
-  isDemo?: boolean;
-}) {
+export function RecipeGrid({ recipes }: { recipes: RecipeCardType[] }) {
   if (recipes.length === 0) {
     return (
       <div className="flex min-h-[300px] flex-col items-center justify-center rounded-2xl border-2 border-dashed border-muted-foreground/20 bg-muted/30 p-8 text-center">
@@ -154,7 +145,7 @@ export function RecipeGrid({
   return (
     <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
       {recipes.map((recipe) => (
-        <RecipeCard key={recipe.slug} recipe={recipe} isDemo={isDemo} />
+        <RecipeCard key={recipe.slug} recipe={recipe} />
       ))}
     </div>
   );

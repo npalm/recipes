@@ -64,30 +64,8 @@ export const config = {
   /** Content paths */
   paths: {
     recipes: 'content/recipes',
-    demo: 'content/demo',
     images: 'images',
   },
 } as const;
-
-/**
- * Check if we're in demo mode based on URL path
- */
-export function isDemoMode(pathname: string): boolean {
-  return pathname.startsWith('/demo');
-}
-
-/**
- * Get the base path for routes (empty for regular, '/demo' for demo mode)
- */
-export function getBasePath(isDemo: boolean): string {
-  return isDemo ? '/demo' : '';
-}
-
-/**
- * Get the content directory path
- */
-export function getContentPath(isDemo: boolean): string {
-  return isDemo ? config.paths.demo : config.paths.recipes;
-}
 
 export type Config = typeof config;

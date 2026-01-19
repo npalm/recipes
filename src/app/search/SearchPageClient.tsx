@@ -12,13 +12,11 @@ import { filterRecipeCards } from '@/modules/recipe/services/filters';
 interface SearchPageClientProps {
   initialRecipes: RecipeCard[];
   availableTags: string[];
-  isDemo?: boolean;
 }
 
 export function SearchPageClient({
   initialRecipes,
   availableTags,
-  isDemo = false,
 }: SearchPageClientProps) {
   const searchParams = useSearchParams();
   const initialTag = searchParams.get('tag');
@@ -56,7 +54,7 @@ export function SearchPageClient({
   }, [query, filters, initialRecipes, searchIndex]);
 
   return (
-    <Layout isDemo={isDemo}>
+    <Layout>
       <div className="mb-8">
         <h1 className="text-3xl font-bold tracking-tight md:text-4xl">
           Search Recipes
@@ -95,7 +93,7 @@ export function SearchPageClient({
           </p>
 
           {/* Recipe grid */}
-          <RecipeGrid recipes={results} isDemo={isDemo} />
+          <RecipeGrid recipes={results} />
         </div>
       </div>
     </Layout>

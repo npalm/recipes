@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { createRecipeService } from '@/modules/recipe/services';
 
 export default function HomePage() {
-  const recipeService = createRecipeService(false);
+  const recipeService = createRecipeService();
   const recipes = recipeService.getRecipeCards(
     { status: ['published'] },
     { field: 'createdAt', direction: 'desc' }
@@ -33,12 +33,6 @@ export default function HomePage() {
               <Link href="/search">
                 <Search className="mr-2 h-4 w-4" />
                 Search Recipes
-              </Link>
-            </Button>
-            <Button size="lg" variant="outline" asChild>
-              <Link href="/demo">
-                <BookOpen className="mr-2 h-4 w-4" />
-                View Demo
               </Link>
             </Button>
           </div>
@@ -84,15 +78,8 @@ export default function HomePage() {
             </div>
             <h3 className="mb-2 text-xl font-semibold">No recipes yet</h3>
             <p className="mb-6 text-muted-foreground">
-              Add your first recipe to get started! You can also check out the demo
-              to see example recipes.
+              Add your first recipe to get started!
             </p>
-            <Button asChild>
-              <Link href="/demo">
-                <BookOpen className="mr-2 h-4 w-4" />
-                View Demo Recipes
-              </Link>
-            </Button>
           </div>
         )}
       </section>

@@ -2,7 +2,6 @@
  * Recipe Repository
  *
  * Handles reading recipes from the file system.
- * Supports both real recipes and demo recipes.
  */
 
 import fs from 'fs';
@@ -15,7 +14,6 @@ import { parseRecipe, RecipeParseError } from '@/lib/markdown/parser';
  */
 export interface RecipeRepositoryConfig {
   contentDir: string;
-  demoDir: string;
 }
 
 /**
@@ -23,24 +21,13 @@ export interface RecipeRepositoryConfig {
  */
 const DEFAULT_CONFIG: RecipeRepositoryConfig = {
   contentDir: path.join(process.cwd(), 'content', 'recipes'),
-  demoDir: path.join(process.cwd(), 'content', 'demo'),
 };
-
-/**
- * Get the content directory based on demo mode
- */
-function getContentDir(isDemo: boolean, config = DEFAULT_CONFIG): string {
-  return isDemo ? config.demoDir : config.contentDir;
-}
 
 /**
  * Read all recipe slugs from the content directory
  */
-export function getRecipeSlugs(
-  isDemo = false,
-  config = DEFAULT_CONFIG
-): string[] {
-  const contentDir = getContentDir(isDemo, config);
+export function getRecipeSlugs(config = DEFAULT_CONFIG): string[] {
+  const contentDir = config.contentDir;
 
   try {
     if (!fs.existsSync(contentDir)) {
@@ -67,10 +54,9 @@ export function getRecipeSlugs(
  */
 export function getRecipeBySlug(
   slug: string,
-  isDemo = false,
   config = DEFAULT_CONFIG
 ): Recipe | null {
-  const contentDir = getContentDir(isDemo, config);
+  const contentDir = config.contentDir;
   const recipePath = path.join(contentDir, slug, 'index.md');
 
   try {
@@ -93,15 +79,12 @@ export function getRecipeBySlug(
 /**
  * Read all recipes
  */
-export function getAllRecipes(
-  isDemo = false,
-  config = DEFAULT_CONFIG
-): Recipe[] {
-  const slugs = getRecipeSlugs(isDemo, config);
+export function getAllRecipes(config = DEFAULT_CONFIG): Recipe[] {
+  const slugs = getRecipeSlugs(config);
   const recipes: Recipe[] = [];
 
   for (const slug of slugs) {
-    const recipe = getRecipeBySlug(slug, isDemo, config);
+    const recipe = getRecipeBySlug(slug, config);
     if (recipe) {
       recipes.push(recipe);
     }
@@ -131,19 +114,16 @@ export function recipeToCard(recipe: Recipe): RecipeCard {
 /**
  * Get all recipe cards (optimized for listing pages)
  */
-export function getAllRecipeCards(
-  isDemo = false,
-  config = DEFAULT_CONFIG
-): RecipeCard[] {
-  const recipes = getAllRecipes(isDemo, config);
+export function getAllRecipeCards(config = DEFAULT_CONFIG): RecipeCard[] {
+  const recipes = getAllRecipes(config);
   return recipes.map(recipeToCard);
 }
 
 /**
  * Get all unique tags from all recipes
  */
-export function getAllTags(isDemo = false, config = DEFAULT_CONFIG): string[] {
-  const recipes = getAllRecipes(isDemo, config);
+export function getAllTags(config = DEFAULT_CONFIG): string[] {
+  const recipes = getAllRecipes(config);
   const tagSet = new Set<string>();
 
   for (const recipe of recipes) {
@@ -158,24 +138,15 @@ export function getAllTags(isDemo = false, config = DEFAULT_CONFIG): string[] {
 /**
  * Get recipe image path
  */
-export function getRecipeImagePath(
-  slug: string,
-  imageName: string,
-  isDemo = false
-): string {
-  const basePath = isDemo ? '/demo' : '/recipes';
-  return `${basePath}/${slug}/images/${imageName}`;
+export function getRecipeImagePath(slug: string, imageName: string): string {
+  return `/content/recipes/${slug}/images/${imageName}`;
 }
 
 /**
  * Check if a recipe exists
  */
-export function recipeExists(
-  slug: string,
-  isDemo = false,
-  config = DEFAULT_CONFIG
-): boolean {
-  const contentDir = getContentDir(isDemo, config);
+export function recipeExists(slug: string, config = DEFAULT_CONFIG): boolean {
+  const contentDir = config.contentDir;
   const recipePath = path.join(contentDir, slug, 'index.md');
   return fs.existsSync(recipePath);
 }

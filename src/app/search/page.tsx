@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 };
 
 export default function SearchPage() {
-  const recipeService = createRecipeService(false);
+  const recipeService = createRecipeService();
   const recipes = recipeService.getRecipeCards({ status: ['published'] });
   const tags = recipeService.getTags();
 
@@ -19,7 +19,6 @@ export default function SearchPage() {
       <SearchPageClient
         initialRecipes={recipes}
         availableTags={tags}
-        isDemo={false}
       />
     </Suspense>
   );

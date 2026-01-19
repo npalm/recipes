@@ -10,7 +10,6 @@ interface ImageGalleryProps {
   images: string[];
   slug: string;
   title: string;
-  isDemo?: boolean;
   autoRotate?: boolean;
 }
 
@@ -24,12 +23,11 @@ function isExternalUrl(path: string): boolean {
 /**
  * Get the full image source path
  */
-function getImageSrc(image: string, slug: string, isDemo: boolean): string {
+function getImageSrc(image: string, slug: string): string {
   if (isExternalUrl(image)) {
     return image;
   }
-  const basePath = isDemo ? '/content/demo' : '/content/recipes';
-  return `${basePath}/${slug}/images/${image}`;
+  return `/content/recipes/${slug}/images/${image}`;
 }
 
 /**
@@ -39,7 +37,6 @@ export function ImageGallery({
   images,
   slug,
   title,
-  isDemo = false,
   autoRotate = true,
 }: ImageGalleryProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -76,7 +73,7 @@ export function ImageGallery({
   }
 
   const currentImage = images[currentIndex];
-  const imageSrc = getImageSrc(currentImage, slug, isDemo);
+  const imageSrc = getImageSrc(currentImage, slug);
 
   return (
     <div
@@ -156,12 +153,10 @@ export function RecipeThumbnail({
   images,
   slug,
   title,
-  isDemo = false,
 }: {
   images: string[];
   slug: string;
   title: string;
-  isDemo?: boolean;
 }) {
   if (images.length === 0) {
     return (
@@ -172,7 +167,7 @@ export function RecipeThumbnail({
   }
 
   const firstImage = images[0];
-  const imageSrc = getImageSrc(firstImage, slug, isDemo);
+  const imageSrc = getImageSrc(firstImage, slug);
 
   return (
     <div className="relative aspect-[4/3] w-full overflow-hidden bg-muted">

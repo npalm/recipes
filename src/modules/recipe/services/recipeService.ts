@@ -30,13 +30,11 @@ import {
  * NOTE: This class uses file system operations and can only be used server-side
  */
 export class RecipeService {
-  constructor(private readonly isDemo: boolean = false) {}
-
   /**
    * Get all recipes with optional filtering and sorting
    */
   getRecipes(filters?: RecipeFilters, sort?: RecipeSort): Recipe[] {
-    let recipes = getAllRecipes(this.isDemo);
+    let recipes = getAllRecipes();
 
     if (filters) {
       recipes = filterRecipes(recipes, filters);
@@ -53,7 +51,7 @@ export class RecipeService {
    * Get all recipe cards with optional filtering and sorting
    */
   getRecipeCards(filters?: RecipeFilters, sort?: RecipeSort): RecipeCard[] {
-    let cards = getAllRecipeCards(this.isDemo);
+    let cards = getAllRecipeCards();
 
     if (filters) {
       cards = filterRecipeCards(cards, filters);
@@ -70,7 +68,7 @@ export class RecipeService {
    * Get a single recipe by slug
    */
   getRecipe(slug: string): Recipe | null {
-    return getRecipeBySlug(slug, this.isDemo);
+    return getRecipeBySlug(slug);
   }
 
   /**
@@ -85,7 +83,7 @@ export class RecipeService {
    * Get all unique tags
    */
   getTags(): string[] {
-    return getAllTags(this.isDemo);
+    return getAllTags();
   }
 
   /**
@@ -125,6 +123,6 @@ export class RecipeService {
 /**
  * Create a recipe service instance
  */
-export function createRecipeService(isDemo = false): RecipeService {
-  return new RecipeService(isDemo);
+export function createRecipeService(): RecipeService {
+  return new RecipeService();
 }
