@@ -4,16 +4,17 @@ import { Layout } from '@/components/layout';
 import { RecipeDetail } from '@/modules/recipe/components';
 import { createRecipeService } from '@/modules/recipe/services';
 import { config } from '@/lib/config';
+import { locales } from '@/i18n';
 
 interface RecipePageProps {
-  params: Promise<{ slug: string }>;
+  params: Promise<{ slug: string; locale: string }>;
 }
 
 export async function generateMetadata({
   params,
 }: RecipePageProps): Promise<Metadata> {
-  const { slug } = await params;
-  const recipeService = createRecipeService();
+  const { slug, locale } = await params;
+  const recipeService = createRecipeService(locale);
   const recipe = recipeService.getRecipe(slug);
 
   if (!recipe) {
@@ -29,17 +30,26 @@ export async function generateMetadata({
 }
 
 export async function generateStaticParams() {
-  const recipeService = createRecipeService();
-  const recipes = recipeService.getRecipeCards();
-
-  return recipes.map((recipe) => ({
-    slug: recipe.slug,
-  }));
+  const allParams = [];
+  
+  for (const locale of locales) {
+    const recipeService = createRecipeService(locale);
+    const recipes = recipeService.getRecipeCards();
+    
+    for (const recipe of recipes) {
+      allParams.push({
+        locale,
+        slug: recipe.slug,
+      });
+    }
+  }
+  
+  return allParams;
 }
 
 export default async function RecipePage({ params }: RecipePageProps) {
-  const { slug } = await params;
-  const recipeService = createRecipeService();
+  const { slug, locale } = await params;
+  const recipeService = createRecipeService(locale);
   const recipe = recipeService.getRecipe(slug);
 
   if (!recipe) {

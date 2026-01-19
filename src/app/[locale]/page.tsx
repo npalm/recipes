@@ -5,8 +5,13 @@ import { RecipeGrid } from '@/modules/recipe/components';
 import { Button } from '@/components/ui/button';
 import { createRecipeService } from '@/modules/recipe/services';
 
-export default function HomePage() {
-  const recipeService = createRecipeService();
+type Props = {
+  params: Promise<{ locale: string }>;
+};
+
+export default async function HomePage({ params }: Props) {
+  const { locale } = await params;
+  const recipeService = createRecipeService(locale);
   const recipes = recipeService.getRecipeCards(
     { status: ['published'] },
     { field: 'createdAt', direction: 'desc' }
@@ -30,7 +35,7 @@ export default function HomePage() {
           </p>
           <div className="flex flex-wrap gap-3">
             <Button size="lg" asChild>
-              <Link href="/search">
+              <Link href={`/${locale}/search`}>
                 <Search className="mr-2 h-4 w-4" />
                 Search Recipes
               </Link>
@@ -64,7 +69,7 @@ export default function HomePage() {
         <div className="mb-6 flex items-center justify-between">
           <h2 className="text-2xl font-semibold tracking-tight">Latest Recipes</h2>
           <Button variant="ghost" size="sm" asChild>
-            <Link href="/search">View all</Link>
+            <Link href={`/${locale}/search`}>View all</Link>
           </Button>
         </div>
 

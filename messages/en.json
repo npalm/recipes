@@ -1,0 +1,129 @@
+{
+  "common": {
+    "loading": "Loading...",
+    "error": "Error",
+    "notFound": "Not Found",
+    "close": "Close",
+    "cancel": "Cancel",
+    "save": "Save",
+    "delete": "Delete",
+    "edit": "Edit",
+    "search": "Search",
+    "filter": "Filter",
+    "clear": "Clear",
+    "next": "Next",
+    "previous": "Previous",
+    "back": "Back"
+  },
+  "navigation": {
+    "home": "Home",
+    "recipes": "Recipes",
+    "dinner": "Dinner Generator",
+    "about": "About",
+    "contact": "Contact"
+  },
+  "footer": {
+    "rightsReserved": "All rights reserved",
+    "madeWith": "Made with",
+    "by": "by"
+  },
+  "home": {
+    "title": "Welcome to Recipe Collection",
+    "subtitle": "Discover and organize your favorite recipes",
+    "description": "A curated collection of culinary delights, from classic comfort food to innovative dishes.",
+    "browseRecipes": "Browse Recipes",
+    "generateDinner": "Generate Dinner Ideas",
+    "featuredRecipes": "Featured Recipes",
+    "recentRecipes": "Recent Recipes",
+    "popularRecipes": "Popular Recipes",
+    "noRecipes": "No recipes found"
+  },
+  "recipe": {
+    "title": "Recipe",
+    "recipes": "Recipes",
+    "ingredients": "Ingredients",
+    "instructions": "Instructions",
+    "preparation": "Preparation",
+    "cooking": "Cooking",
+    "total": "Total",
+    "servings": "Servings",
+    "difficulty": "Difficulty",
+    "category": "Category",
+    "tags": "Tags",
+    "source": "Source",
+    "notes": "Notes",
+    "prepTime": "Prep Time",
+    "cookTime": "Cook Time",
+    "totalTime": "Total Time",
+    "difficultyLevels": {
+      "easy": "Easy",
+      "medium": "Medium",
+      "hard": "Hard"
+    },
+    "noIngredients": "No ingredients listed",
+    "noInstructions": "No instructions provided",
+    "notFound": "Recipe not found",
+    "backToRecipes": "Back to Recipes",
+    "gallery": "Gallery",
+    "viewFullImage": "View full image"
+  },
+  "search": {
+    "title": "Search Recipes",
+    "placeholder": "Search recipes...",
+    "searchByName": "Search by name, ingredient, or tag",
+    "results": "Results",
+    "noResults": "No recipes found matching your search",
+    "filters": "Filters",
+    "clearFilters": "Clear Filters",
+    "sortBy": "Sort By",
+    "sortOptions": {
+      "nameAsc": "Name (A-Z)",
+      "nameDesc": "Name (Z-A)",
+      "dateNew": "Newest First",
+      "dateOld": "Oldest First",
+      "prepTime": "Prep Time",
+      "cookTime": "Cook Time"
+    },
+    "filterByDifficulty": "Filter by Difficulty",
+    "filterByCategory": "Filter by Category",
+    "filterByTags": "Filter by Tags",
+    "resultsCount": "{count} recipe(s) found"
+  },
+  "dinner": {
+    "title": "Dinner Generator",
+    "subtitle": "Generate dinner ideas for the upcoming week",
+    "description": "Plan your dinners effortlessly with our smart generator",
+    "generate": "Generate Dinner Ideas",
+    "regenerate": "Regenerate",
+    "numberOfDays": "Number of Days",
+    "selectDays": "Select number of days",
+    "preferences": "Preferences",
+    "includeCategories": "Include Categories",
+    "excludeIngredients": "Exclude Ingredients",
+    "maxDifficulty": "Maximum Difficulty",
+    "generatedPlan": "Your Dinner Plan",
+    "day": "Day",
+    "noPlansGenerated": "No dinner plans generated yet",
+    "generateFirst": "Click the button above to generate dinner ideas"
+  },
+  "time": {
+    "minutes": "{count} min",
+    "hours": "{count} hr",
+    "days": "{count} day",
+    "mins": "mins",
+    "hrs": "hrs"
+  },
+  "language": {
+    "english": "English",
+    "dutch": "Nederlands",
+    "switchTo": "Switch to {language}"
+  },
+  "meta": {
+    "defaultTitle": "Recipe Collection",
+    "defaultDescription": "A curated collection of delicious recipes",
+    "homeTitle": "Home - Recipe Collection",
+    "recipesTitle": "Recipes - Recipe Collection",
+    "dinnerTitle": "Dinner Generator - Recipe Collection",
+    "searchTitle": "Search Recipes - Recipe Collection"
+  }
+}

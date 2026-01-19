@@ -9,8 +9,13 @@ export const metadata: Metadata = {
   description: 'Search and filter recipes by name, ingredients, tags, and more',
 };
 
-export default function SearchPage() {
-  const recipeService = createRecipeService();
+type Props = {
+  params: Promise<{ locale: string }>;
+};
+
+export default async function SearchPage({ params }: Props) {
+  const { locale } = await params;
+  const recipeService = createRecipeService(locale);
   const recipes = recipeService.getRecipeCards({ status: ['published'] });
   const tags = recipeService.getTags();
 

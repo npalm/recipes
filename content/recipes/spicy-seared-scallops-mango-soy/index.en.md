@@ -1,5 +1,5 @@
 ---
-title: "Spicy Seared Scallops with Mango and Soy"
+title: "Spicy Scallops with Mango and Soy"
 slug: "spicy-seared-scallops-mango-soy"
 status: published
 servings: 4

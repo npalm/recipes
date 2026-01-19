@@ -26,7 +26,10 @@ const DEFAULT_CONFIG: RecipeRepositoryConfig = {
 /**
  * Read all recipe slugs from the content directory
  */
-export function getRecipeSlugs(config = DEFAULT_CONFIG): string[] {
+export function getRecipeSlugs(
+  locale: string = 'en',
+  config = DEFAULT_CONFIG
+): string[] {
   const contentDir = config.contentDir;
 
   try {
@@ -39,8 +42,8 @@ export function getRecipeSlugs(config = DEFAULT_CONFIG): string[] {
       .filter((entry) => entry.isDirectory())
       .map((entry) => entry.name)
       .filter((name) => {
-        // Check if directory contains an index.md file
-        const indexPath = path.join(contentDir, name, 'index.md');
+        // Check if directory contains an index.{locale}.md file
+        const indexPath = path.join(contentDir, name, `index.${locale}.md`);
         return fs.existsSync(indexPath);
       });
   } catch (error) {
@@ -54,10 +57,11 @@ export function getRecipeSlugs(config = DEFAULT_CONFIG): string[] {
  */
 export function getRecipeBySlug(
   slug: string,
+  locale: string = 'en',
   config = DEFAULT_CONFIG
 ): Recipe | null {
   const contentDir = config.contentDir;
-  const recipePath = path.join(contentDir, slug, 'index.md');
+  const recipePath = path.join(contentDir, slug, `index.${locale}.md`);
 
   try {
     if (!fs.existsSync(recipePath)) {
@@ -79,12 +83,15 @@ export function getRecipeBySlug(
 /**
  * Read all recipes
  */
-export function getAllRecipes(config = DEFAULT_CONFIG): Recipe[] {
-  const slugs = getRecipeSlugs(config);
+export function getAllRecipes(
+  locale: string = 'en',
+  config = DEFAULT_CONFIG
+): Recipe[] {
+  const slugs = getRecipeSlugs(locale, config);
   const recipes: Recipe[] = [];
 
   for (const slug of slugs) {
-    const recipe = getRecipeBySlug(slug, config);
+    const recipe = getRecipeBySlug(slug, locale, config);
     if (recipe) {
       recipes.push(recipe);
     }
@@ -114,16 +121,22 @@ export function recipeToCard(recipe: Recipe): RecipeCard {
 /**
  * Get all recipe cards (optimized for listing pages)
  */
-export function getAllRecipeCards(config = DEFAULT_CONFIG): RecipeCard[] {
-  const recipes = getAllRecipes(config);
+export function getAllRecipeCards(
+  locale: string = 'en',
+  config = DEFAULT_CONFIG
+): RecipeCard[] {
+  const recipes = getAllRecipes(locale, config);
   return recipes.map(recipeToCard);
 }
 
 /**
  * Get all unique tags from all recipes
  */
-export function getAllTags(config = DEFAULT_CONFIG): string[] {
-  const recipes = getAllRecipes(config);
+export function getAllTags(
+  locale: string = 'en',
+  config = DEFAULT_CONFIG
+): string[] {
+  const recipes = getAllRecipes(locale, config);
   const tagSet = new Set<string>();
 
   for (const recipe of recipes) {
@@ -145,8 +158,12 @@ export function getRecipeImagePath(slug: string, imageName: string): string {
 /**
  * Check if a recipe exists
  */
-export function recipeExists(slug: string, config = DEFAULT_CONFIG): boolean {
+export function recipeExists(
+  slug: string,
+  locale: string = 'en',
+  config = DEFAULT_CONFIG
+): boolean {
   const contentDir = config.contentDir;
-  const recipePath = path.join(contentDir, slug, 'index.md');
+  const recipePath = path.join(contentDir, slug, `index.${locale}.md`);
   return fs.existsSync(recipePath);
 }

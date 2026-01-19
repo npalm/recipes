@@ -1,0 +1,129 @@
+{
+  "common": {
+    "loading": "Laden...",
+    "error": "Fout",
+    "notFound": "Niet gevonden",
+    "close": "Sluiten",
+    "cancel": "Annuleren",
+    "save": "Opslaan",
+    "delete": "Verwijderen",
+    "edit": "Bewerken",
+    "search": "Zoeken",
+    "filter": "Filteren",
+    "clear": "Wissen",
+    "next": "Volgende",
+    "previous": "Vorige",
+    "back": "Terug"
+  },
+  "navigation": {
+    "home": "Home",
+    "recipes": "Recepten",
+    "dinner": "Diner Generator",
+    "about": "Over",
+    "contact": "Contact"
+  },
+  "footer": {
+    "rightsReserved": "Alle rechten voorbehouden",
+    "madeWith": "Gemaakt met",
+    "by": "door"
+  },
+  "home": {
+    "title": "Welkom bij Recepten Collectie",
+    "subtitle": "Ontdek en organiseer je favoriete recepten",
+    "description": "Een zorgvuldig samengestelde collectie van culinaire hoogstandjes, van klassieke comfortgerechten tot innovatieve creaties.",
+    "browseRecipes": "Recepten Bekijken",
+    "generateDinner": "Diner Ideeën Genereren",
+    "featuredRecipes": "Uitgelichte Recepten",
+    "recentRecipes": "Recente Recepten",
+    "popularRecipes": "Populaire Recepten",
+    "noRecipes": "Geen recepten gevonden"
+  },
+  "recipe": {
+    "title": "Recept",
+    "recipes": "Recepten",
+    "ingredients": "Ingrediënten",
+    "instructions": "Bereidingswijze",
+    "preparation": "Voorbereiding",
+    "cooking": "Koken",
+    "total": "Totaal",
+    "servings": "Porties",
+    "difficulty": "Moeilijkheidsgraad",
+    "category": "Categorie",
+    "tags": "Tags",
+    "source": "Bron",
+    "notes": "Notities",
+    "prepTime": "Voorbereidingstijd",
+    "cookTime": "Bereidingstijd",
+    "totalTime": "Totale tijd",
+    "difficultyLevels": {
+      "easy": "Makkelijk",
+      "medium": "Gemiddeld",
+      "hard": "Moeilijk"
+    },
+    "noIngredients": "Geen ingrediënten vermeld",
+    "noInstructions": "Geen bereidingswijze beschikbaar",
+    "notFound": "Recept niet gevonden",
+    "backToRecipes": "Terug naar Recepten",
+    "gallery": "Galerij",
+    "viewFullImage": "Volledig beeld bekijken"
+  },
+  "search": {
+    "title": "Recepten Zoeken",
+    "placeholder": "Zoek recepten...",
+    "searchByName": "Zoek op naam, ingrediënt of tag",
+    "results": "Resultaten",
+    "noResults": "Geen recepten gevonden die aan je zoekopdracht voldoen",
+    "filters": "Filters",
+    "clearFilters": "Filters Wissen",
+    "sortBy": "Sorteren op",
+    "sortOptions": {
+      "nameAsc": "Naam (A-Z)",
+      "nameDesc": "Naam (Z-A)",
+      "dateNew": "Nieuwste eerst",
+      "dateOld": "Oudste eerst",
+      "prepTime": "Voorbereidingstijd",
+      "cookTime": "Bereidingstijd"
+    },
+    "filterByDifficulty": "Filteren op Moeilijkheidsgraad",
+    "filterByCategory": "Filteren op Categorie",
+    "filterByTags": "Filteren op Tags",
+    "resultsCount": "{count} recept(en) gevonden"
+  },
+  "dinner": {
+    "title": "Diner Generator",
+    "subtitle": "Genereer diner ideeën voor de komende week",
+    "description": "Plan je diners moeiteloos met onze slimme generator",
+    "generate": "Diner Ideeën Genereren",
+    "regenerate": "Opnieuw Genereren",
+    "numberOfDays": "Aantal Dagen",
+    "selectDays": "Selecteer aantal dagen",
+    "preferences": "Voorkeuren",
+    "includeCategories": "Inclusief Categorieën",
+    "excludeIngredients": "Exclusief Ingrediënten",
+    "maxDifficulty": "Maximale Moeilijkheidsgraad",
+    "generatedPlan": "Jouw Diner Plan",
+    "day": "Dag",
+    "noPlansGenerated": "Nog geen diner plannen gegenereerd",
+    "generateFirst": "Klik op de knop hierboven om diner ideeën te genereren"
+  },
+  "time": {
+    "minutes": "{count} min",
+    "hours": "{count} uur",
+    "days": "{count} dag",
+    "mins": "min",
+    "hrs": "uur"
+  },
+  "language": {
+    "english": "English",
+    "dutch": "Nederlands",
+    "switchTo": "Overschakelen naar {language}"
+  },
+  "meta": {
+    "defaultTitle": "Recepten Collectie",
+    "defaultDescription": "Een zorgvuldig samengestelde collectie van heerlijke recepten",
+    "homeTitle": "Home - Recepten Collectie",
+    "recipesTitle": "Recepten - Recepten Collectie",
+    "dinnerTitle": "Diner Generator - Recepten Collectie",
+    "searchTitle": "Recepten Zoeken - Recepten Collectie"
+  }
+}

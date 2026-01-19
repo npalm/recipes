@@ -1,8 +1,6 @@
 import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
 import './globals.css';
-import { config } from '@/lib/config';
-import { ThemeProvider } from '@/components/theme/ThemeProvider';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -15,11 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: {
-    default: config.appName,
-    template: `%s | ${config.appName}`,
-  },
-  description: config.appDescription,
+  title: 'Recipe Collection',
+  description: 'A curated collection of delicious recipes',
 };
 
 // Inline script to prevent theme flash on page load
@@ -46,9 +41,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <ThemeProvider>
-          {children}
-        </ThemeProvider>
+        {children}
       </body>
     </html>
   );
