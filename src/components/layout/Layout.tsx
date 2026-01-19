@@ -13,6 +13,7 @@ import {
   Moon,
   Sun,
   Github,
+  Calendar,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { config } from '@/lib/config';
@@ -95,6 +96,12 @@ export function Header({ isDemo = false }: HeaderProps) {
               <Search className="h-4 w-4" />
               Search
             </NavLink>
+            {!isDemo && (
+              <NavLink href="/dinner/plan">
+                <Calendar className="h-4 w-4" />
+                Dinner
+              </NavLink>
+            )}
             {!isDemo ? (
               <NavLink href="/demo">
                 <BookOpen className="h-4 w-4" />
@@ -149,6 +156,12 @@ export function Header({ isDemo = false }: HeaderProps) {
                 <Search className="h-4 w-4" />
                 Search
               </NavLink>
+              {!isDemo && (
+                <NavLink href="/dinner/plan" onClick={closeMobileMenu}>
+                  <Calendar className="h-4 w-4" />
+                  Plan Dinner
+                </NavLink>
+              )}
               {!isDemo ? (
                 <NavLink href="/demo" onClick={closeMobileMenu}>
                   <BookOpen className="h-4 w-4" />
