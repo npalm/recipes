@@ -2,13 +2,14 @@ version: 2
 updates:
   # Enable version updates for npm (main project)
   # Checks weekly (7-day interval between checks)
+  # Limit PRs to prevent overwhelming reviewers (pedantic mode requirement)
   - package-ecosystem: "npm"
     directory: "/"
     schedule:
       interval: "weekly"
       day: "monday"
       time: "03:00"
-    open-pull-requests-limit: 10
+    open-pull-requests-limit: 5
     reviewers:
       - "npalm"
     labels:
@@ -33,13 +34,14 @@ updates:
 
   # Enable version updates for npm (CLI tool)
   # Checks weekly (7-day interval between checks)
+  # Limit PRs to prevent overwhelming reviewers (pedantic mode requirement)
   - package-ecosystem: "npm"
     directory: "/tools/cli"
     schedule:
       interval: "weekly"
       day: "monday"
       time: "03:00"
-    open-pull-requests-limit: 5
+    open-pull-requests-limit: 3
     reviewers:
       - "npalm"
     labels:
@@ -58,13 +60,14 @@ updates:
 
   # Enable version updates for GitHub Actions
   # Checks weekly (7-day interval between checks)
+  # Limit PRs to prevent overwhelming reviewers (pedantic mode requirement)
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
       interval: "weekly"
       day: "monday"
       time: "03:00"
-    open-pull-requests-limit: 5
+    open-pull-requests-limit: 3
     reviewers:
       - "npalm"
     labels:
