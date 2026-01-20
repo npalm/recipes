@@ -61,23 +61,22 @@ npm run recipe validate --json
 
 ### 3. Pre-commit Hooks
 
-**Files:** `.husky/pre-commit`, `package.json` (lint-staged config)
+**Files:** `.husky/pre-commit`, `.lintstagedrc.js`
 
 Automatically validates changed recipe files before commit.
 
 #### Configuration
 
-```json
-{
-  "lint-staged": {
-    "content/recipes/**/*.md": [
-      "npm run recipe validate --"
-    ],
-    "*.{ts,tsx}": [
-      "eslint --fix"
-    ]
-  }
-}
+```javascript
+// .lintstagedrc.js
+export default {
+  'content/recipes/**/*.md': [
+    'npm run recipe validate --'
+  ],
+  '*.{ts,tsx}': [
+    'eslint --fix'
+  ]
+};
 ```
 
 #### How it works
@@ -87,26 +86,49 @@ Automatically validates changed recipe files before commit.
 3. If validation fails, the commit is blocked
 4. Fix the issues and try committing again
 
-### 4. GitHub Actions CI
+### 4. GitHub Actions Workflows
+
+#### Recipe Validation Workflow
+
+**File:** `.github/workflows/validate-recipes.yml`
+
+**Purpose:** Validates recipes only when recipe-related files change
+
+**Triggers on:**
+- Pull requests that modify:
+  - Recipe markdown files (`content/recipes/**/*.md`)
+  - Recipe validation schema (`src/modules/recipe/domain/schemas.ts`)
+  - CLI validation tool (`tools/cli/src/**`)
+- Pushes to `main` branch with recipe-related changes
+- Manual workflow dispatch
+
+**Jobs:**
+1. **Standard validation**: Validates all recipe markdown files
+2. **Strict validation**: Checks for image file existence (informational only)
+
+**Why a separate workflow?**
+- ⚡ **Faster feedback**: Only runs when recipes or validation code changes
+- 💰 **Efficient**: Doesn't waste CI minutes on every code change
+- 🎯 **Clear separation**: Recipe validation status is independent from main CI
+
+#### Main CI Workflow
 
 **File:** `.github/workflows/ci.yml`
 
-Runs validation on all pull requests and pushes to main.
+**Purpose:** Validates code quality and builds the application
 
-#### Security Features
+**Jobs:**
+1. **Lint**: Runs ESLint on TypeScript files
+2. **Test**: Runs unit tests and coverage
+3. **Build**: Builds the Next.js application
+4. **CI Success**: Summary job ensuring all checks passed
+
+#### Security Features (Both Workflows)
 
 ✅ **Minimal permissions**: Each job has only necessary permissions  
 ✅ **Actions pinned to SHA**: All actions locked to specific commit hashes  
 ✅ **No credential persistence**: Checkouts don't persist credentials  
-✅ **Validated with zizmor**: Security linter for GitHub Actions  
-
-#### Jobs
-
-1. **Lint**: Runs ESLint on TypeScript files
-2. **Test**: Runs unit tests and coverage
-3. **Validate Recipes**: Validates all recipe markdown files
-4. **Build**: Builds the Next.js application
-5. **CI Success**: Summary job ensuring all checks passed
+✅ **Validated with zizmor**: Security linter for GitHub Actions
 
 ## Common Validation Errors
 
