@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 import { Search, X } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -28,12 +28,13 @@ export function SearchBar({
   const [query, setQuery] = useState(initialQuery);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  // Debounced search
-  const debouncedSearch = useRef(
-    debounce((value: string) => {
+  // Create debounced search function using useMemo to avoid ref access during render
+  const debouncedSearch = useMemo(
+    () => debounce((value: string) => {
       onSearch(value);
-    }, config.searchDebounceMs)
-  ).current;
+    }, config.searchDebounceMs),
+    [onSearch]
+  );
 
   useEffect(() => {
     debouncedSearch(query);

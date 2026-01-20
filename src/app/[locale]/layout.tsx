@@ -14,9 +14,7 @@ export function generateStaticParams() {
   return locales.map((locale) => ({ locale }));
 }
 
-export async function generateMetadata({ params }: Props) {
-  const { locale } = await params;
-  
+export async function generateMetadata() {
   return {
     title: {
       default: config.appName,
@@ -32,7 +30,7 @@ export default async function LocaleLayout({ children, params }: Props) {
   const locale = resolvedParams.locale;
 
   // Ensure that the incoming `locale` is valid
-  if (!locales.includes(locale as any)) {
+  if (!locales.includes(locale as (typeof locales)[number])) {
     notFound();
   }
 

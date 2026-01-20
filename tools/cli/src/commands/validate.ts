@@ -132,7 +132,7 @@ function parseFrontmatter(content: string): { frontmatter: Record<string, unknow
       continue;
     } else if (typeof value === 'string') {
       // Remove quotes
-      let strValue: string = value.replace(/^["']|["']$/g, '');
+      const strValue: string = value.replace(/^["']|["']$/g, '');
 
       // Parse numbers
       if (/^\d+$/.test(strValue)) {

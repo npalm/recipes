@@ -1,6 +1,6 @@
 'use client';
 
-import { createContext, useContext, useEffect, useState } from 'react';
+import { createContext, useContext, useEffect, useLayoutEffect, useState } from 'react';
 
 type Theme = 'light' | 'dark' | 'system';
 
@@ -34,47 +34,40 @@ interface ThemeProviderProps {
 }
 
 export function ThemeProvider({ children, defaultTheme = 'system' }: ThemeProviderProps) {
-  const [theme, setThemeState] = useState<Theme>(defaultTheme);
-  const [resolvedTheme, setResolvedTheme] = useState<'light' | 'dark'>('light');
-  const [mounted, setMounted] = useState(false);
-
-  // Initialize theme from localStorage on mount
-  useEffect(() => {
+  // Initialize theme from localStorage using lazy initialization
+  const [theme, setThemeState] = useState<Theme>(() => {
+    if (typeof window === 'undefined') return defaultTheme;
     const stored = localStorage.getItem(STORAGE_KEY) as Theme | null;
-    if (stored && ['light', 'dark', 'system'].includes(stored)) {
-      setThemeState(stored);
-    }
-    setMounted(true);
-  }, []);
+    return stored && ['light', 'dark', 'system'].includes(stored) ? stored : defaultTheme;
+  });
+  
+  // Track system theme separately - only updates via media query listener
+  const [systemTheme, setSystemTheme] = useState<'light' | 'dark'>(() => 
+    typeof window !== 'undefined' ? getSystemTheme() : 'light'
+  );
 
-  // Update resolved theme and apply to document
-  useEffect(() => {
-    if (!mounted) return;
-    
-    const resolved = theme === 'system' ? getSystemTheme() : theme;
-    setResolvedTheme(resolved);
-    
-    // Apply to document
+  // Compute resolved theme
+  const resolvedTheme = theme === 'system' ? systemTheme : theme;
+
+  // Apply theme to document
+  useLayoutEffect(() => {
     const root = document.documentElement;
     root.classList.remove('light', 'dark');
-    root.classList.add(resolved);
-  }, [theme, mounted]);
+    root.classList.add(resolvedTheme);
+  }, [resolvedTheme]);
 
-  // Listen for system theme changes
+  // Listen for system theme changes - setState is in event handler, not effect body
   useEffect(() => {
-    if (!mounted || theme !== 'system') return;
+    if (theme !== 'system') return;
 
     const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
     const handleChange = () => {
-      const resolved = getSystemTheme();
-      setResolvedTheme(resolved);
-      document.documentElement.classList.remove('light', 'dark');
-      document.documentElement.classList.add(resolved);
+      setSystemTheme(getSystemTheme());
     };
 
     mediaQuery.addEventListener('change', handleChange);
     return () => mediaQuery.removeEventListener('change', handleChange);
-  }, [theme, mounted]);
+  }, [theme]);
 
   const setTheme = (newTheme: Theme) => {
     setThemeState(newTheme);
@@ -88,10 +81,13 @@ export function ThemeProvider({ children, defaultTheme = 'system' }: ThemeProvid
     setTheme(newTheme);
   };
 
-  // Always provide context, even during SSR (with safe defaults)
-  const value: ThemeContextValue = mounted
-    ? { theme, resolvedTheme, setTheme, toggleTheme }
-    : defaultContextValue;
+  // Always provide context with current values
+  const value: ThemeContextValue = {
+    theme,
+    resolvedTheme,
+    setTheme,
+    toggleTheme,
+  };
 
   return (
     <ThemeContext.Provider value={value}>
