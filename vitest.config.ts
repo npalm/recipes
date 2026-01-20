@@ -19,6 +19,13 @@ export default defineConfig({
         '**/*.config.*',
         '**/index.ts',
       ],
+      // Coverage thresholds - fail CI if coverage drops below these levels
+      thresholds: {
+        statements: 96,
+        branches: 89,
+        functions: 100,
+        lines: 97,
+      },
     },
   },
   resolve: {
