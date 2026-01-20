@@ -18,6 +18,7 @@ export default defineConfig({
         '**/*.d.ts',
         '**/*.config.*',
         '**/index.ts',
+        '**/repository/**', // Exclude repository layer (file system operations, tested via integration)
       ],
       // Coverage thresholds - fail CI if coverage drops below these levels
       // Current coverage: 97.27% statements, 89.3% branches, 100% functions, 98.39% lines
