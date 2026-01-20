@@ -1,6 +1,7 @@
 version: 2
 updates:
   # Enable version updates for npm (main project)
+  # Checks weekly (7-day interval between checks)
   - package-ecosystem: "npm"
     directory: "/"
     schedule:
@@ -31,6 +32,7 @@ updates:
           - "patch"
 
   # Enable version updates for npm (CLI tool)
+  # Checks weekly (7-day interval between checks)
   - package-ecosystem: "npm"
     directory: "/tools/cli"
     schedule:
@@ -55,6 +57,7 @@ updates:
           - "patch"
 
   # Enable version updates for GitHub Actions
+  # Checks weekly (7-day interval between checks)
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
