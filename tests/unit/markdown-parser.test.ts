@@ -698,6 +698,107 @@ Description
     });
   });
 
+  describe('instruction parsing edge cases', () => {
+    const validFrontmatter = `---
+title: Test Recipe
+slug: test-recipe
+servings: 4
+prepTime: 15
+cookTime: 30
+difficulty: medium
+createdAt: "2024-01-01"
+---`;
+
+    it('handles empty lines between instructions', () => {
+      const markdown = `${validFrontmatter}
+
+## Ingredients
+- Flour
+
+## Instructions
+
+1. Mix ingredients
+
+2. Let rest
+
+
+3. Bake`;
+
+      const result = parseRecipeMarkdown(markdown, 'test-recipe');
+      expect(result.instructionsMarkdown).toContain('1. Mix ingredients');
+      expect(result.instructionsMarkdown).toContain('2. Let rest');
+      expect(result.instructionsMarkdown).toContain('3. Bake');
+    });
+
+    it('handles multi-line instructions (continuation lines)', () => {
+      const markdown = `${validFrontmatter}
+
+## Ingredients
+- Flour
+
+## Instructions
+
+1. Mix the flour with water
+   and knead for 10 minutes
+   until smooth
+2. Let rest`;
+
+      const result = parseRecipeMarkdown(markdown, 'test-recipe');
+      const parsed = parsedRecipeToRecipe(result);
+      
+      expect(parsed.instructions[0]).toContain('Mix the flour with water');
+      expect(parsed.instructions[0]).toContain('and knead for 10 minutes');
+      expect(parsed.instructions[0]).toContain('until smooth');
+    });
+
+    it('handles instructions with bulleted lists', () => {
+      const markdown = `${validFrontmatter}
+
+## Ingredients
+- Flour
+
+## Instructions
+
+- Mix ingredients
+- Let rest
+- Bake`;
+
+      const result = parseRecipeMarkdown(markdown, 'test-recipe');
+      const parsed = parsedRecipeToRecipe(result);
+      
+      expect(parsed.instructions).toHaveLength(3);
+      expect(parsed.instructions[0]).toBe('Mix ingredients');
+      expect(parsed.instructions[1]).toBe('Let rest');
+    });
+
+    it('handles error wrapping in parseRecipe', () => {
+      const markdown = `---
+title: Test
+slug: test
+servings: -5
+prepTime: 15
+cookTime: 30
+difficulty: medium
+createdAt: "2024-01-01"
+---
+
+## Ingredients
+- Flour`;
+
+      // This should throw RecipeParseError wrapping the Zod validation error
+      expect(() => parseRecipe(markdown, 'test')).toThrow(RecipeParseError);
+      
+      try {
+        parseRecipe(markdown, 'test');
+      } catch (error) {
+        expect(error).toBeInstanceOf(RecipeParseError);
+        // The error message contains the validation error
+        expect((error as RecipeParseError).message).toContain('Invalid frontmatter');
+        expect((error as RecipeParseError).slug).toBe('test');
+      }
+    });
+  });
+
   describe('RecipeParseError', () => {
     it('has correct error properties', () => {
       const error = new RecipeParseError('Test error', 'test-slug', new Error('cause'));
