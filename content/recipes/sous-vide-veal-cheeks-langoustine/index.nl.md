@@ -4,7 +4,7 @@ slug: "sous-vide-veal-cheeks-langoustine"
 status: published
 servings: 4
 prepTime: 90
-cookTime: 840
+cookTime: 2280
 difficulty: hard
 tags: ["sous vide", "kalfsvlees", "langoustine", "hoofdgerecht", "gastronomisch"]
 images: 
@@ -15,7 +15,12 @@ createdAt: "2026-01-18"
 
 Een elegant gastronomisch gerecht met malse sous vide kalfswang in plakjes gesneden en geserveerd met langoustinestaarten, bietentartaar en pastinaakpuree. De kalfswang wordt gegaard op 72°C om een stevige textuur te behouden die mooi te snijden is.
 
-**Let op:** Dit gerecht vereist 24 uur voorbereidingstijd voor het pekelen van de kalfswangen, plan dus een dag vooruit.
+**Let op:** Dit gerecht vereist uitgebreide voorbereidingstijd verspreid over meerdere dagen:
+- **Dag 1:** Kalfswangen 24 uur in pekel (in koelkast)
+- **Dag 2:** Afdrogen, aanbraden en 12-16 uur sous vide garen
+- **Dag 3:** Afwerken en serveren
+
+Plan minimaal 2-3 dagen vooruit voor dit gerecht.
 
 ## Onderdelen
 
