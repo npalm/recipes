@@ -20,11 +20,12 @@ export default defineConfig({
         '**/index.ts',
       ],
       // Coverage thresholds - fail CI if coverage drops below these levels
+      // Current coverage: 97.27% statements, 89.3% branches, 100% functions, 98.39% lines
       thresholds: {
-        statements: 96,
-        branches: 88, // Slightly lower to account for defensive null-checks that are unreachable in practice
+        statements: 97,
+        branches: 89,
         functions: 100,
-        lines: 97,
+        lines: 98,
       },
     },
   },
