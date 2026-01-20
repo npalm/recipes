@@ -958,99 +958,35 @@ import { Command as Command3 } from "commander";
 import chalk3 from "chalk";
 import fs3 from "fs/promises";
 import path3 from "path";
+import matter from "gray-matter";
 import { z } from "zod";
-var RecipeFrontmatterSchema = z.object({
-  title: z.string().min(1, "Title is required"),
-  slug: z.string().regex(/^[a-z0-9-]+$/, "Slug must be lowercase alphanumeric with hyphens"),
-  status: z.enum(["draft", "published"]),
-  servings: z.number().positive("Servings must be positive"),
-  prepTime: z.number().nonnegative("Prep time cannot be negative"),
-  cookTime: z.number().nonnegative("Cook time cannot be negative"),
-  difficulty: z.enum(["easy", "medium", "hard"]),
-  tags: z.array(z.string()),
-  images: z.array(z.string()).optional(),
-  headerImageRotation: z.boolean().optional(),
-  sources: z.array(
-    z.object({
-      url: z.string().url("Source URL must be valid"),
-      title: z.string().optional()
-    })
-  ).optional(),
-  createdAt: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "Date must be YYYY-MM-DD format"),
-  updatedAt: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "Date must be YYYY-MM-DD format").optional()
+var difficultySchema = z.enum(["easy", "medium", "hard"]);
+var recipeStatusSchema = z.enum(["draft", "published"]);
+var recipeSourceSchema = z.object({
+  url: z.string().url("Invalid URL format"),
+  title: z.string().optional(),
+  importedAt: z.string().datetime().optional()
 });
-var validateCommand = new Command3("validate").description("Validate recipe markdown files").argument("[path]", "Path to recipe file or directory", "content").option("-s, --strict", "Enable strict validation").option("--fix", "Attempt to fix common issues (not yet implemented)").action(validateRecipes);
-function parseFrontmatter(content) {
-  const match = content.match(/^---\n([\s\S]*?)\n---\n([\s\S]*)$/);
-  if (!match) return null;
-  const yamlContent = match[1];
-  const body = match[2];
-  const frontmatter = {};
-  let currentKey = "";
-  let inArray = false;
-  let arrayItems = [];
-  for (const line of yamlContent.split("\n")) {
-    if (!line.trim()) continue;
-    if (line.match(/^\s+-/)) {
-      const value2 = line.replace(/^\s+-\s*/, "").trim();
-      if (value2.startsWith("url:")) {
-        const obj = {};
-        obj.url = value2.replace("url:", "").trim().replace(/^["']|["']$/g, "");
-        arrayItems.push(obj);
-      } else {
-        arrayItems.push(value2.replace(/^["']|["']$/g, ""));
-      }
-      continue;
-    }
-    if (line.match(/^\s+\w+:/) && arrayItems.length > 0) {
-      const [key2, ...valueParts] = line.trim().split(":");
-      const value2 = valueParts.join(":").trim().replace(/^["']|["']$/g, "");
-      const lastItem = arrayItems[arrayItems.length - 1];
-      if (typeof lastItem === "object" && lastItem !== null) {
-        lastItem[key2] = value2;
-      }
-      continue;
-    }
-    if (inArray && currentKey) {
-      frontmatter[currentKey] = arrayItems;
-      arrayItems = [];
-      inArray = false;
-    }
-    const colonIndex = line.indexOf(":");
-    if (colonIndex === -1) continue;
-    const key = line.slice(0, colonIndex).trim();
-    let value = line.slice(colonIndex + 1).trim();
-    if (typeof value === "string" && value.startsWith("[")) {
-      const arrayMatch = value.match(/^\[(.*)\]$/);
-      if (arrayMatch) {
-        value = arrayMatch[1].split(",").map((item) => item.trim().replace(/^["']|["']$/g, "")).filter(Boolean);
-      }
-    } else if (value === "" || value === "[]") {
-      inArray = true;
-      currentKey = key;
-      arrayItems = [];
-      continue;
-    } else if (typeof value === "string") {
-      const strValue = value.replace(/^["']|["']$/g, "");
-      if (/^\d+$/.test(strValue)) {
-        value = parseInt(strValue, 10);
-      } else if (/^\d+\.\d+$/.test(strValue)) {
-        value = parseFloat(strValue);
-      } else if (strValue === "true") {
-        value = true;
-      } else if (strValue === "false") {
-        value = false;
-      } else {
-        value = strValue;
-      }
-    }
-    frontmatter[key] = value;
-  }
-  if (inArray && currentKey) {
-    frontmatter[currentKey] = arrayItems;
-  }
-  return { frontmatter, body };
-}
+var recipeFrontmatterSchema = z.object({
+  title: z.string().min(1, "Title is required").max(200, "Title must be less than 200 characters"),
+  slug: z.string().min(1, "Slug is required").regex(
+    /^[a-z0-9]+(?:-[a-z0-9]+)*$/,
+    "Slug must be lowercase with hyphens only"
+  ),
+  status: recipeStatusSchema.default("published"),
+  servings: z.number().int().positive("Servings must be a positive integer").max(100, "Servings cannot exceed 100"),
+  prepTime: z.number().int().nonnegative("Prep time cannot be negative").max(2880, "Prep time cannot exceed 48 hours"),
+  cookTime: z.number().int().nonnegative("Cook time cannot be negative").max(4320, "Cook time cannot exceed 72 hours"),
+  totalTime: z.number().int().nonnegative("Total time cannot be negative").optional(),
+  difficulty: difficultySchema,
+  tags: z.array(z.string().min(1).max(50)).default([]),
+  images: z.array(z.string()).default([]),
+  headerImageRotation: z.boolean().default(true),
+  sources: z.array(recipeSourceSchema).default([]),
+  createdAt: z.string(),
+  updatedAt: z.string().optional()
+});
+var validateCommand = new Command3("validate").description("Validate recipe markdown files").argument("[path]", "Path to recipe file or directory", "content/recipes").option("-s, --strict", "Enable strict validation").option("--fix", "Attempt to fix common issues (not yet implemented)").option("--json", "Output results as JSON").action(validateRecipes);
 async function validateFile(filePath, options) {
   const result = {
     file: filePath,
@@ -1060,40 +996,67 @@ async function validateFile(filePath, options) {
   };
   try {
     const content = await fs3.readFile(filePath, "utf-8");
-    const parsed = parseFrontmatter(content);
-    if (!parsed) {
-      result.errors.push("Missing or invalid frontmatter (must be wrapped in ---)");
+    let parsed;
+    try {
+      parsed = matter(content);
+    } catch (error) {
+      result.errors.push(
+        `Failed to parse frontmatter: ${error instanceof Error ? error.message : "Unknown error"}`
+      );
       result.valid = false;
       return result;
     }
-    const { frontmatter, body } = parsed;
-    const validation = RecipeFrontmatterSchema.safeParse(frontmatter);
+    const { data: frontmatter, content: body } = parsed;
+    const validation = recipeFrontmatterSchema.safeParse(frontmatter);
     if (!validation.success) {
       for (const error of validation.error.issues) {
         result.errors.push(`${error.path.join(".")}: ${error.message}`);
       }
       result.valid = false;
     }
-    if (!body.includes("## Ingredients")) {
-      result.errors.push('Missing "## Ingredients" section');
-      result.valid = false;
+    const hasIngredients = body.includes("## Ingredients") || body.includes("## Ingredi\xEBnten");
+    const hasInstructions = body.includes("## Instructions") || body.includes("## Bereiding");
+    const hasComponents = body.includes("## Components") || body.includes("## Onderdelen");
+    if (!hasComponents) {
+      if (!hasIngredients) {
+        result.errors.push('Missing "## Ingredients" or "## Ingredi\xEBnten" section');
+        result.valid = false;
+      }
+      if (!hasInstructions) {
+        result.errors.push('Missing "## Instructions" or "## Bereiding" section');
+        result.valid = false;
+      }
+    } else {
+      if (!body.match(/^###\s+.+/m)) {
+        result.warnings.push("Components section found but no ### subsections detected");
+      }
     }
-    if (!body.includes("## Instructions")) {
-      result.errors.push('Missing "## Instructions" section');
-      result.valid = false;
-    }
-    if (!body.match(/^- .+/m)) {
-      result.warnings.push('No ingredients found (expected "- item" format)');
-    }
-    if (!body.match(/^\d+\. .+/m)) {
-      result.warnings.push("No numbered instructions found");
+    if (!hasComponents) {
+      if (!body.match(/^- .+/m)) {
+        result.warnings.push('No ingredients found (expected "- item" format)');
+      }
+      if (!body.match(/^\d+\. .+/m)) {
+        result.warnings.push("No numbered instructions found");
+      }
     }
     if (options.strict) {
       if (!frontmatter.tags || Array.isArray(frontmatter.tags) && frontmatter.tags.length === 0) {
         result.warnings.push("No tags specified");
       }
-      if (frontmatter.status === "published" && !frontmatter.images) {
+      if (frontmatter.status === "published" && (!frontmatter.images || frontmatter.images.length === 0)) {
         result.warnings.push("Published recipe has no images");
+      }
+      if (frontmatter.images && Array.isArray(frontmatter.images)) {
+        const recipeDir = path3.dirname(filePath);
+        const imagesDir = path3.join(recipeDir, "images");
+        for (const image of frontmatter.images) {
+          const imagePath = path3.join(imagesDir, image);
+          try {
+            await fs3.access(imagePath);
+          } catch {
+            result.warnings.push(`Image file not found: ${image}`);
+          }
+        }
       }
     }
   } catch (error) {
@@ -1113,7 +1076,7 @@ async function findRecipeFiles(dirPath) {
         if (!entry.name.startsWith(".") && entry.name !== "node_modules") {
           await walk(fullPath);
         }
-      } else if (entry.name.endsWith(".md")) {
+      } else if (entry.name.match(/^index\.(en|nl)\.md$/)) {
         files.push(fullPath);
       }
     }
@@ -1122,7 +1085,6 @@ async function findRecipeFiles(dirPath) {
   return files;
 }
 async function validateRecipes(inputPath, options) {
-  console.log(chalk3.bold("\nValidating recipes...\n"));
   let files;
   try {
     const stat = await fs3.stat(inputPath);
@@ -1132,45 +1094,88 @@ async function validateRecipes(inputPath, options) {
       files = [inputPath];
     }
   } catch {
-    console.error(chalk3.red(`Error: Path not found: ${inputPath}`));
+    if (!options.json) {
+      console.error(chalk3.red(`Error: Path not found: ${inputPath}`));
+    } else {
+      console.log(JSON.stringify({ error: `Path not found: ${inputPath}` }));
+    }
     process.exit(1);
   }
   if (files.length === 0) {
-    console.log(chalk3.yellow("No markdown files found."));
+    if (!options.json) {
+      console.log(chalk3.yellow("No recipe markdown files found."));
+    } else {
+      console.log(JSON.stringify({ files: [], valid: 0, invalid: 0 }));
+    }
     return;
   }
-  console.log(chalk3.dim(`Found ${files.length} file(s) to validate
+  if (!options.json) {
+    console.log(chalk3.bold("\nValidating recipes...\n"));
+    console.log(chalk3.dim(`Found ${files.length} file(s) to validate
 `));
+  }
   let validCount = 0;
   let invalidCount = 0;
+  const results = [];
   for (const file of files) {
     const result = await validateFile(file, options);
-    const relativePath = path3.relative(process.cwd(), file);
-    if (result.valid && result.warnings.length === 0) {
-      console.log(chalk3.green(`\u2713 ${relativePath}`));
-      validCount++;
-    } else if (result.valid) {
-      console.log(chalk3.yellow(`\u26A0 ${relativePath}`));
-      for (const warning of result.warnings) {
-        console.log(chalk3.dim(`    Warning: ${warning}`));
+    results.push(result);
+    if (!options.json) {
+      const relativePath = path3.relative(process.cwd(), file);
+      if (result.valid && result.warnings.length === 0) {
+        console.log(chalk3.green(`\u2713 ${relativePath}`));
+        validCount++;
+      } else if (result.valid) {
+        console.log(chalk3.yellow(`\u26A0 ${relativePath}`));
+        for (const warning of result.warnings) {
+          console.log(chalk3.dim(`    Warning: ${warning}`));
+        }
+        validCount++;
+      } else {
+        console.log(chalk3.red(`\u2717 ${relativePath}`));
+        for (const error of result.errors) {
+          console.log(chalk3.red(`    Error: ${error}`));
+        }
+        for (const warning of result.warnings) {
+          console.log(chalk3.dim(`    Warning: ${warning}`));
+        }
+        invalidCount++;
       }
-      validCount++;
     } else {
-      console.log(chalk3.red(`\u2717 ${relativePath}`));
-      for (const error of result.errors) {
-        console.log(chalk3.red(`    Error: ${error}`));
+      if (result.valid) {
+        validCount++;
+      } else {
+        invalidCount++;
       }
-      for (const warning of result.warnings) {
-        console.log(chalk3.dim(`    Warning: ${warning}`));
-      }
-      invalidCount++;
     }
   }
-  console.log("");
-  console.log(chalk3.bold("Summary:"));
-  console.log(chalk3.green(`  Valid:   ${validCount}`));
+  if (options.json) {
+    console.log(
+      JSON.stringify(
+        {
+          files: results.map((r) => ({
+            file: path3.relative(process.cwd(), r.file),
+            valid: r.valid,
+            errors: r.errors,
+            warnings: r.warnings
+          })),
+          valid: validCount,
+          invalid: invalidCount,
+          success: invalidCount === 0
+        },
+        null,
+        2
+      )
+    );
+  } else {
+    console.log("");
+    console.log(chalk3.bold("Summary:"));
+    console.log(chalk3.green(`  Valid:   ${validCount}`));
+    if (invalidCount > 0) {
+      console.log(chalk3.red(`  Invalid: ${invalidCount}`));
+    }
+  }
   if (invalidCount > 0) {
-    console.log(chalk3.red(`  Invalid: ${invalidCount}`));
     process.exit(1);
   }
 }

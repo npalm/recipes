@@ -51,12 +51,12 @@ export const recipeFrontmatterSchema = z.object({
     .number()
     .int()
     .nonnegative('Prep time cannot be negative')
-    .max(1440, 'Prep time cannot exceed 24 hours'),
+    .max(2880, 'Prep time cannot exceed 48 hours'),
   cookTime: z
     .number()
     .int()
     .nonnegative('Cook time cannot be negative')
-    .max(1440, 'Cook time cannot exceed 24 hours'),
+    .max(4320, 'Cook time cannot exceed 72 hours'),
   totalTime: z
     .number()
     .int()
