@@ -16,10 +16,10 @@ export type TemperatureUnit = 'celsius' | 'fahrenheit';
 
 export const config = {
   /** App name */
-  appName: 'My Recipes',
+  appName: 'Niek Kookt',
 
   /** App description */
-  appDescription: 'A personal recipe collection',
+  appDescription: 'Koken met passie',
 
   /** Default servings for new recipes */
   defaultServings: 4,

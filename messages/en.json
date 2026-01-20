@@ -35,14 +35,14 @@
     "rightsReserved": "All rights reserved",
     "madeWith": "Made with",
     "by": "by",
-    "description": "A personal recipe collection stored as markdown files. Fast, simple, and always yours.",
+    "description": "Cooking with passion",
     "quickLinks": "Quick Links",
     "allRecipes": "All Recipes",
     "aboutText": "Built with Next.js, styled with Tailwind CSS. Recipes stored as markdown in git for easy version control.",
     "madeWithLove": "Made with love and good food."
   },
   "home": {
-    "title": "Welcome to Recipe Collection",
+    "title": "Welcome to Niek Kookt",
     "subtitle": "Discover and organize your favorite recipes",
     "description": "A curated collection of culinary delights, from classic comfort food to innovative dishes.",
     "browseRecipes": "Browse Recipes",
@@ -52,8 +52,8 @@
     "popularRecipes": "Popular Recipes",
     "noRecipes": "No recipes found",
     "personalCollection": "Personal Recipe Collection",
-    "myRecipes": "My Recipes",
-    "heroDescription": "A curated collection of my favorite recipes. Simple, delicious, and always at your fingertips.",
+    "myRecipes": "Recipes",
+    "heroDescription": "What I love to cook and share with you. From quick weekday meals to ambitious weekend projects. Sometimes easy, sometimes challenging, always with passion.",
     "searchRecipes": "Search Recipes",
     "recipesCount": "{count} recipes",
     "latestRecipes": "Latest Recipes",
@@ -201,12 +201,12 @@
     "switchTo": "Switch to {language}"
   },
   "meta": {
-    "defaultTitle": "Recipe Collection",
-    "defaultDescription": "A curated collection of delicious recipes",
-    "homeTitle": "Home - Recipe Collection",
-    "recipesTitle": "Recipes - Recipe Collection",
-    "dinnerTitle": "Dinner Generator - Recipe Collection",
-    "searchTitle": "Search Recipes - Recipe Collection",
-    "searchDescription": "Search and filter recipes by name, ingredients, or tags"
+    "defaultTitle": "Niek Kookt",
+    "defaultDescription": "What I love to cook and share with you. Sometimes easy, sometimes challenging, always with passion.",
+    "homeTitle": "Home - Niek Kookt",
+    "recipesTitle": "Recipes - Niek Kookt",
+    "dinnerTitle": "Dinner Generator - Niek Kookt",
+    "searchTitle": "Search Recipes - Niek Kookt",
+    "searchDescription": "Search and filter recipes by name, ingredients or tags"
   }
 }

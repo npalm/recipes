@@ -176,66 +176,10 @@ export function Footer() {
   
   return (
     <footer className="border-t bg-muted/30">
-      <div className="container py-8 md:py-12">
-        <div className="grid gap-8 md:grid-cols-3">
-          {/* Brand */}
-          <div className="space-y-3">
-            <div className="flex items-center gap-2">
-              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-                <UtensilsCrossed className="h-4 w-4" />
-              </div>
-              <span className="font-bold">{config.appName}</span>
-            </div>
-            <p className="text-sm text-muted-foreground">
-              {t('footer.description')}
-            </p>
-          </div>
-
-          {/* Quick Links */}
-          <div className="space-y-3">
-            <h4 className="text-sm font-semibold">{t('footer.quickLinks')}</h4>
-            <nav className="flex flex-col gap-2 text-sm">
-              <Link
-                href="/"
-                className="text-muted-foreground transition-colors hover:text-foreground"
-              >
-                {t('footer.allRecipes')}
-              </Link>
-              <Link
-                href="/search"
-                className="text-muted-foreground transition-colors hover:text-foreground"
-              >
-                {t('navigation.search')}
-              </Link>
-            </nav>
-          </div>
-
-          {/* About */}
-          <div className="space-y-3">
-            <h4 className="text-sm font-semibold">{t('navigation.about')}</h4>
-            <p className="text-sm text-muted-foreground">
-              {t('footer.aboutText')}
-            </p>
-            <div className="flex gap-2">
-              <Button variant="ghost" size="icon" className="h-8 w-8" asChild>
-                <a
-                  href="https://github.com"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <Github className="h-4 w-4" />
-                  <span className="sr-only">GitHub</span>
-                </a>
-              </Button>
-            </div>
-          </div>
-        </div>
-
-        <div className="mt-8 border-t pt-6">
-          <p className="text-center text-xs text-muted-foreground">
-            {new Date().getFullYear()} {config.appName}. {t('footer.madeWithLove')}
-          </p>
-        </div>
+      <div className="container py-6">
+        <p className="text-center text-sm text-muted-foreground">
+          {new Date().getFullYear()} {config.appName}. {t('footer.description')}
+        </p>
       </div>
     </footer>
   );

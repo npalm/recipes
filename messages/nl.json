@@ -35,14 +35,14 @@
     "rightsReserved": "Alle rechten voorbehouden",
     "madeWith": "Gemaakt met",
     "by": "door",
-    "description": "Een persoonlijke receptencollectie opgeslagen als markdown-bestanden. Snel, eenvoudig en altijd van jou.",
+    "description": "Koken met passie",
     "quickLinks": "Snelle Links",
     "allRecipes": "Alle Recepten",
     "aboutText": "Gebouwd met Next.js, gestyled met Tailwind CSS. Recepten opgeslagen als markdown in git voor eenvoudige versiebeheer.",
     "madeWithLove": "Gemaakt met liefde en lekker eten."
   },
   "home": {
-    "title": "Welkom bij Recepten Collectie",
+    "title": "Welkom bij Niek Kookt",
     "subtitle": "Ontdek en organiseer je favoriete recepten",
     "description": "Een zorgvuldig samengestelde collectie van culinaire hoogstandjes, van klassieke comfortgerechten tot innovatieve creaties.",
     "browseRecipes": "Recepten Bekijken",
@@ -52,8 +52,8 @@
     "popularRecipes": "Populaire Recepten",
     "noRecipes": "Geen recepten gevonden",
     "personalCollection": "Persoonlijke Recepten Collectie",
-    "myRecipes": "Mijn Recepten",
-    "heroDescription": "Een zorgvuldig samengestelde collectie van mijn favoriete recepten. Simpel, heerlijk en altijd bij de hand.",
+    "myRecipes": "Recepten",
+    "heroDescription": "Wat ik graag kook en met jullie deel. Van snelle doordeweekse maaltijden tot ambitieuze weekend projecten. Soms makkelijk, soms een uitdaging, altijd met passie.",
     "searchRecipes": "Recepten Zoeken",
     "recipesCount": "{count} recepten",
     "latestRecipes": "Laatste Recepten",
@@ -201,12 +201,12 @@
     "switchTo": "Overschakelen naar {language}"
   },
   "meta": {
-    "defaultTitle": "Recepten Collectie",
-    "defaultDescription": "Een zorgvuldig samengestelde collectie van heerlijke recepten",
-    "homeTitle": "Home - Recepten Collectie",
-    "recipesTitle": "Recepten - Recepten Collectie",
-    "dinnerTitle": "Diner Generator - Recepten Collectie",
-    "searchTitle": "Recepten Zoeken - Recepten Collectie",
+    "defaultTitle": "Niek Kookt",
+    "defaultDescription": "Wat ik graag kook en met jullie deel. Soms makkelijk, soms een uitdaging, altijd met passie.",
+    "homeTitle": "Home - Niek Kookt",
+    "recipesTitle": "Recepten - Niek Kookt",
+    "dinnerTitle": "Diner Generator - Niek Kookt",
+    "searchTitle": "Recepten Zoeken - Niek Kookt",
     "searchDescription": "Zoek en filter recepten op naam, ingrediënten of tags"
   }
 }
