@@ -46,6 +46,22 @@ If you discover a security vulnerability, please report it by:
 
 **View Results:** GitHub Security tab > Code scanning alerts
 
+### Vulnerability Scanning (OSV-Scanner)
+
+**Workflow:** `.github/workflows/osv-scanner.yml`  
+**Schedule:** On every pull request and merge group  
+**Permissions:** Minimal, with SARIF upload for GitHub Security tab
+
+[OSV-Scanner](https://github.com/google/osv-scanner) scans dependencies for known vulnerabilities:
+
+- ✅ Checks all npm dependencies (main + CLI tool)
+- ✅ Scans against OSV database (comprehensive vulnerability data)
+- ✅ Blocks PRs with critical vulnerabilities
+- ✅ Uploads results to GitHub Security tab
+- ✅ Runs on pull requests for immediate feedback
+
+**View Results:** GitHub Security tab > Code scanning alerts or PR checks
+
 ### Dependency Management (Dependabot)
 
 **Configuration:** `.github/dependabot.yml`  
@@ -167,6 +183,7 @@ Before submitting a pull request:
 
 - **[zizmor](https://github.com/woodruffw/zizmor)** - GitHub Actions security linter
 - **[OSSF Scorecard](https://github.com/ossf/scorecard)** - Supply chain security assessment
+- **[OSV-Scanner](https://github.com/google/osv-scanner)** - Vulnerability scanner for dependencies
 - **[Dependabot](https://docs.github.com/en/code-security/dependabot)** - Automated dependency updates
 - **[npm audit](https://docs.npmjs.com/cli/v10/commands/npm-audit)** - Vulnerability scanner for npm dependencies
 - **[Husky](https://typicode.github.io/husky/)** - Git hooks for pre-commit checks
@@ -182,6 +199,7 @@ Before submitting a pull request:
 - **2026-01-20**: Initial security policy
   - Added zizmor workflow (pedantic mode)
   - Added OSSF Scorecard workflow
+  - Added OSV-Scanner for vulnerability scanning
   - Configured Dependabot with 7-day cooldown
   - SHA-pinned all GitHub Actions
   - Implemented minimal permissions
