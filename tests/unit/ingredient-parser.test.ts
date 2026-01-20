@@ -217,4 +217,40 @@ Some extra text here.
     
     expect(results).toHaveLength(2);
   });
+
+  it('handles ingredient with comma and preparation notes', () => {
+    const markdown = `
+## Ingredients
+
+- 2 onions, finely chopped
+- 3 cloves garlic, minced
+- 1 carrot, diced
+`;
+    const results = parseIngredientsFromMarkdown(markdown);
+    
+    expect(results).toHaveLength(3);
+    expect(results[0].name).toBe('onions');
+    expect(results[0].notes).toBe('finely chopped');
+    expect(results[1].name).toBe('garlic');
+    expect(results[1].notes).toBe('minced');
+    expect(results[2].name).toBe('carrot');
+    expect(results[2].notes).toBe('diced');
+  });
+
+  it('handles ingredient with comma but not preparation notes', () => {
+    const markdown = `
+## Ingredients
+
+- Salt and pepper, to taste
+- 2 eggs, large
+`;
+    const results = parseIngredientsFromMarkdown(markdown);
+    
+    expect(results).toHaveLength(2);
+    // "to taste" is a prep word, so it becomes notes
+    expect(results[0].name).toBe('Salt and pepper');
+    expect(results[0].notes).toBe('to taste');
+    // "large" is not a prep word, so it stays part of name
+    expect(results[1].name).toContain('eggs, large');
+  });
 });
