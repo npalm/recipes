@@ -153,7 +153,7 @@ export function FilterPanel({
  */
 export function InlineFilters({
   filters,
-  availableTags,
+  availableTags, // eslint-disable-line @typescript-eslint/no-unused-vars
   onFiltersChange,
 }: FilterPanelProps) {
   const t = useTranslations();

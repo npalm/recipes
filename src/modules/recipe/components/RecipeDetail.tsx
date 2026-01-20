@@ -16,7 +16,6 @@ import {
 import { useTranslations } from 'next-intl';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Separator } from '@/components/ui/separator';
 import { Card, CardContent } from '@/components/ui/card';
 import { Recipe } from '@/modules/recipe/domain';
 import { ImageGallery } from './ImageGallery';

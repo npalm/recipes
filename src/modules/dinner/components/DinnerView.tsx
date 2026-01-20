@@ -6,7 +6,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Clock, ChefHat, ArrowLeft, ImageIcon, Home } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { formatTime, formatDate } from '@/modules/shared/utils';
+import { formatTime } from '@/modules/shared/utils';
 import { getDifficultyConfig } from '@/modules/recipe/components/RecipeCard';
 
 /**
