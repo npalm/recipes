@@ -31,6 +31,6 @@ jobs:
           persist-credentials: false
 
       - name: Run zizmor
-        uses: woodruffw/zizmor-action@9e8f03406d28fe4fc5c4e524c0a0fccdb62c2c42 # v1
+        uses: zizmorcore/zizmor-action@7462f075f718787753331c6d98ca9ef8eb41e735 # v1
         with:
           persona: pedantic
