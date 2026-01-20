@@ -10,10 +10,8 @@ import {
   Menu,
   X,
   Home,
-  BookOpen,
   Moon,
   Sun,
-  Github,
   Calendar,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';

@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { getTranslations } from 'next-intl/server';
-import { Search, ChefHat, BookOpen, Sparkles } from 'lucide-react';
+import { Search, ChefHat, Sparkles } from 'lucide-react';
 import { Layout } from '@/components/layout';
 import { RecipeGrid } from '@/modules/recipe/components';
 import { Button } from '@/components/ui/button';

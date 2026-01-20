@@ -1,12 +1,12 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useMemo } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { Layout } from '@/components/layout';
 import { RecipeGrid } from '@/modules/recipe/components';
 import { SearchBar, FilterPanel } from '@/modules/search/components';
-import { createSearchIndex, SearchResult } from '@/modules/search/services';
+import { createSearchIndex } from '@/modules/search/services';
 import { RecipeCard, RecipeFilters } from '@/modules/recipe/domain';
 import { filterRecipeCards } from '@/modules/recipe/services/filters';
 
@@ -27,12 +27,12 @@ export function SearchPageClient({
   const [filters, setFilters] = useState<RecipeFilters>(() => ({
     tags: initialTag ? [initialTag] : undefined,
   }));
-  const [results, setResults] = useState<RecipeCard[]>(initialRecipes);
 
   // Create search index
   const [searchIndex] = useState(() => createSearchIndex(initialRecipes));
 
-  useEffect(() => {
+  // Calculate results using useMemo to avoid setState in effect
+  const results = useMemo(() => {
     let filteredRecipes: RecipeCard[];
 
     if (query.trim()) {
@@ -52,7 +52,7 @@ export function SearchPageClient({
       filteredRecipes = filterRecipeCards(filteredRecipes, filters);
     }
 
-    setResults(filteredRecipes);
+    return filteredRecipes;
   }, [query, filters, initialRecipes, searchIndex]);
 
   return (
