@@ -19,16 +19,15 @@ updates:
       - "npm"
     commit-message:
       prefix: "chore(deps)"
-      include: "scope"
     groups:
-      # Group development dependencies together
-      development-dependencies:
+      # Group all development dependencies together
+      dev-dependencies:
         dependency-type: "development"
         update-types:
           - "minor"
           - "patch"
-      # Group production dependencies together for minor/patch updates
-      production-dependencies:
+      # Group all production dependencies together for minor/patch updates
+      prod-dependencies:
         dependency-type: "production"
         update-types:
           - "minor"
@@ -54,9 +53,8 @@ updates:
       - "tools"
     commit-message:
       prefix: "chore(deps)"
-      include: "scope"
     groups:
-      development-dependencies:
+      dev-dependencies:
         dependency-type: "development"
         update-types:
           - "minor"
@@ -81,6 +79,10 @@ updates:
       - "github-actions"
     commit-message:
       prefix: "chore(deps)"
-      prefix-development: "chore(deps-dev)"
+    groups:
+      # Group all GitHub Actions together
+      github-actions:
+        patterns:
+          - "*"
     # Keep actions pinned to SHA but update the comments with version tags
     # This maintains security while keeping track of versions
