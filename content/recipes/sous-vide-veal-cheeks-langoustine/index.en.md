@@ -3,8 +3,8 @@ title: "Sous Vide Veal Cheeks with Langoustine and Beetroot Tartare"
 slug: "sous-vide-veal-cheeks-langoustine"
 status: published
 servings: 4
-prepTime: 45
-cookTime: 300
+prepTime: 90
+cookTime: 840
 difficulty: hard
 tags: ["sous vide", "veal", "langoustine", "main course", "gourmet"]
 images: 
@@ -14,6 +14,8 @@ createdAt: "2026-01-18"
 ---
 
 An elegant gourmet dish featuring tender sous vide veal cheeks sliced and served with langoustine tails, beetroot tartare, and parsnip puree. The veal is cooked at 72°C to maintain a firm texture that slices beautifully.
+
+**Note:** This dish requires 24 hours advance preparation for brining the veal cheeks, so plan ahead.
 
 ## Components
 
