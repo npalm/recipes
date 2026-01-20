@@ -4,8 +4,7 @@ import { useState } from 'react';
 import { ChevronDown, ChevronRight, Minus, Plus, RotateCcw, Users, Check } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
-import { Ingredient, RecipeComponent } from '@/modules/recipe/domain';
+import { RecipeComponent } from '@/modules/recipe/domain';
 import {
   scaleIngredients,
   formatScaledIngredient,
@@ -67,12 +66,6 @@ export function ComponentIngredientList({
   };
 
   const isModified = servings !== defaultServings;
-
-  // Get total ingredient count for clear button
-  const totalIngredients = components.reduce(
-    (sum, comp) => sum + comp.ingredients.length,
-    0
-  );
 
   return (
     <div>

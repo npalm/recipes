@@ -746,7 +746,7 @@ Today's date (for createdAt): ${getTodayDate()}`;
         throw new Error("No JSON found in response");
       }
       recipeData = JSON.parse(jsonMatch[0]);
-    } catch (parseError) {
+    } catch {
       spinner.fail("Failed to parse AI response");
       console.log(chalk.dim("\nRaw response:"));
       console.log(result.content);
@@ -902,7 +902,7 @@ Extract the recipe information and return it as JSON.`;
         throw new Error("No JSON found in response");
       }
       recipeData = JSON.parse(jsonMatch[0]);
-    } catch (parseError) {
+    } catch {
       spinner.fail("Failed to parse AI response");
       console.log(chalk2.dim("\nRaw response:"));
       console.log(result.content);
@@ -1031,7 +1031,7 @@ function parseFrontmatter(content) {
       arrayItems = [];
       continue;
     } else if (typeof value === "string") {
-      let strValue = value.replace(/^["']|["']$/g, "");
+      const strValue = value.replace(/^["']|["']$/g, "");
       if (/^\d+$/.test(strValue)) {
         value = parseInt(strValue, 10);
       } else if (/^\d+\.\d+$/.test(strValue)) {

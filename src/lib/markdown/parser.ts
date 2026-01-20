@@ -11,7 +11,6 @@ import {
   Recipe,
   RecipeMetadata,
   RecipeComponent,
-  recipeFrontmatterSchema,
   safeValidateRecipeFrontmatter,
 } from '@/modules/recipe/domain';
 import { parseIngredientsFromMarkdown } from '@/modules/ingredient/services/parser';

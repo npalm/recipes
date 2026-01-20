@@ -89,7 +89,7 @@ async function createRecipe(
         throw new Error('No JSON found in response');
       }
       recipeData = JSON.parse(jsonMatch[0]);
-    } catch (parseError) {
+    } catch {
       spinner.fail('Failed to parse AI response');
       console.log(chalk.dim('\nRaw response:'));
       console.log(result.content);
