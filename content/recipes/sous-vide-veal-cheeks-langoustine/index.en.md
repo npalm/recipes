@@ -10,9 +10,6 @@ tags: ["sous vide", "veal", "langoustine", "main course", "gourmet"]
 images: 
   - veal-cheeks.jpg
 headerImageRotation: true
-sources:
-  - url: "https://www.hanos.nl/nl/foodxperience/recept/sous_vide_bereide_kalfswang"
-    title: "HANOS"
 createdAt: "2026-01-18"
 ---
 

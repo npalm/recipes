@@ -10,9 +10,6 @@ tags: ["starter", "seafood", "scallops", "spicy"]
 images:
   - scallops.jpg
 headerImageRotation: true
-sources:
-  - url: "https://www.francescakookt.nl/coquilles-met-sojasaus-mango-en-tijm/"
-    title: "Francesca Kookt"
 createdAt: "2026-01-18"
 ---
 
