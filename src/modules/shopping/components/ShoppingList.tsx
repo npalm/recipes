@@ -6,11 +6,10 @@
 
 'use client';
 
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useRef } from 'react';
 import type { ShoppingItem } from '../domain/types';
 import { ShoppingListItem } from './ShoppingListItem';
 import { ShoppingListHeader } from './ShoppingListHeader';
-import { formatQuantity } from '@/modules/ingredient/services/scaling';
 
 type ShoppingListProps = {
   title: string;
@@ -35,15 +34,9 @@ export function ShoppingList({
   listId,
   encodedListData,
 }: ShoppingListProps) {
-  const [checkedItems, setCheckedItems] = useState<Record<string, boolean>>({});
-  const [removedItems, setRemovedItems] = useState<Record<string, boolean>>({});
-  const [targetServings, setTargetServings] = useState<number>(2);
-  const [mounted, setMounted] = useState(false);
-  const [hasLoadedFromStorage, setHasLoadedFromStorage] = useState(false);
-
-  // Load state from localStorage on mount
-  useEffect(() => {
-    if (typeof window === 'undefined') return;
+  // Load initial state from localStorage using lazy initialization
+  const [checkedItems, setCheckedItems] = useState<Record<string, boolean>>(() => {
+    if (typeof window === 'undefined') return {};
     
     const storageKey = `shopping-list-${listId}`;
     console.log('[ShoppingList] Loading from localStorage with key:', storageKey);
@@ -54,24 +47,66 @@ export function ShoppingList({
       try {
         const parsed: ShoppingListStorageState = JSON.parse(saved);
         console.log('[ShoppingList] Parsed data:', parsed);
-        setCheckedItems(parsed.checked || {});
-        setRemovedItems(parsed.removed || {});
-        setTargetServings(parsed.targetServings || 2);
         console.log('[ShoppingList] State loaded successfully');
-      } catch (error) {
-        console.error('Failed to load shopping list state:', error);
+        return parsed.checked || {};
+      } catch {
+        console.error('Failed to load shopping list state');
+        return {};
       }
-    } else {
-      console.log('[ShoppingList] No saved state found');
     }
     
-    setHasLoadedFromStorage(true);
-    setMounted(true);
-  }, [listId]);
+    console.log('[ShoppingList] No saved state found');
+    return {};
+  });
+
+  const [removedItems, setRemovedItems] = useState<Record<string, boolean>>(() => {
+    if (typeof window === 'undefined') return {};
+    
+    const storageKey = `shopping-list-${listId}`;
+    const saved = localStorage.getItem(storageKey);
+
+    if (saved) {
+      try {
+        const parsed: ShoppingListStorageState = JSON.parse(saved);
+        return parsed.removed || {};
+      } catch {
+        return {};
+      }
+    }
+    
+    return {};
+  });
+
+  const [targetServings, setTargetServings] = useState<number>(() => {
+    if (typeof window === 'undefined') return 2;
+    
+    const storageKey = `shopping-list-${listId}`;
+    const saved = localStorage.getItem(storageKey);
+
+    if (saved) {
+      try {
+        const parsed: ShoppingListStorageState = JSON.parse(saved);
+        return parsed.targetServings || 2;
+      } catch {
+        return 2;
+      }
+    }
+    
+    return 2;
+  });
+
+  // Track if this is the first render to prevent saving on initial load
+  const isFirstRender = useRef(true);
 
   // Save state to localStorage whenever it changes (but not on initial load)
   useEffect(() => {
-    if (!hasLoadedFromStorage || !mounted || typeof window === 'undefined') return;
+    // Skip saving on first render since we just loaded from localStorage
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
+
+    if (typeof window === 'undefined') return;
 
     const storageKey = `shopping-list-${listId}`;
     const state: ShoppingListStorageState = {
@@ -81,7 +116,7 @@ export function ShoppingList({
     };
     console.log('[ShoppingList] Saving to localStorage:', storageKey, state);
     localStorage.setItem(storageKey, JSON.stringify(state));
-  }, [checkedItems, removedItems, targetServings, listId, mounted, hasLoadedFromStorage]);
+  }, [checkedItems, removedItems, targetServings, listId]);
 
   const toggleItem = (itemId: string) => {
     setCheckedItems((prev) => ({

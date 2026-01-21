@@ -31,7 +31,7 @@ A surprising combination of sweet white chocolate mousse with a spicy red pepper
 
 2. Remove seeds from the red pepper and cut into strips.
 
-3. Heat 100 ml apple juice with the pepper strips, do not let it boil. Let it steep for about 10 minutes.
+3. Heat {{100 ml}} apple juice with the pepper strips, do not let it boil. Let it steep for about 10 minutes.
 
 4. Strain the apple juice and add the gelatin.
 
@@ -59,11 +59,11 @@ A surprising combination of sweet white chocolate mousse with a spicy red pepper
 
 4. Stir the rum into the chocolate mixture.
 
-5. Heat 2 tablespoons of water (microwave) to near boiling temperature, and dissolve gelatin. Then stir this well into the chocolate mixture.
+5. Heat {{2 tbsp}} of water (microwave) to near boiling temperature, and dissolve gelatin. Then stir this well into the chocolate mixture.
 
 6. Gently fold the chocolate mixture into the whipped cream.
 
-7. Divide the mixture among 4 glasses and let set in the refrigerator for 1 to 2 hours.
+7. Divide the mixture among {{4}} glasses and let set in the refrigerator for 1 to 2 hours.
 
 8. Pour a thin layer of the still-liquid pepper jelly onto the mousse and place back in the refrigerator. Let set for at least a few more hours.
 

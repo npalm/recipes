@@ -44,7 +44,7 @@ Plan minimaal 2-3 dagen vooruit voor dit gerecht.
 
 #### Bereiding
 
-1. Pekel de kalfswangen: los het zout op in water (ongeveer 50g zout per liter) en dompel de kalfswangen onder. Zet 24 uur in de koelkast.
+1. Pekel de kalfswangen: los het zout op in water (ongeveer {{50 g}} zout per liter) en dompel de kalfswangen onder. Zet 24 uur in de koelkast.
 
 2. Haal de kalfswangen uit de pekel, spoel kort af en dep droog. Kruid met zwarte peper.
 

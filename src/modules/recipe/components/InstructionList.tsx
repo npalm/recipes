@@ -3,19 +3,34 @@
 import { useState } from 'react';
 import { Check } from 'lucide-react';
 import { useTranslations } from 'next-intl';
+import { scaleInstructionText, parseInstructionSegments } from '@/modules/instruction/services';
 
 interface InstructionListProps {
   instructions: string[];
+  originalServings?: number;
+  currentServings?: number;
 }
 
 /**
- * Recipe instruction list with step completion tracking
+ * Recipe instruction list with step completion tracking and quantity scaling
  */
-export function InstructionList({ instructions }: InstructionListProps) {
+export function InstructionList({ 
+  instructions,
+  originalServings,
+  currentServings,
+}: InstructionListProps) {
   const t = useTranslations();
   const [completedSteps, setCompletedSteps] = useState<Set<number>>(new Set());
 
-  if (instructions.length === 0) {
+  // Always scale instructions to process {{...}} annotations
+  // Even when servings match, we need to remove the braces
+  const scaledInstructions = originalServings && currentServings
+    ? instructions.map(inst => scaleInstructionText(inst, originalServings, currentServings))
+    : instructions;
+  
+  const shouldHighlight = originalServings && currentServings && originalServings !== currentServings;
+
+  if (scaledInstructions.length === 0) {
     return (
       <p className="text-muted-foreground">{t('recipe.noInstructions')}</p>
     );
@@ -33,7 +48,7 @@ export function InstructionList({ instructions }: InstructionListProps) {
     });
   };
 
-  const progress = (completedSteps.size / instructions.length) * 100;
+  const progress = (completedSteps.size / scaledInstructions.length) * 100;
 
   return (
     <div>
@@ -43,7 +58,7 @@ export function InstructionList({ instructions }: InstructionListProps) {
           <div className="mb-2 flex items-center justify-between text-sm">
             <span className="font-medium">{t('recipe.progress')}</span>
             <span className="text-muted-foreground">
-              {t('recipe.stepsCount', { completed: completedSteps.size, total: instructions.length })}
+              {t('recipe.stepsCount', { completed: completedSteps.size, total: scaledInstructions.length })}
             </span>
           </div>
           <div className="h-2 overflow-hidden rounded-full bg-muted">
@@ -57,8 +72,13 @@ export function InstructionList({ instructions }: InstructionListProps) {
 
       {/* Steps */}
       <ol className="space-y-6">
-        {instructions.map((instruction, index) => {
+        {scaledInstructions.map((instruction, index) => {
           const isCompleted = completedSteps.has(index);
+          
+          // Parse segments to identify scaled quantities for highlighting
+          const segments = shouldHighlight && originalServings && currentServings
+            ? parseInstructionSegments(instructions[index], instruction, originalServings, currentServings)
+            : [{ text: instruction, isScaled: false }];
 
           return (
             <li
@@ -90,7 +110,18 @@ export function InstructionList({ instructions }: InstructionListProps) {
                     isCompleted ? 'line-through' : ''
                   }`}
                 >
-                  {instruction}
+                  {segments.map((segment, segIndex) => (
+                    segment.isScaled ? (
+                      <span 
+                        key={segIndex}
+                        className="font-medium text-primary/90 underline decoration-primary/30 decoration-dotted underline-offset-2"
+                      >
+                        {segment.text}
+                      </span>
+                    ) : (
+                      <span key={segIndex}>{segment.text}</span>
+                    )
+                  ))}
                 </p>
               </div>
             </li>
@@ -99,7 +130,7 @@ export function InstructionList({ instructions }: InstructionListProps) {
       </ol>
 
       {/* Completion message */}
-      {completedSteps.size === instructions.length && (
+      {completedSteps.size === scaledInstructions.length && (
         <div className="mt-8 rounded-xl bg-green-50 p-6 text-center dark:bg-green-950/20">
           <div className="mb-2 text-4xl">🎉</div>
           <h3 className="text-lg font-semibold text-green-800 dark:text-green-200">

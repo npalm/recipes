@@ -72,7 +72,7 @@ A Japanese-inspired dish featuring briefly seared tuna with a crispy sesame seed
 
 5. Heat a skillet over high heat until very hot.
 
-6. Sear the tuna briefly on each side (about 30 seconds per side), keeping the inside raw.
+6. Sear the tuna briefly on each side (about {{30 seconds}} per side), keeping the inside raw.
 
 7. Let the tuna cool immediately in the refrigerator.
 

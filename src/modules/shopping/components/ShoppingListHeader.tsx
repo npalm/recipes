@@ -7,7 +7,7 @@
 
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import type { ShoppingItem, IngredientSource } from '../domain/types';
+import type { ShoppingItem } from '../domain/types';
 
 type ShoppingListHeaderProps = {
   title: string;

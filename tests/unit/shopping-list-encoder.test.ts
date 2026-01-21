@@ -49,7 +49,7 @@ describe('ShoppingListEncoder', () => {
         recipes: [{ slug: 'test', servings: 4 }],
       };
 
-      expect(() => encoder.encode(invalidData as any)).toThrow();
+      expect(() => encoder.encode(invalidData as unknown as ShoppingListData)).toThrow();
     });
 
     it('throws error for invalid data (no recipes)', () => {
@@ -58,7 +58,7 @@ describe('ShoppingListEncoder', () => {
         recipes: [],
       };
 
-      expect(() => encoder.encode(invalidData as any)).toThrow();
+      expect(() => encoder.encode(invalidData as unknown as ShoppingListData)).toThrow();
     });
 
     it('throws error for invalid servings', () => {
@@ -67,7 +67,7 @@ describe('ShoppingListEncoder', () => {
         recipes: [{ slug: 'test', servings: 0 }],
       };
 
-      expect(() => encoder.encode(invalidData as any)).toThrow();
+      expect(() => encoder.encode(invalidData as unknown as ShoppingListData)).toThrow();
     });
 
     it('handles special characters in title', () => {

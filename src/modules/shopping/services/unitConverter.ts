@@ -133,7 +133,6 @@ export class UnitConverter {
 
     // Convert both to base unit and add
     let baseValue = 0;
-    let targetUnit = '';
 
     if (this.volumeConversions.has(normalized1) && this.volumeConversions.has(normalized2)) {
       const base1 = qty1 * (this.volumeConversions.get(normalized1) || 1);
