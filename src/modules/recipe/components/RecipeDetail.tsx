@@ -12,6 +12,7 @@ import {
   Timer,
   Flame,
   Layers,
+  ShoppingCart,
 } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { Badge } from '@/components/ui/badge';
@@ -24,17 +25,21 @@ import { InstructionList } from './InstructionList';
 import { ComponentIngredientList, ComponentInstructionList } from './ComponentList';
 import { formatTime, formatDate } from '@/modules/shared/utils';
 import { getDifficultyConfig } from './RecipeCard';
+import { GenerateShoppingListButton } from '@/modules/shopping/components/GenerateShoppingListButton';
+import { useState } from 'react';
 
 interface RecipeDetailProps {
   recipe: Recipe;
+  locale: string;
 }
 
 /**
  * Full recipe detail view
  */
-export function RecipeDetail({ recipe }: RecipeDetailProps) {
+export function RecipeDetail({ recipe, locale }: RecipeDetailProps) {
   const t = useTranslations();
   const difficulty = getDifficultyConfig(t)[recipe.difficulty];
+  const [servings, setServings] = useState(recipe.servings);
 
   const handlePrint = () => {
     window.print();
@@ -81,15 +86,24 @@ export function RecipeDetail({ recipe }: RecipeDetailProps) {
                 {recipe.title}
               </h1>
             </div>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={handlePrint}
-              className="hidden print:hidden md:flex"
-            >
-              <Printer className="mr-2 h-4 w-4" />
-              {t('recipe.print')}
-            </Button>
+            <div className="flex gap-2 print:hidden">
+              <GenerateShoppingListButton
+                recipes={[{ slug: recipe.slug, servings }]}
+                title={`Shopping List - ${recipe.title}`}
+                locale={locale}
+                variant="outline"
+                size="sm"
+              />
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handlePrint}
+                className="hidden md:flex"
+              >
+                <Printer className="mr-2 h-4 w-4" />
+                {t('recipe.print')}
+              </Button>
+            </div>
           </div>
 
           {/* Description */}

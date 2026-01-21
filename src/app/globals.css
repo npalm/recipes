@@ -166,6 +166,28 @@
     max-width: 100%;
     padding: 0;
   }
+  
+  /* Shopping list specific print styles */
+  .shopping-list-container {
+    padding: 1rem;
+  }
+  
+  .shopping-list-item {
+    page-break-inside: avoid;
+    border-bottom: 1px solid #e0e0e0;
+    padding: 0.5rem 0;
+  }
+  
+  .shopping-list-item:hover {
+    background: none;
+  }
+  
+  /* Larger checkboxes for print */
+  .shopping-list-item span[role="checkbox"] {
+    width: 1.5rem;
+    height: 1.5rem;
+    border: 2px solid #000;
+  }
 }
 
 /* Animation utilities */

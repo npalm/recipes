@@ -8,6 +8,7 @@ import { Clock, ChefHat, ArrowLeft, ImageIcon, Home } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { formatTime } from '@/modules/shared/utils';
 import { getDifficultyConfig } from '@/modules/recipe/components/RecipeCard';
+import { GenerateShoppingListButton } from '@/modules/shopping/components/GenerateShoppingListButton';
 
 /**
  * Check if an image path is an external URL
@@ -55,10 +56,23 @@ export function DinnerView({ title, recipes, locale }: DinnerViewProps) {
           </Button>
         </div>
         
-        <h1 className="text-4xl font-bold tracking-tight md:text-5xl">{title}</h1>
-        <p className="mt-2 text-lg text-muted-foreground">
-          {t('dinner.courseCount', { count: recipes.length })}
-        </p>
+        <div className="flex flex-wrap items-start justify-between gap-4">
+          <div>
+            <h1 className="text-4xl font-bold tracking-tight md:text-5xl">{title}</h1>
+            <p className="mt-2 text-lg text-muted-foreground">
+              {t('dinner.courseCount', { count: recipes.length })}
+            </p>
+          </div>
+          <div className="print:hidden">
+            <GenerateShoppingListButton
+              recipes={recipes.map(r => ({ slug: r.slug, servings: r.servings }))}
+              title={`${title} - Shopping List`}
+              locale={locale}
+              variant="default"
+              size="default"
+            />
+          </div>
+        </div>
       </div>
 
       {/* Courses - Timeline with Card Stack */}

@@ -58,7 +58,7 @@ export default async function RecipePage({ params }: RecipePageProps) {
 
   return (
     <Layout>
-      <RecipeDetail recipe={recipe} />
+      <RecipeDetail recipe={recipe} locale={locale} />
     </Layout>
   );
 }
