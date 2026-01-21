@@ -191,6 +191,8 @@ export function RecipeDetail({ recipe, locale }: RecipeDetailProps) {
                 <ComponentIngredientList
                   components={recipe.components}
                   defaultServings={recipe.servings}
+                  servings={servings}
+                  onServingsChange={setServings}
                 />
               </CardContent>
             </Card>
@@ -206,7 +208,11 @@ export function RecipeDetail({ recipe, locale }: RecipeDetailProps) {
                     {t('recipe.parts', { count: recipe.components.length })}
                   </Badge>
                 </h2>
-                <ComponentInstructionList components={recipe.components} />
+                <ComponentInstructionList 
+                  components={recipe.components}
+                  originalServings={recipe.servings}
+                  currentServings={servings}
+                />
               </CardContent>
             </Card>
 
@@ -269,6 +275,8 @@ export function RecipeDetail({ recipe, locale }: RecipeDetailProps) {
                 <IngredientList
                   ingredients={recipe.ingredients}
                   defaultServings={recipe.servings}
+                  servings={servings}
+                  onServingsChange={setServings}
                 />
               </CardContent>
             </Card>
@@ -279,7 +287,11 @@ export function RecipeDetail({ recipe, locale }: RecipeDetailProps) {
             <Card className="border-0 shadow-sm">
               <CardContent className="p-6 md:p-8">
                 <h2 className="mb-6 text-xl font-semibold">{t('recipe.instructions')}</h2>
-                <InstructionList instructions={recipe.instructions} />
+                <InstructionList 
+                  instructions={recipe.instructions}
+                  originalServings={recipe.servings}
+                  currentServings={servings}
+                />
               </CardContent>
             </Card>
 

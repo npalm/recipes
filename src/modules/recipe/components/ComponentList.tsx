@@ -9,26 +9,36 @@ import {
   scaleIngredients,
   formatScaledIngredient,
 } from '@/modules/ingredient/services';
+import { scaleInstructionText, parseInstructionSegments } from '@/modules/instruction/services';
 import { config } from '@/lib/config';
 
 interface ComponentIngredientsProps {
   components: RecipeComponent[];
   defaultServings: number;
+  servings?: number;
+  onServingsChange?: (servings: number) => void;
 }
 
 /**
  * Interactive ingredient list grouped by components with serving adjustment
+ * Can be controlled (servings + onServingsChange) or uncontrolled (internal state)
  */
 export function ComponentIngredientList({
   components,
   defaultServings,
+  servings: controlledServings,
+  onServingsChange,
 }: ComponentIngredientsProps) {
   const t = useTranslations();
-  const [servings, setServings] = useState(defaultServings);
+  const [internalServings, setInternalServings] = useState(defaultServings);
   const [checkedItems, setCheckedItems] = useState<Set<string>>(new Set());
   const [expandedComponents, setExpandedComponents] = useState<Set<string>>(
     new Set(components.map((c) => c.name))
   );
+
+  // Use controlled value if provided, otherwise use internal state
+  const servings = controlledServings ?? internalServings;
+  const setServings = onServingsChange ?? setInternalServings;
 
   const handleServingsChange = (newServings: number) => {
     const clamped = Math.max(
@@ -240,17 +250,26 @@ export function ComponentIngredientList({
 
 interface ComponentInstructionsProps {
   components: RecipeComponent[];
+  originalServings?: number;
+  currentServings?: number;
 }
 
 /**
- * Instruction list grouped by components with step completion tracking
+ * Instruction list grouped by components with step completion tracking and quantity scaling
  */
-export function ComponentInstructionList({ components }: ComponentInstructionsProps) {
+export function ComponentInstructionList({ 
+  components,
+  originalServings,
+  currentServings,
+}: ComponentInstructionsProps) {
   const t = useTranslations();
   const [completedSteps, setCompletedSteps] = useState<Set<string>>(new Set());
   const [expandedComponents, setExpandedComponents] = useState<Set<string>>(
     new Set(components.map((c) => c.name))
   );
+
+  // Scale instructions if servings are provided
+  const shouldScale = originalServings && currentServings && originalServings !== currentServings;
 
   // Calculate total steps across all components
   const totalSteps = components.reduce(
@@ -359,6 +378,16 @@ export function ComponentInstructionList({ components }: ComponentInstructionsPr
                   {component.instructions.map((instruction, index) => {
                     const key = `${component.name}-${index}`;
                     const isCompleted = completedSteps.has(key);
+                    
+                    // Scale instruction if needed
+                    const scaledInstruction = shouldScale && originalServings && currentServings
+                      ? scaleInstructionText(instruction, originalServings, currentServings)
+                      : instruction;
+                    
+                    // Parse segments for highlighting
+                    const segments = shouldScale && originalServings && currentServings
+                      ? parseInstructionSegments(instruction, scaledInstruction, originalServings, currentServings)
+                      : [{ text: instruction, isScaled: false }];
 
                     return (
                       <li
@@ -392,7 +421,18 @@ export function ComponentInstructionList({ components }: ComponentInstructionsPr
                               isCompleted ? 'line-through' : ''
                             }`}
                           >
-                            {instruction}
+                            {segments.map((segment, segIndex) => (
+                              segment.isScaled ? (
+                                <span 
+                                  key={segIndex}
+                                  className="font-medium text-primary/90 underline decoration-primary/30 decoration-dotted underline-offset-2"
+                                >
+                                  {segment.text}
+                                </span>
+                              ) : (
+                                <span key={segIndex}>{segment.text}</span>
+                              )
+                            ))}
                           </p>
                         </div>
                       </li>

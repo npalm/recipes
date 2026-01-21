@@ -14,18 +14,27 @@ import { config } from '@/lib/config';
 interface IngredientListProps {
   ingredients: Ingredient[];
   defaultServings: number;
+  servings?: number;
+  onServingsChange?: (servings: number) => void;
 }
 
 /**
  * Interactive ingredient list with serving adjustment
+ * Can be controlled (servings + onServingsChange) or uncontrolled (internal state)
  */
 export function IngredientList({
   ingredients,
   defaultServings,
+  servings: controlledServings,
+  onServingsChange,
 }: IngredientListProps) {
   const t = useTranslations();
-  const [servings, setServings] = useState(defaultServings);
+  const [internalServings, setInternalServings] = useState(defaultServings);
   const [checkedItems, setCheckedItems] = useState<Set<number>>(new Set());
+
+  // Use controlled value if provided, otherwise use internal state
+  const servings = controlledServings ?? internalServings;
+  const setServings = onServingsChange ?? setInternalServings;
 
   const scaledIngredients = scaleIngredients(
     ingredients,
