@@ -31,7 +31,7 @@ A surprising combination of sweet white chocolate mousse with a spicy red pepper
 
 2. Remove seeds from the red pepper and cut into strips.
 
-3. Heat 100 ml apple juice with the pepper strips, do not let it boil. Let it steep for about 10 minutes.
+3. Heat {{100ml}} apple juice with the pepper strips, do not let it boil. Let it steep for about 10 minutes.
 
 4. Strain the apple juice and add the gelatin.
 
