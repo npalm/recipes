@@ -59,11 +59,11 @@ Een verrassende combinatie van zoete witte chocolade mousse met een pittige rode
 
 4. Roer de rum door het chocolade mengsel.
 
-5. Verwarm 2 eetlepels water (magnetron) rond kooktemperatuur, en los gelatine op. Roer dit vervolgens goed door het chocolade mengsel.
+5. Verwarm {{2 el}} water (magnetron) rond kooktemperatuur, en los gelatine op. Roer dit vervolgens goed door het chocolade mengsel.
 
 6. Mix het chocolade mengsel voorzichtig door de slagroom.
 
-7. Verdeel het mengsel nu over 4 glazen en laat 1 tot 2 uur opstijven in de koelkast.
+7. Verdeel het mengsel nu over {{4}} glazen en laat 1 tot 2 uur opstijven in de koelkast.
 
 8. Schenk een dun laagje van de nog vloeibare peper gelei op de mousse en plaats weer terug in de koelkast. Laat tenminste nog een paar uur opstijven.
 
