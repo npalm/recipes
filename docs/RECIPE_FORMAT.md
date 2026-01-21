@@ -182,19 +182,20 @@ Mark scalable ingredients with `{scale}` to enable automatic quantity adjustment
 
 ### Formatting Rules
 
-1. **No spaces in annotations**: `{{50ml}}` not `{{50 ml}}`
+1. **Use space between quantity and unit**: `{{50 ml}}` not `{{50ml}}`
 2. **Supports fractions**: `{{1/2 cup}}`, `{{1 1/4 tsp}}`
-3. **Supports decimals**: `{{2.5g}}`, `{{0.5ml}}`
-4. **Supports ranges**: `{{10-15ml}}`, `{{2-3 cups}}`
-5. **Case insensitive units**: `{{50ML}}` works same as `{{50ml}}`
+3. **Supports decimals**: `{{2.5 g}}`, `{{0.5 ml}}`
+4. **Supports ranges**: `{{10-15 ml}}`, `{{2-3 cups}}`
+5. **Case insensitive units**: `{{50 ML}}` works same as `{{50 ml}}`
+6. **Plain numbers work too**: `{{4}}` glasses scales to `{{8}}` glasses
 
 ### Display Format
 
 When rendered, annotations are replaced with properly formatted quantities:
 
-- **Scaled output adds space**: `{{50ml}}` → `25 ml` (when scaled 4→2)
-- **Fractions used where appropriate**: `{{2.5g}}` → `1 1/4 g` (when scaled 4→2)
-- **Large values rounded**: `{{100g}}` → `67 g` (when scaled 3→2, not "66 2/3 g")
+- **Space between quantity and unit**: `{{50 ml}}` → `25 ml` (when scaled 4→2)
+- **Fractions used where appropriate**: `{{2.5 g}}` → `1 1/4 g` (when scaled 4→2)
+- **Large values rounded**: `{{100 g}}` → `67 g` (when scaled 3→2, not "66 2/3 g")
 
 ### Visual Highlighting
 
@@ -204,28 +205,28 @@ When servings are adjusted, scaled quantities in instructions are highlighted wi
 
 1. **Use annotations for scalable measurements only**
    ```markdown
-   ✅ Add {{50ml}} water to the mixture.
+   ✅ Add {{50 ml}} water to the mixture.
    ❌ Cook for {{20 minutes}}.  # Time doesn't scale - use plain text
    ```
 
 2. **Ingredient quantities should still use {scale}**
    ```markdown
    ## Ingredients
-   - 50 ml water {scale}        # Still needed!
+   - 50 ml water {scale}          # Still needed!
    
    ## Instructions
-   1. Add {{50ml}} water...     # Also annotated for instructions
+   1. Add {{50 ml}} water...       # Also annotated for instructions
    ```
 
 3. **Don't over-annotate**
    ```markdown
-   ✅ Add {{50ml}} water and stir for 2 minutes.
-   ❌ Add {{50ml}} water and stir for {{2 minutes}}.  # Time is NOT scalable
+   ✅ Add {{50 ml}} water and stir for 2 minutes.
+   ❌ Add {{50 ml}} water and stir for {{2 minutes}}.  # Time is NOT scalable
    ```
 
 4. **Use for key measurements**
    ```markdown
-   ✅ Add {{50ml}} soy sauce (about {{50ml}} salt per liter)
+   ✅ Add {{50 ml}} soy sauce (about {{50 g}} salt per liter)
    ❌ Add a splash of soy sauce ({{tiny bit}} salt)  # Vague quantities
    ```
 
@@ -261,9 +262,9 @@ Quick and delicious pasta dish perfect for weeknight dinners.
 
 ## Instructions
 
-1. Bring a large pot of salted water to boil. Add {{400g}} pasta.
+1. Bring a large pot of salted water to boil. Add {{400 g}} pasta.
 
-2. Cook for 8-10 minutes until al dente. Reserve {{100ml}} pasta water.
+2. Cook for 8-10 minutes until al dente. Reserve {{100 ml}} pasta water.
 
 3. Heat {{2 tbsp}} olive oil in a pan, add garlic and sauté.
 

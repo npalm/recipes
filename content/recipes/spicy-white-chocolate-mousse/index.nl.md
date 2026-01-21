@@ -31,7 +31,7 @@ Een verrassende combinatie van zoete witte chocolade mousse met een pittige rode
 
 2. Verwijder pitten van de rode peper en snijd in reepjes.
 
-3. Verwarm {{100ml}} appelsap met de peper reepjes, niet laten koken. Laat dit een minuut of 10 trekken.
+3. Verwarm {{100 ml}} appelsap met de peper reepjes, niet laten koken. Laat dit een minuut of 10 trekken.
 
 4. Filter het appelsap en voeg de gelatine toe.
 

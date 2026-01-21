@@ -44,7 +44,7 @@ Plan at least 2-3 days ahead for this dish.
 
 #### Instructions
 
-1. Brine the veal cheeks: dissolve salt in water (about {{50g}} salt per liter) and submerge the veal cheeks. Refrigerate for 24 hours.
+1. Brine the veal cheeks: dissolve salt in water (about {{50 g}} salt per liter) and submerge the veal cheeks. Refrigerate for 24 hours.
 
 2. Remove the veal cheeks from the brine, rinse briefly and pat dry. Season with black pepper.
 

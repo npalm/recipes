@@ -6,8 +6,8 @@
  * 
  * @example
  * // Scaling quantities
- * scaleInstructionText("Add {{50ml}} water", 4, 2)
- * // Returns: "Add 25ml water"
+ * scaleInstructionText("Add {{50 ml}} water", 4, 2)
+ * // Returns: "Add 25 ml water"
  * 
  * scaleInstructionText("Cook for {{20 minutes}}", 4, 2)
  * // Returns: "Cook for 20 minutes" (time doesn't scale)
@@ -106,7 +106,7 @@ function parseQuantityString(str: string): { quantity: number; quantityMax?: num
  * Parse instruction text for {{...}} quantity patterns
  * 
  * @example
- * parseInstructionQuantities("Add {{50ml}} water and cook for {{20 minutes}}")
+ * parseInstructionQuantities("Add {{50 ml}} water and cook for {{20 minutes}}")
  * // Returns array with 2 matches
  */
 export function parseInstructionQuantities(text: string): QuantityMatch[] {
@@ -165,8 +165,8 @@ export function parseInstructionQuantities(text: string): QuantityMatch[] {
  * @returns Scaled instruction text with {{...}} replaced
  * 
  * @example
- * scaleInstructionText("Add {{50ml}} water", 4, 2)
- * // Returns: "Add 25ml water"
+ * scaleInstructionText("Add {{50 ml}} water", 4, 2)
+ * // Returns: "Add 25 ml water"
  */
 export function scaleInstructionText(
   instruction: string,

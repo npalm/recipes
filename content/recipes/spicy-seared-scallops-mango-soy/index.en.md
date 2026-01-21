@@ -34,7 +34,7 @@ An elegant starter featuring seared scallops with a sweet and savory mango chutn
 
 2. Heat the olive oil in a skillet over medium heat. Sauté the shallot and red chili for a few minutes until softened.
 
-3. Reduce the heat and add the mango puree to the pan. Stir in {{10ml}} of soy sauce and the chopped thyme. Let the mixture simmer on low heat for a few minutes, then taste and adjust with more soy sauce if needed. The chutney should have a good balance of sweet, salty, and spicy.
+3. Reduce the heat and add the mango puree to the pan. Stir in {{10 ml}} of soy sauce and the chopped thyme. Let the mixture simmer on low heat for a few minutes, then taste and adjust with more soy sauce if needed. The chutney should have a good balance of sweet, salty, and spicy.
 
 4. Let the chutney cool and store covered in the refrigerator until ready to use. Can be made up to a day in advance.
 

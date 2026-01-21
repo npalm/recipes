@@ -34,7 +34,7 @@ Een elegant voorgerecht met gebakken coquilles met een zoete en hartige mangochu
 
 2. Verhit de olijfolie in een koekenpan op middelhoog vuur. Fruit de sjalot en rode peper een paar minuten tot ze zacht zijn.
 
-3. Zet het vuur lager en voeg de mangopuree toe aan de pan. Roer {{10ml}} sojasaus en de gehakte tijm erdoor. Laat het mengsel een paar minuten zachtjes pruttelen, proef en pas zo nodig aan met meer sojasaus. De chutney moet een goede balans hebben tussen zoet, zout en pittig.
+3. Zet het vuur lager en voeg de mangopuree toe aan de pan. Roer {{10 ml}} sojasaus en de gehakte tijm erdoor. Laat het mengsel een paar minuten zachtjes pruttelen, proef en pas zo nodig aan met meer sojasaus. De chutney moet een goede balans hebben tussen zoet, zout en pittig.
 
 4. Laat de chutney afkoelen en bewaar afgedekt in de koelkast tot gebruik. Kan tot een dag van tevoren worden gemaakt.
 
