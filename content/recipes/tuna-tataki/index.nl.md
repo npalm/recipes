@@ -72,7 +72,7 @@ Een Japans geïnspireerd gerecht met kort geschroeide tonijn met een krokant ses
 
 5. Verhit een koekenpan op hoog vuur tot zeer heet.
 
-6. Schroei de tonijn kort dicht aan elke kant (ongeveer 30 seconden per kant), zodat de binnenkant rauw blijft.
+6. Schroei de tonijn kort dicht aan elke kant (ongeveer {{30 seconden}} per kant), zodat de binnenkant rauw blijft.
 
 7. Laat de tonijn direct afkoelen in de koelkast.
 
