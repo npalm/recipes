@@ -242,13 +242,27 @@ export function DinnerPlanner({ recipes }: DinnerPlannerProps) {
               {shareLink && (
                 <div className="mt-4 rounded-md bg-muted p-4">
                   <div className="mb-2 text-sm font-medium">{t('dinner.shareableLink')}</div>
-                  <div className="flex gap-2">
-                    <Input value={shareLink} readOnly className="flex-1" />
-                    <Button onClick={copyToClipboard} variant="outline">
+                  <div className="flex flex-col sm:flex-row gap-2">
+                    <a
+                      href={shareLink}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex-1 flex items-center justify-center gap-2 rounded-md border bg-background px-4 py-2 text-sm font-medium hover:bg-muted transition-colors"
+                    >
+                      <Share2 className="h-4 w-4" />
+                      Click to open dinner plan
+                    </a>
+                    <Button onClick={copyToClipboard} variant="outline" size="sm" className="sm:w-auto">
                       {copied ? (
-                        <Check className="h-4 w-4" />
+                        <>
+                          <Check className="mr-2 h-4 w-4" />
+                          Copied!
+                        </>
                       ) : (
-                        <Copy className="h-4 w-4" />
+                        <>
+                          <Copy className="mr-2 h-4 w-4" />
+                          Copy Link
+                        </>
                       )}
                     </Button>
                   </div>
