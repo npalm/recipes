@@ -68,9 +68,15 @@ export function formatQuantity(value: number | undefined): string {
   if (value === undefined || value === null) return '';
   if (value === 0) return '0';
 
-  const rounded = roundForCooking(value);
-  const wholePart = Math.floor(rounded);
-  const fraction = findClosestFraction(rounded);
+  // For values >= 10, always round to integer (no fractions like "66 2/3")
+  if (value >= 10) {
+    return Math.round(value).toString();
+  }
+
+  // Check for common fractions BEFORE rounding
+  // This prevents 1.25 from being rounded to 1.2 and then matching to 1/3
+  const wholePart = Math.floor(value);
+  const fraction = findClosestFraction(value);
 
   if (fraction) {
     if (wholePart === 0) {
@@ -79,9 +85,10 @@ export function formatQuantity(value: number | undefined): string {
     return `${wholePart} ${fraction}`;
   }
 
-  // No close fraction found, use decimal
-  if (rounded === wholePart) {
-    return wholePart.toString();
+  // No close fraction found, round for cooking precision
+  const rounded = roundForCooking(value);
+  if (rounded === Math.floor(rounded)) {
+    return Math.floor(rounded).toString();
   }
 
   return rounded.toString();
