@@ -268,8 +268,9 @@ export function ComponentInstructionList({
     new Set(components.map((c) => c.name))
   );
 
-  // Scale instructions if servings are provided
-  const shouldScale = originalServings && currentServings && originalServings !== currentServings;
+  // Always scale instructions to process {{...}} annotations
+  // Even when servings match, we need to remove the braces
+  const shouldHighlight = originalServings && currentServings && originalServings !== currentServings;
 
   // Calculate total steps across all components
   const totalSteps = components.reduce(
@@ -379,15 +380,15 @@ export function ComponentInstructionList({
                     const key = `${component.name}-${index}`;
                     const isCompleted = completedSteps.has(key);
                     
-                    // Scale instruction if needed
-                    const scaledInstruction = shouldScale && originalServings && currentServings
+                    // Always scale instruction to process {{...}} annotations
+                    const scaledInstruction = originalServings && currentServings
                       ? scaleInstructionText(instruction, originalServings, currentServings)
                       : instruction;
                     
                     // Parse segments for highlighting
-                    const segments = shouldScale && originalServings && currentServings
+                    const segments = shouldHighlight && originalServings && currentServings
                       ? parseInstructionSegments(instruction, scaledInstruction, originalServings, currentServings)
-                      : [{ text: instruction, isScaled: false }];
+                      : [{ text: scaledInstruction, isScaled: false }];
 
                     return (
                       <li

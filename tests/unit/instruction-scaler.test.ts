@@ -313,13 +313,13 @@ describe('parseInstructionSegments', () => {
     const scaled = scaleInstructionText(original, 4, 2);
     const segments = parseInstructionSegments(original, scaled, 4, 2);
     
-    // Should have 3 segments: "Add ", "25ml", " water"
+    // Should have 3 segments: "Add ", "25 ml", " water"
     expect(segments.length).toBeGreaterThan(1);
     
     // Find the scaled segment
     const scaledSegment = segments.find(s => s.isScaled);
     expect(scaledSegment).toBeDefined();
-    expect(scaledSegment?.text).toBe('25ml');
+    expect(scaledSegment?.text).toBe('25 ml');
   });
 
   test('handles multiple scaled quantities', () => {

@@ -22,11 +22,13 @@ export function InstructionList({
   const t = useTranslations();
   const [completedSteps, setCompletedSteps] = useState<Set<number>>(new Set());
 
-  // Scale instructions if servings are provided
-  const shouldScale = originalServings && currentServings && originalServings !== currentServings;
-  const scaledInstructions = shouldScale
+  // Always scale instructions to process {{...}} annotations
+  // Even when servings match, we need to remove the braces
+  const scaledInstructions = originalServings && currentServings
     ? instructions.map(inst => scaleInstructionText(inst, originalServings, currentServings))
     : instructions;
+  
+  const shouldHighlight = originalServings && currentServings && originalServings !== currentServings;
 
   if (scaledInstructions.length === 0) {
     return (
@@ -74,7 +76,7 @@ export function InstructionList({
           const isCompleted = completedSteps.has(index);
           
           // Parse segments to identify scaled quantities for highlighting
-          const segments = shouldScale && originalServings && currentServings
+          const segments = shouldHighlight && originalServings && currentServings
             ? parseInstructionSegments(instructions[index], instruction, originalServings, currentServings)
             : [{ text: instruction, isScaled: false }];
 

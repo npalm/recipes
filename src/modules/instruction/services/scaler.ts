@@ -270,7 +270,7 @@ export function parseInstructionSegments(
         ? `${formatQuantity(scaledQuantity)}-${formatQuantity(scaledQuantityMax)}`
         : formatQuantity(scaledQuantity);
 
-      const scaledText = match.unit ? `${formattedQuantity}${match.unit}` : formattedQuantity;
+      const scaledText = match.unit ? `${formattedQuantity} ${match.unit}` : formattedQuantity;
       segments.push({ text: scaledText, isScaled: true });
     } else {
       // This was NOT scaled (time/temperature) - keep original
