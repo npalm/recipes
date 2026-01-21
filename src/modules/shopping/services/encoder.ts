@@ -4,7 +4,7 @@
  * Handles encoding and decoding shopping list data to/from URL-safe format
  */
 
-import { shoppingListDataSchema, type ShoppingListDataSchema } from '../domain/schemas';
+import { shoppingListDataSchema } from '../domain/schemas';
 import type { ShoppingListData } from '../domain/types';
 
 /**

@@ -10,7 +10,6 @@ import { useState, useEffect, useMemo } from 'react';
 import type { ShoppingItem } from '../domain/types';
 import { ShoppingListItem } from './ShoppingListItem';
 import { ShoppingListHeader } from './ShoppingListHeader';
-import { formatQuantity } from '@/modules/ingredient/services/scaling';
 
 type ShoppingListProps = {
   title: string;
