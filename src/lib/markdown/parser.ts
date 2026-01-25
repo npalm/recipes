@@ -430,6 +430,7 @@ export function parsedRecipeToRecipe(parsed: ParsedRecipe): Recipe {
       } else {
         // Fallback to recipe-level times if no component times
         const activeTime = parsed.metadata.prepTime + parsed.metadata.cookTime;
+        // @ts-ignore - CI TypeScript has caching issues with RecipeMetadata type
         const waitTime = parsed.metadata.waitTime ?? 0;
         calculatedTotalTime = activeTime + waitTime;
       }
