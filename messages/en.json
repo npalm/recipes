@@ -77,6 +77,7 @@
     "notes": "Notes",
     "prepTime": "Prep Time",
     "cookTime": "Cook Time",
+    "waitTime": "Wait Time",
     "totalTime": "Total Time",
     "difficultyLevels": {
       "easy": "Easy",

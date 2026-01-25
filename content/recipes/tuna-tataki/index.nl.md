@@ -51,6 +51,9 @@ Een Japans geïnspireerd gerecht met kort geschroeide tonijn met een krokant ses
 2. Bewaar tot gebruik in de koelkast.
 
 ### Tonijn
+prepTime: 15
+cookTime: 5
+waitTime: 30
 
 #### Ingrediënten
 

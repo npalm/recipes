@@ -57,6 +57,12 @@ export const recipeFrontmatterSchema = z.object({
     .int()
     .nonnegative('Cook time cannot be negative')
     .max(4320, 'Cook time cannot exceed 72 hours'),
+  waitTime: z
+    .number()
+    .int()
+    .nonnegative('Wait time cannot be negative')
+    .max(10080, 'Wait time cannot exceed 7 days')
+    .optional(),
   totalTime: z
     .number()
     .int()
@@ -85,12 +91,48 @@ export const ingredientSchema = z.object({
 });
 
 /**
- * Recipe component schema (sub-recipes like Sauce, Marinade, Assembly)
+ * Component reference schema (for cross-recipe component references)
+ */
+export const componentReferenceSchema = z.object({
+  type: z.enum(['recipe', 'library']),
+  recipeSlug: z
+    .string()
+    .min(1, 'Recipe slug is required')
+    .regex(
+      /^[a-z0-9]+(?:-[a-z0-9]+)*$/,
+      'Recipe slug must be lowercase with hyphens only'
+    ),
+  componentSlug: z
+    .string()
+    .min(1, 'Component slug is required')
+    .regex(
+      /^[a-z0-9]+(?:-[a-z0-9]+)*$/,
+      'Component slug must be lowercase with hyphens only'
+    ),
+  sourceServings: z
+    .number()
+    .int()
+    .positive('Source servings must be a positive integer'),
+});
+
+/**
+ * Recipe component schema (sub-recipe)
  */
 export const recipeComponentSchema = z.object({
   name: z.string().min(1, 'Component name is required'),
+  slug: z
+    .string()
+    .regex(
+      /^[a-z0-9-]+$/,
+      'Component slug must be lowercase with hyphens only'
+    )
+    .optional(),
+  prepTime: z.number().int().nonnegative('Prep time cannot be negative').optional(),
+  cookTime: z.number().int().nonnegative('Cook time cannot be negative').optional(),
+  waitTime: z.number().int().nonnegative('Wait time cannot be negative').optional(),
   ingredients: z.array(ingredientSchema).default([]),
   instructions: z.array(z.string().min(1)).default([]),
+  reference: componentReferenceSchema.optional(),
 });
 
 /**
@@ -138,6 +180,7 @@ export type RecipeStatusSchema = z.infer<typeof recipeStatusSchema>;
 export type RecipeSourceSchema = z.infer<typeof recipeSourceSchema>;
 export type RecipeFrontmatterSchema = z.infer<typeof recipeFrontmatterSchema>;
 export type IngredientSchema = z.infer<typeof ingredientSchema>;
+export type ComponentReferenceSchema = z.infer<typeof componentReferenceSchema>;
 export type RecipeComponentSchema = z.infer<typeof recipeComponentSchema>;
 export type RecipeSchema = z.infer<typeof recipeSchema>;
 export type RecipeFiltersSchema = z.infer<typeof recipeFiltersSchema>;

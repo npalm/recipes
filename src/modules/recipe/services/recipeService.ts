@@ -39,8 +39,8 @@ export class RecipeService {
   /**
    * Get all recipes with optional filtering and sorting
    */
-  getRecipes(filters?: RecipeFilters, sort?: RecipeSort): Recipe[] {
-    let recipes = getAllRecipes(this.locale);
+  async getRecipes(filters?: RecipeFilters, sort?: RecipeSort): Promise<Recipe[]> {
+    let recipes = await getAllRecipes(this.locale);
 
     if (filters) {
       recipes = filterRecipes(recipes, filters);
@@ -56,8 +56,8 @@ export class RecipeService {
   /**
    * Get all recipe cards with optional filtering and sorting
    */
-  getRecipeCards(filters?: RecipeFilters, sort?: RecipeSort): RecipeCard[] {
-    let cards = getAllRecipeCards(this.locale);
+  async getRecipeCards(filters?: RecipeFilters, sort?: RecipeSort): Promise<RecipeCard[]> {
+    let cards = await getAllRecipeCards(this.locale);
 
     if (filters) {
       cards = filterRecipeCards(cards, filters);
@@ -73,42 +73,42 @@ export class RecipeService {
   /**
    * Get a single recipe by slug
    */
-  getRecipe(slug: string): Recipe | null {
-    return getRecipeBySlug(slug, this.locale);
+  async getRecipe(slug: string): Promise<Recipe | null> {
+    return await getRecipeBySlug(slug, this.locale);
   }
 
   /**
    * Get a recipe card by slug
    */
-  getRecipeCard(slug: string): RecipeCard | null {
-    const recipe = this.getRecipe(slug);
+  async getRecipeCard(slug: string): Promise<RecipeCard | null> {
+    const recipe = await this.getRecipe(slug);
     return recipe ? recipeToCard(recipe) : null;
   }
 
   /**
    * Get all unique tags
    */
-  getTags(): string[] {
-    return getAllTags(this.locale);
+  async getTags(): Promise<string[]> {
+    return await getAllTags(this.locale);
   }
 
   /**
    * Get recipes by tag
    */
-  getRecipesByTag(tag: string): Recipe[] {
-    return this.getRecipes({ tags: [tag] });
+  async getRecipesByTag(tag: string): Promise<Recipe[]> {
+    return await this.getRecipes({ tags: [tag] });
   }
 
   /**
    * Get related recipes (same tags, excluding current)
    */
-  getRelatedRecipes(slug: string, limit = 4): RecipeCard[] {
-    const recipe = this.getRecipe(slug);
+  async getRelatedRecipes(slug: string, limit = 4): Promise<RecipeCard[]> {
+    const recipe = await this.getRecipe(slug);
     if (!recipe || recipe.tags.length === 0) {
       return [];
     }
 
-    const allCards = this.getRecipeCards();
+    const allCards = await this.getRecipeCards();
     const related = allCards
       .filter((card) => card.slug !== slug)
       .map((card) => {

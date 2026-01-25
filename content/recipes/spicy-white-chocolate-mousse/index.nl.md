@@ -3,8 +3,8 @@ title: "Pikante Witte Chocolade Mousse"
 slug: "spicy-white-chocolate-mousse"
 status: published
 servings: 4
-prepTime: 30
-cookTime: 240
+prepTime: 0
+cookTime: 0
 difficulty: medium
 tags: ["dessert", "chocolade", "mousse", "pikant"]
 images: 
@@ -17,6 +17,9 @@ Een verrassende combinatie van zoete witte chocolade mousse met een pittige rode
 ## Onderdelen
 
 ### Rode Peper Gelei
+prepTime: 15
+cookTime: 0
+waitTime: 40
 
 #### Ingrediënten
 
@@ -40,6 +43,9 @@ Een verrassende combinatie van zoete witte chocolade mousse met een pittige rode
 6. Laat afkoelen tot kamertemperatuur.
 
 ### Witte Chocolade Mousse
+prepTime: 20
+cookTime: 0
+waitTime: 200
 
 #### Ingrediënten
 

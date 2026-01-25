@@ -8,6 +8,7 @@ import fs from 'fs';
 import path from 'path';
 import { Recipe, RecipeCard } from '@/modules/recipe/domain';
 import { parseRecipe, RecipeParseError } from '@/lib/markdown/parser';
+import { resolveComponentReferences } from '@/modules/recipe/services/componentResolver';
 
 /**
  * Configuration for the recipe repository
@@ -54,12 +55,13 @@ export function getRecipeSlugs(
 
 /**
  * Read a single recipe by slug
+ * Note: This function is async to support component reference resolution
  */
-export function getRecipeBySlug(
+export async function getRecipeBySlug(
   slug: string,
   locale: string = 'en',
   config = DEFAULT_CONFIG
-): Recipe | null {
+): Promise<Recipe | null> {
   const contentDir = config.contentDir;
   const recipePath = path.join(contentDir, slug, `index.${locale}.md`);
 
@@ -69,7 +71,18 @@ export function getRecipeBySlug(
     }
 
     const content = fs.readFileSync(recipePath, 'utf-8');
-    return parseRecipe(content, slug);
+    let recipe = parseRecipe(content, slug);
+
+    // Resolve component references if any exist
+    if (recipe.components?.some((c) => c.reference)) {
+      recipe = await resolveComponentReferences(
+        recipe,
+        { getRecipeBySlug: (s, l) => getRecipeBySlug(s, l, config) },
+        { locale }
+      );
+    }
+
+    return recipe;
   } catch (error) {
     if (error instanceof RecipeParseError) {
       console.error(`Failed to parse recipe ${slug}: ${error.message}`);
@@ -82,16 +95,17 @@ export function getRecipeBySlug(
 
 /**
  * Read all recipes
+ * Note: This function is async to support component reference resolution
  */
-export function getAllRecipes(
+export async function getAllRecipes(
   locale: string = 'en',
   config = DEFAULT_CONFIG
-): Recipe[] {
+): Promise<Recipe[]> {
   const slugs = getRecipeSlugs(locale, config);
   const recipes: Recipe[] = [];
 
   for (const slug of slugs) {
-    const recipe = getRecipeBySlug(slug, locale, config);
+    const recipe = await getRecipeBySlug(slug, locale, config);
     if (recipe) {
       recipes.push(recipe);
     }
@@ -121,22 +135,22 @@ export function recipeToCard(recipe: Recipe): RecipeCard {
 /**
  * Get all recipe cards (optimized for listing pages)
  */
-export function getAllRecipeCards(
+export async function getAllRecipeCards(
   locale: string = 'en',
   config = DEFAULT_CONFIG
-): RecipeCard[] {
-  const recipes = getAllRecipes(locale, config);
+): Promise<RecipeCard[]> {
+  const recipes = await getAllRecipes(locale, config);
   return recipes.map(recipeToCard);
 }
 
 /**
  * Get all unique tags from all recipes
  */
-export function getAllTags(
+export async function getAllTags(
   locale: string = 'en',
   config = DEFAULT_CONFIG
-): string[] {
-  const recipes = getAllRecipes(locale, config);
+): Promise<string[]> {
+  const recipes = await getAllRecipes(locale, config);
   const tagSet = new Set<string>();
 
   for (const recipe of recipes) {

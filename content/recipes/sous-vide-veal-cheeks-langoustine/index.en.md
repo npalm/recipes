@@ -3,8 +3,8 @@ title: "Sous Vide Veal Cheeks with Langoustine and Beetroot Tartare"
 slug: "sous-vide-veal-cheeks-langoustine"
 status: published
 servings: 4
-prepTime: 90
-cookTime: 2280
+prepTime: 0
+cookTime: 0
 difficulty: hard
 tags: ["sous vide", "veal", "langoustine", "main course", "gourmet"]
 images: 
@@ -25,6 +25,9 @@ Plan at least 2-3 days ahead for this dish.
 ## Components
 
 ### Veal Cheeks
+prepTime: 90
+cookTime: 0
+waitTime: 2160
 
 #### Ingredients
 
@@ -61,6 +64,10 @@ Plan at least 2-3 days ahead for this dish.
 7. Remove from bags, strain and reserve the cooking liquid for sauce. Slice the veal cheeks into medallions before serving.
 
 ### Beetroot Tartare
+slug: beetroot-tartare
+prepTime: 10
+cookTime: 0
+waitTime: 180
 
 #### Ingredients
 
@@ -84,6 +91,8 @@ Plan at least 2-3 days ahead for this dish.
 5. Use a small ring mold to press the tartare into neat rounds on each plate.
 
 ### Parsnip Puree
+prepTime: 10
+cookTime: 25
 
 #### Ingredients
 
@@ -108,6 +117,8 @@ Plan at least 2-3 days ahead for this dish.
 6. Optional: make parsnip chips by thinly slicing parsnip, tossing in oil, and baking at 140-160°C until crisp.
 
 ### Langoustine
+prepTime: 2
+cookTime: 3
 
 #### Ingredients
 
@@ -129,6 +140,9 @@ Plan at least 2-3 days ahead for this dish.
 4. Finish with a squeeze of lemon juice and fresh herbs.
 
 ### Pickled Carrot with Enoki
+prepTime: 10
+cookTime: 0
+waitTime: 30
 
 #### Ingredients
 
@@ -154,6 +168,8 @@ Plan at least 2-3 days ahead for this dish.
 6. Arrange 2-3 carrot-enoki rolls per plate as garnish.
 
 ### Montage
+prepTime: 10
+cookTime: 0
 
 #### Ingredients
 

@@ -32,9 +32,10 @@ export interface RecipeMetadata {
   slug: string;
   status: RecipeStatus;
   servings: number;
-  prepTime: number; // in minutes
-  cookTime: number; // in minutes
-  totalTime?: number; // in minutes, auto-calculated if omitted
+  prepTime: number; // Active preparation time in minutes
+  cookTime: number; // Active cooking time in minutes
+  waitTime?: number; // Passive waiting time in minutes (marinating, chilling, brining)
+  totalTime?: number; // Total time in minutes, auto-calculated if omitted
   difficulty: Difficulty;
   tags: string[];
   images: string[];
@@ -58,13 +59,28 @@ export interface Ingredient {
 }
 
 /**
+ * Reference to a component from another recipe or shared component library
+ */
+export interface ComponentReference {
+  type: 'recipe' | 'library'; // 'recipe' for cross-recipe refs, 'library' for future shared components
+  recipeSlug: string; // Source recipe slug (or component slug for library type)
+  componentSlug: string; // Component slug in source recipe
+  sourceServings: number; // Original servings for scaling calculations
+}
+
+/**
  * A recipe component (sub-recipe) with its own ingredients and instructions
  * Examples: "Sauce", "Marinade", "Dressing", "Assembly"
  */
 export interface RecipeComponent {
   name: string; // e.g., "Salsa Verde", "Seasoned Beef", "Assembly"
+  slug?: string; // Optional English slug for cross-recipe references (e.g., "beetroot-tartare")
+  prepTime?: number; // Active preparation time in minutes (optional)
+  cookTime?: number; // Active cooking time in minutes (optional)
+  waitTime?: number; // Passive waiting time in minutes (optional, for marinating, chilling, etc.)
   ingredients: Ingredient[];
   instructions: string[];
+  reference?: ComponentReference; // If this component references another component
 }
 
 /**
