@@ -5,7 +5,7 @@
  * Loads source recipes and copies component ingredients/instructions.
  */
 
-import { Recipe, RecipeComponent } from '@/modules/recipe/domain';
+import { Recipe } from '@/modules/recipe/domain';
 
 /**
  * Custom error for component reference resolution failures

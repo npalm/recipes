@@ -409,11 +409,14 @@ export function parsedRecipeToRecipe(parsed: ParsedRecipe): Recipe {
     if (!calculatedTotalTime) {
       const componentTimes = components.map((c) => {
         // Skip components without timing info (like referenced components)
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore - CI TypeScript has caching issues with RecipeComponent type
         if (!c.prepTime && !c.cookTime && !c.waitTime) return 0;
         
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore - CI TypeScript has caching issues with RecipeComponent type
         const activeTime = (c.prepTime ?? 0) + (c.cookTime ?? 0);
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore - CI TypeScript has caching issues with RecipeComponent type
         const waitTime = c.waitTime ?? 0;
         // Total time for a component is active time + wait time
@@ -430,6 +433,7 @@ export function parsedRecipeToRecipe(parsed: ParsedRecipe): Recipe {
       } else {
         // Fallback to recipe-level times if no component times
         const activeTime = parsed.metadata.prepTime + parsed.metadata.cookTime;
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore - CI TypeScript has caching issues with RecipeMetadata type
         const waitTime = parsed.metadata.waitTime ?? 0;
         calculatedTotalTime = activeTime + waitTime;
@@ -454,6 +458,7 @@ export function parsedRecipeToRecipe(parsed: ParsedRecipe): Recipe {
 
   // Calculate totalTime if not explicitly set in frontmatter
   // Use max of (prepTime + cookTime) and waitTime
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore - CI TypeScript has caching issues with RecipeMetadata type
   const totalTime = parsed.metadata.totalTime ?? 
     Math.max(

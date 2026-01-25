@@ -3,7 +3,6 @@
 import Link from 'next/link';
 import {
   Clock,
-  Users,
   ChefHat,
   Calendar,
   ExternalLink,
