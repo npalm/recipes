@@ -12,6 +12,7 @@ import {
   Timer,
   Flame,
   Layers,
+  Hourglass,
 } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { Badge } from '@/components/ui/badge';
@@ -39,6 +40,28 @@ export function RecipeDetail({ recipe, locale }: RecipeDetailProps) {
   const t = useTranslations();
   const difficulty = getDifficultyConfig(t)[recipe.difficulty];
   const [servings, setServings] = useState(recipe.servings);
+
+  // Calculate totals from components if present, otherwise use recipe-level values
+  const totalPrepTime = recipe.components
+    ? recipe.components.reduce((sum, component) => {
+        if (component.reference) return sum;
+        return sum + (component.prepTime ?? 0);
+      }, 0) || recipe.prepTime
+    : recipe.prepTime;
+
+  const totalCookTime = recipe.components
+    ? recipe.components.reduce((sum, component) => {
+        if (component.reference) return sum;
+        return sum + (component.cookTime ?? 0);
+      }, 0) || recipe.cookTime
+    : recipe.cookTime;
+
+  const totalWaitTime = recipe.components
+    ? recipe.components.reduce((sum, component) => {
+        if (component.reference) return sum;
+        return sum + (component.waitTime ?? 0);
+      }, 0) || (recipe.waitTime ?? 0)
+    : (recipe.waitTime ?? 0);
 
   const handlePrint = () => {
     window.print();
@@ -113,22 +136,13 @@ export function RecipeDetail({ recipe, locale }: RecipeDetailProps) {
           )}
 
           {/* Quick stats */}
-          <div className="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-4">
-            <div className="flex items-center gap-3 rounded-xl bg-muted/50 p-4">
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">
-                <Users className="h-5 w-5 text-primary" />
-              </div>
-              <div>
-                <p className="text-2xl font-bold">{recipe.servings}</p>
-                <p className="text-xs text-muted-foreground">{t('recipe.servings')}</p>
-              </div>
-            </div>
+          <div className={`mt-6 grid grid-cols-2 gap-4 ${totalWaitTime > 0 ? 'sm:grid-cols-4' : 'sm:grid-cols-3'}`}>
             <div className="flex items-center gap-3 rounded-xl bg-muted/50 p-4">
               <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-500/10">
                 <Timer className="h-5 w-5 text-blue-500" />
               </div>
               <div>
-                <p className="text-2xl font-bold">{formatTime(recipe.prepTime)}</p>
+                <p className="text-2xl font-bold">{formatTime(totalPrepTime)}</p>
                 <p className="text-xs text-muted-foreground">{t('recipe.prepTime')}</p>
               </div>
             </div>
@@ -137,10 +151,21 @@ export function RecipeDetail({ recipe, locale }: RecipeDetailProps) {
                 <Flame className="h-5 w-5 text-orange-500" />
               </div>
               <div>
-                <p className="text-2xl font-bold">{formatTime(recipe.cookTime)}</p>
+                <p className="text-2xl font-bold">{formatTime(totalCookTime)}</p>
                 <p className="text-xs text-muted-foreground">{t('recipe.cookTime')}</p>
               </div>
             </div>
+            {totalWaitTime > 0 && (
+              <div className="flex items-center gap-3 rounded-xl bg-muted/50 p-4">
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-purple-500/10">
+                  <Hourglass className="h-5 w-5 text-purple-500" />
+                </div>
+                <div>
+                  <p className="text-2xl font-bold">{formatTime(totalWaitTime)}</p>
+                  <p className="text-xs text-muted-foreground">{t('recipe.waitTime')}</p>
+                </div>
+              </div>
+            )}
             <div className="flex items-center gap-3 rounded-xl bg-muted/50 p-4">
               <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-green-500/10">
                 <Clock className="h-5 w-5 text-green-500" />
