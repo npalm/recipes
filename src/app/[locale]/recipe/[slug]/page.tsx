@@ -15,7 +15,7 @@ export async function generateMetadata({
 }: RecipePageProps): Promise<Metadata> {
   const { slug, locale } = await params;
   const recipeService = createRecipeService(locale);
-  const recipe = recipeService.getRecipe(slug);
+  const recipe = await recipeService.getRecipe(slug);
 
   if (!recipe) {
     return {
@@ -34,7 +34,7 @@ export async function generateStaticParams() {
   
   for (const locale of locales) {
     const recipeService = createRecipeService(locale);
-    const recipes = recipeService.getRecipeCards();
+    const recipes = await recipeService.getRecipeCards();
     
     for (const recipe of recipes) {
       allParams.push({
@@ -50,7 +50,7 @@ export async function generateStaticParams() {
 export default async function RecipePage({ params }: RecipePageProps) {
   const { slug, locale } = await params;
   const recipeService = createRecipeService(locale);
-  const recipe = recipeService.getRecipe(slug);
+  const recipe = await recipeService.getRecipe(slug);
 
   if (!recipe) {
     notFound();

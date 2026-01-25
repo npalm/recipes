@@ -51,6 +51,9 @@ A Japanese-inspired dish featuring briefly seared tuna with a crispy sesame seed
 2. Store in the refrigerator until use.
 
 ### Tuna
+prepTime: 15
+cookTime: 5
+waitTime: 30
 
 #### Ingredients
 

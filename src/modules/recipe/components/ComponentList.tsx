@@ -132,9 +132,11 @@ export function ComponentIngredientList({
       <div className="space-y-4">
         {components.map((component) => {
           const isExpanded = expandedComponents.has(component.name);
+          // Use source servings for referenced components, otherwise use recipe servings
+          const componentBaseServings = component.reference?.sourceServings ?? defaultServings;
           const scaledIngredients = scaleIngredients(
             component.ingredients,
-            defaultServings,
+            componentBaseServings,
             servings
           );
           const componentCheckedCount = component.ingredients.filter((_, idx) =>
@@ -340,6 +342,9 @@ export function ComponentInstructionList({
           const isComponentComplete =
             componentCompletedCount === component.instructions.length;
 
+          // Use source servings for referenced components, otherwise use recipe servings
+          const componentBaseServings = component.reference?.sourceServings ?? originalServings;
+
           // Skip components with no instructions
           if (component.instructions.length === 0) return null;
 
@@ -381,13 +386,13 @@ export function ComponentInstructionList({
                     const isCompleted = completedSteps.has(key);
                     
                     // Always scale instruction to process {{...}} annotations
-                    const scaledInstruction = originalServings && currentServings
-                      ? scaleInstructionText(instruction, originalServings, currentServings)
+                    const scaledInstruction = componentBaseServings && currentServings
+                      ? scaleInstructionText(instruction, componentBaseServings, currentServings)
                       : instruction;
                     
                     // Parse segments for highlighting
-                    const segments = shouldHighlight && originalServings && currentServings
-                      ? parseInstructionSegments(instruction, scaledInstruction, originalServings, currentServings)
+                    const segments = shouldHighlight && componentBaseServings && currentServings
+                      ? parseInstructionSegments(instruction, scaledInstruction, componentBaseServings, currentServings)
                       : [{ text: scaledInstruction, isScaled: false }];
 
                     return (

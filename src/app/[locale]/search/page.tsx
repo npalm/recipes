@@ -16,8 +16,8 @@ type Props = {
 export default async function SearchPage({ params }: Props) {
   const { locale } = await params;
   const recipeService = createRecipeService(locale);
-  const recipes = recipeService.getRecipeCards({ status: ['published'] });
-  const tags = recipeService.getTags();
+  const recipes = await recipeService.getRecipeCards({ status: ['published'] });
+  const tags = await recipeService.getTags();
 
   return (
     <Suspense fallback={<PageLoading />}>

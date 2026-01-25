@@ -3,8 +3,8 @@ title: "Sous Vide Kalfswang met Langoustine en Bietentartaar"
 slug: "sous-vide-veal-cheeks-langoustine"
 status: published
 servings: 4
-prepTime: 90
-cookTime: 2280
+prepTime: 0
+cookTime: 0
 difficulty: hard
 tags: ["sous vide", "kalfsvlees", "langoustine", "hoofdgerecht", "gastronomisch"]
 images: 
@@ -25,6 +25,9 @@ Plan minimaal 2-3 dagen vooruit voor dit gerecht.
 ## Onderdelen
 
 ### Kalfswang
+prepTime: 90
+cookTime: 0
+waitTime: 2160
 
 #### Ingrediënten
 
@@ -61,6 +64,10 @@ Plan minimaal 2-3 dagen vooruit voor dit gerecht.
 7. Haal uit de zakken, zeef en bewaar het kookvocht voor de saus. Snijd de kalfswangen in medaillons voor serveren.
 
 ### Bietentartaar
+slug: beetroot-tartare
+prepTime: 10
+cookTime: 0
+waitTime: 180
 
 #### Ingrediënten
 
@@ -84,6 +91,8 @@ Plan minimaal 2-3 dagen vooruit voor dit gerecht.
 5. Gebruik een kleine ringvorm om de tartaar in nette rondjes op elk bord te drukken.
 
 ### Pastinaakpuree
+prepTime: 10
+cookTime: 25
 
 #### Ingrediënten
 
@@ -108,6 +117,8 @@ Plan minimaal 2-3 dagen vooruit voor dit gerecht.
 6. Optioneel: maak pastinaakchips door pastinaak dun te snijden, te mengen met olie en te bakken op 140-160°C tot knapperig.
 
 ### Langoustine
+prepTime: 2
+cookTime: 3
 
 #### Ingrediënten
 
@@ -129,6 +140,9 @@ Plan minimaal 2-3 dagen vooruit voor dit gerecht.
 4. Maak af met een scheutje citroensap en verse kruiden.
 
 ### Gepekelde Wortel met Enoki
+prepTime: 10
+cookTime: 0
+waitTime: 30
 
 #### Ingrediënten
 
@@ -154,6 +168,8 @@ Plan minimaal 2-3 dagen vooruit voor dit gerecht.
 6. Leg 2-3 wortel-enoki rolletjes per bord als garnering.
 
 ### Montage
+prepTime: 10
+cookTime: 0
 
 #### Ingrediënten
 

@@ -130,7 +130,7 @@ Second paragraph.
 - Flour`;
 
         const result = parseRecipeMarkdown(markdown, 'test-recipe');
-        expect(result.description).toBe('First paragraph.\n\nSecond paragraph.');
+        expect(result.description).toBe('First paragraph.');
       });
     });
 
@@ -235,7 +235,7 @@ Recipe
     });
 
     describe('frontmatter validation', () => {
-      it('calculates totalTime when not provided', () => {
+      it('does not auto-calculate totalTime (done in parsedRecipeToRecipe)', () => {
         const markdown = `---
 title: Test Recipe
 slug: test-recipe
@@ -250,7 +250,11 @@ createdAt: "2024-01-01"
 - Flour`;
 
         const result = parseRecipeMarkdown(markdown, 'test-recipe');
-        expect(result.metadata.totalTime).toBe(45);
+        expect(result.metadata.totalTime).toBeUndefined();
+        
+        // But it should be calculated when converted to Recipe
+        const recipe = parsedRecipeToRecipe(result);
+        expect(recipe.totalTime).toBe(45);
       });
 
       it('uses provided totalTime', () => {
@@ -459,9 +463,9 @@ Third paragraph.
 - Flour`;
 
         const result = parseRecipeMarkdown(markdown, 'test-recipe');
-        expect(result.description).toContain('First paragraph');
-        expect(result.description).toContain('Second paragraph');
-        expect(result.description).toContain('Third paragraph');
+        expect(result.description).toBe('First paragraph with some text.');
+        expect(result.description).not.toContain('Second paragraph');
+        expect(result.description).not.toContain('Third paragraph');
       });
 
       it('handles headings with extra whitespace', () => {
@@ -815,6 +819,707 @@ createdAt: "2024-01-01"
       expect(error.message).toBe('Test error');
       expect(error.slug).toBe('test-slug');
       expect(error.cause).toBeUndefined();
+    });
+  });
+
+  describe('Component references', () => {
+    const validFrontmatter = `---
+title: Test Recipe
+slug: test-recipe
+servings: 4
+prepTime: 15
+cookTime: 30
+difficulty: medium
+createdAt: "2024-01-01"
+---`;
+
+    it('parses component with slug metadata', () => {
+      const markdown = `${validFrontmatter}
+
+## Components
+
+### Sauce
+slug: tomato-sauce
+
+- 2 cups tomatoes
+- 1 tsp salt
+
+1. Cook tomatoes
+2. Add salt`;
+
+      const result = parseRecipeMarkdown(markdown, 'test-recipe');
+      const parsed = parsedRecipeToRecipe(result);
+      
+      expect(parsed.components).toBeDefined();
+      expect(parsed.components!.length).toBe(1);
+      expect(parsed.components![0].name).toBe('Sauce');
+      expect(parsed.components![0].slug).toBe('tomato-sauce');
+      expect(parsed.components![0].reference).toBeUndefined();
+    });
+
+    it('parses component with reference', () => {
+      const markdown = `${validFrontmatter}
+
+## Components
+
+### Beetroot Tartare
+@include:veal-cheeks#beetroot-tartare`;
+
+      const result = parseRecipeMarkdown(markdown, 'test-recipe');
+      const parsed = parsedRecipeToRecipe(result);
+      
+      expect(parsed.components).toBeDefined();
+      expect(parsed.components!.length).toBe(1);
+      expect(parsed.components![0].name).toBe('Beetroot Tartare');
+      expect(parsed.components![0].reference).toBeDefined();
+      expect(parsed.components![0].reference!.type).toBe('recipe');
+      expect(parsed.components![0].reference!.recipeSlug).toBe('veal-cheeks');
+      expect(parsed.components![0].reference!.componentSlug).toBe('beetroot-tartare');
+      expect(parsed.components![0].ingredients).toEqual([]);
+      expect(parsed.components![0].instructions).toEqual([]);
+    });
+
+    it('parses component with both slug and reference', () => {
+      const markdown = `${validFrontmatter}
+
+## Components
+
+### Special Sauce
+slug: special-sauce
+@include:base-recipe#sauce`;
+
+      const result = parseRecipeMarkdown(markdown, 'test-recipe');
+      const parsed = parsedRecipeToRecipe(result);
+      
+      expect(parsed.components).toBeDefined();
+      expect(parsed.components!.length).toBe(1);
+      expect(parsed.components![0].name).toBe('Special Sauce');
+      expect(parsed.components![0].slug).toBe('special-sauce');
+      expect(parsed.components![0].reference).toBeDefined();
+      expect(parsed.components![0].reference!.recipeSlug).toBe('base-recipe');
+    });
+
+    it('removes slug and reference lines from component body', () => {
+      const markdown = `${validFrontmatter}
+
+## Components
+
+### Sauce
+slug: my-sauce
+
+#### Ingredients
+
+- 2 cups tomatoes
+
+#### Instructions
+
+1. Cook`;
+
+      const result = parseRecipeMarkdown(markdown, 'test-recipe');
+      const parsed = parsedRecipeToRecipe(result);
+      
+      // The slug line should not appear in ingredients or instructions
+      expect(parsed.components![0].ingredients.length).toBe(1);
+      expect(parsed.components![0].ingredients[0].raw).toBe('2 cups tomatoes');
+      expect(parsed.components![0].instructions.length).toBe(1);
+      expect(parsed.components![0].instructions[0]).toBe('Cook');
+    });
+
+    it('handles component with slug but no reference', () => {
+      const markdown = `${validFrontmatter}
+
+## Components
+
+### Main
+slug: main-component
+
+#### Ingredients
+
+- 1 cup flour
+
+#### Instructions
+
+1. Mix`;
+
+      const result = parseRecipeMarkdown(markdown, 'test-recipe');
+      const parsed = parsedRecipeToRecipe(result);
+      
+      expect(parsed.components![0].slug).toBe('main-component');
+      expect(parsed.components![0].reference).toBeUndefined();
+      expect(parsed.components![0].ingredients.length).toBe(1);
+      expect(parsed.components![0].instructions.length).toBe(1);
+    });
+
+    it('handles component with reference but no slug', () => {
+      const markdown = `${validFrontmatter}
+
+## Components
+
+### Referenced Component
+@include:source-recipe#component-slug`;
+
+      const result = parseRecipeMarkdown(markdown, 'test-recipe');
+      const parsed = parsedRecipeToRecipe(result);
+      
+      expect(parsed.components![0].slug).toBeUndefined();
+      expect(parsed.components![0].reference).toBeDefined();
+      expect(parsed.components![0].reference!.recipeSlug).toBe('source-recipe');
+      expect(parsed.components![0].reference!.componentSlug).toBe('component-slug');
+    });
+
+    it('ignores slug with invalid format (not matching pattern)', () => {
+      const markdown = `${validFrontmatter}
+
+## Components
+
+### Invalid
+slug: Invalid_Slug_123
+
+#### Ingredients
+
+- Flour`;
+
+      // Parser regex only matches lowercase-with-hyphens format
+      // Invalid formats are ignored and slug won't be set
+      const result = parseRecipeMarkdown(markdown, 'test-recipe');
+      
+      expect(result.components).toBeDefined();
+      expect(result.components!.length).toBe(1);
+      // Slug won't be extracted because it doesn't match the pattern
+      expect(result.components![0].slug).toBeUndefined();
+      
+      // Parse will succeed, component just won't have a slug
+      const parsed = parsedRecipeToRecipe(result);
+      expect(parsed.components![0].slug).toBeUndefined();
+    });
+
+    it('parses reference even with invalid format', () => {
+      const markdown = `${validFrontmatter}
+
+## Components
+
+### Invalid
+@include:invalid
+
+#### Ingredients
+
+- Flour`;
+
+      // Parser attempts to extract reference but won't match the pattern
+      const result = parseRecipeMarkdown(markdown, 'test-recipe');
+      
+      expect(result.components).toBeDefined();
+      expect(result.components!.length).toBe(1);
+      // Reference won't be set because pattern requires recipe#component format
+      expect(result.components![0].reference).toBeUndefined();
+    });
+
+    it('handles multiple components with mix of slugs and references', () => {
+      const markdown = `${validFrontmatter}
+
+## Components
+
+### Sauce
+slug: tomato-sauce
+
+- Tomatoes
+
+1. Cook
+
+### Base
+@include:other#base
+
+### Topping
+slug: cheese-topping
+
+- Cheese
+
+1. Grate`;
+
+      const result = parseRecipeMarkdown(markdown, 'test-recipe');
+      const parsed = parsedRecipeToRecipe(result);
+      
+      expect(parsed.components!.length).toBe(3);
+      expect(parsed.components![0].slug).toBe('tomato-sauce');
+      expect(parsed.components![0].reference).toBeUndefined();
+      expect(parsed.components![1].reference).toBeDefined();
+      expect(parsed.components![1].slug).toBeUndefined();
+      expect(parsed.components![2].slug).toBe('cheese-topping');
+      expect(parsed.components![2].reference).toBeUndefined();
+    });
+  });
+
+  describe('Component Timing', () => {
+    const validFrontmatter = `---
+title: Test Recipe
+slug: test-recipe
+servings: 4
+prepTime: 10
+cookTime: 20
+difficulty: medium
+createdAt: "2024-01-01"
+---`;
+
+    it('should parse prepTime and cookTime from component metadata', () => {
+      const markdown = `${validFrontmatter}
+
+## Components
+
+### Sauce
+prepTime: 10
+cookTime: 20
+
+#### Ingredients
+- Tomatoes
+
+#### Instructions
+1. Cook`;
+
+      const result = parseRecipeMarkdown(markdown, 'test-recipe');
+      const parsed = parsedRecipeToRecipe(result);
+      
+      expect(parsed.components).toBeDefined();
+      expect(parsed.components!.length).toBe(1);
+      expect(parsed.components![0].prepTime).toBe(10);
+      expect(parsed.components![0].cookTime).toBe(20);
+    });
+
+    it('should remove prepTime and cookTime metadata lines from component body', () => {
+      const markdown = `${validFrontmatter}
+
+## Components
+
+### Sauce
+prepTime: 15
+cookTime: 30
+
+#### Ingredients
+- Tomatoes
+
+#### Instructions
+1. Cook`;
+
+      const result = parseRecipeMarkdown(markdown, 'test-recipe');
+      const parsed = parsedRecipeToRecipe(result);
+      
+      expect(parsed.components![0].ingredients[0].name).toBe('Tomatoes');
+      expect(parsed.components![0].instructions[0]).toBe('Cook');
+    });
+
+    it('should handle component without timing', () => {
+      const markdown = `${validFrontmatter}
+
+## Components
+
+### Sauce
+
+#### Ingredients
+- Tomatoes`;
+
+      const result = parseRecipeMarkdown(markdown, 'test-recipe');
+      const parsed = parsedRecipeToRecipe(result);
+      
+      expect(parsed.components![0].prepTime).toBeUndefined();
+      expect(parsed.components![0].cookTime).toBeUndefined();
+    });
+
+    it('should auto-calculate recipe totalTime from component times', () => {
+      const markdown = `${validFrontmatter}
+
+## Components
+
+### Sauce
+prepTime: 10
+cookTime: 20
+
+#### Ingredients
+- Tomatoes
+
+### Main
+prepTime: 15
+cookTime: 30
+
+#### Ingredients
+- Pasta
+
+### Topping
+prepTime: 5
+cookTime: 5
+
+#### Ingredients
+- Cheese`;
+
+      const result = parseRecipeMarkdown(markdown, 'test-recipe');
+      const parsed = parsedRecipeToRecipe(result);
+      
+      expect(parsed.totalTime).toBe(85); // (10+20) + (15+30) + (5+5) = 30 + 45 + 10
+    });
+
+    it('should use explicit totalTime from frontmatter over calculated time', () => {
+      const frontmatter = `---
+title: Test Recipe
+slug: test-recipe
+servings: 4
+prepTime: 10
+cookTime: 20
+totalTime: 100
+difficulty: medium
+createdAt: "2024-01-01"
+---`;
+
+      const markdown = `${frontmatter}
+
+## Components
+
+### Sauce
+time: 30
+
+#### Ingredients
+- Tomatoes
+
+### Main
+time: 45
+
+#### Ingredients
+- Pasta`;
+
+      const result = parseRecipeMarkdown(markdown, 'test-recipe');
+      const parsed = parsedRecipeToRecipe(result);
+      
+      expect(parsed.totalTime).toBe(100); // Explicit totalTime, not 75
+    });
+
+    it('should fallback to prepTime + cookTime when no component times', () => {
+      const markdown = `${validFrontmatter}
+
+## Components
+
+### Sauce
+
+#### Ingredients
+- Tomatoes
+
+### Main
+
+#### Ingredients
+- Pasta`;
+
+      const result = parseRecipeMarkdown(markdown, 'test-recipe');
+      const parsed = parsedRecipeToRecipe(result);
+      
+      expect(parsed.totalTime).toBe(30); // 10 prepTime + 20 cookTime
+    });
+
+    it('should handle mixed components with and without timing', () => {
+      const markdown = `${validFrontmatter}
+
+## Components
+
+### Sauce
+prepTime: 10
+cookTime: 20
+
+#### Ingredients
+- Tomatoes
+
+### Main
+
+#### Ingredients
+- Pasta
+
+### Topping
+prepTime: 5
+cookTime: 10
+
+#### Ingredients
+- Cheese`;
+
+      const result = parseRecipeMarkdown(markdown, 'test-recipe');
+      const parsed = parsedRecipeToRecipe(result);
+      
+      expect(parsed.totalTime).toBe(45); // (10+20) + (5+10) = 30 + 15 (ignores component without time)
+    });
+
+    it('should handle component with slug and timing', () => {
+      const markdown = `${validFrontmatter}
+
+## Components
+
+### Sauce
+slug: tomato-sauce
+prepTime: 10
+cookTime: 15
+
+#### Ingredients
+- Tomatoes
+
+#### Instructions
+1. Cook`;
+
+      const result = parseRecipeMarkdown(markdown, 'test-recipe');
+      const parsed = parsedRecipeToRecipe(result);
+      
+      expect(parsed.components![0].slug).toBe('tomato-sauce');
+      expect(parsed.components![0].prepTime).toBe(10);
+      expect(parsed.components![0].cookTime).toBe(15);
+    });
+
+    it('should handle component with reference (no timing in target)', () => {
+      const markdown = `${validFrontmatter}
+
+## Components
+
+### Sauce
+@include:base-recipe#sauce
+
+### Main
+prepTime: 15
+cookTime: 25
+
+#### Ingredients
+- Pasta`;
+
+      const result = parseRecipeMarkdown(markdown, 'test-recipe');
+      const parsed = parsedRecipeToRecipe(result);
+      
+      expect(parsed.components![0].reference).toBeDefined();
+      expect(parsed.components![0].prepTime).toBeUndefined();
+      expect(parsed.components![0].cookTime).toBeUndefined();
+      expect(parsed.components![1].prepTime).toBe(15);
+      expect(parsed.components![1].cookTime).toBe(25);
+      expect(parsed.totalTime).toBe(40); // Only counts Main component (15+25)
+    });
+
+    it('should parse waitTime from component metadata', () => {
+      const markdown = `${validFrontmatter}
+
+## Components
+
+### Sous Vide Meat
+prepTime: 20
+cookTime: 0
+waitTime: 2160
+
+#### Ingredients
+- Beef
+
+#### Instructions
+1. Season and vacuum seal
+2. Cook sous vide at 56°C for 36 hours`;
+
+      const result = parseRecipeMarkdown(markdown, 'test-recipe');
+      const parsed = parsedRecipeToRecipe(result);
+      
+      expect(parsed.components).toBeDefined();
+      expect(parsed.components!.length).toBe(1);
+      expect(parsed.components![0].prepTime).toBe(20);
+      expect(parsed.components![0].cookTime).toBe(0);
+      expect(parsed.components![0].waitTime).toBe(2160);
+    });
+
+    it('should remove waitTime metadata line from component body', () => {
+      const markdown = `${validFrontmatter}
+
+## Components
+
+### Marinated Vegetables
+prepTime: 15
+cookTime: 0
+waitTime: 180
+
+#### Ingredients
+- Vegetables
+
+#### Instructions
+1. Marinate for 3 hours`;
+
+      const result = parseRecipeMarkdown(markdown, 'test-recipe');
+      const parsed = parsedRecipeToRecipe(result);
+      
+      expect(parsed.components![0].ingredients[0].name).toBe('Vegetables');
+      expect(parsed.components![0].instructions[0]).toBe('Marinate for 3 hours');
+      expect(parsed.components![0].waitTime).toBe(180);
+    });
+
+    it('should calculate totalTime using additive formula (prep + cook + wait per component)', () => {
+      const markdown = `${validFrontmatter}
+
+## Components
+
+### Sous Vide Meat
+prepTime: 20
+cookTime: 0
+waitTime: 2160
+
+#### Ingredients
+- Beef
+
+### Quick Sauce
+prepTime: 10
+cookTime: 15
+
+#### Ingredients
+- Stock
+
+### Marinated Vegetables
+prepTime: 15
+cookTime: 0
+waitTime: 180
+
+#### Ingredients
+- Vegetables`;
+
+      const result = parseRecipeMarkdown(markdown, 'test-recipe');
+      const parsed = parsedRecipeToRecipe(result);
+      
+      // Component 1: 20 + 0 + 2160 = 2180
+      // Component 2: 10 + 15 + 0 = 25
+      // Component 3: 15 + 0 + 180 = 195
+      // Total: 2180 + 25 + 195 = 2400
+      expect(parsed.totalTime).toBe(2400);
+    });
+
+    it('should handle component with only waitTime (no prep/cook)', () => {
+      const markdown = `${validFrontmatter}
+
+## Components
+
+### Chilling
+waitTime: 240
+
+#### Instructions
+1. Chill in refrigerator for 4 hours`;
+
+      const result = parseRecipeMarkdown(markdown, 'test-recipe');
+      const parsed = parsedRecipeToRecipe(result);
+      
+      expect(parsed.components![0].prepTime).toBeUndefined();
+      expect(parsed.components![0].cookTime).toBeUndefined();
+      expect(parsed.components![0].waitTime).toBe(240);
+      expect(parsed.totalTime).toBe(240); // 0 + 0 + 240 = 240
+    });
+
+    it('should handle component where active time exceeds wait time', () => {
+      const markdown = `${validFrontmatter}
+
+## Components
+
+### Slow Roast
+prepTime: 30
+cookTime: 240
+waitTime: 60
+
+#### Ingredients
+- Meat`;
+
+      const result = parseRecipeMarkdown(markdown, 'test-recipe');
+      const parsed = parsedRecipeToRecipe(result);
+      
+      // 30 + 240 + 60 = 330 (all times are additive)
+      expect(parsed.totalTime).toBe(330);
+    });
+
+    it('should handle component where wait time exceeds active time', () => {
+      const markdown = `${validFrontmatter}
+
+## Components
+
+### Brined Pork
+prepTime: 15
+cookTime: 0
+waitTime: 1440
+
+#### Ingredients
+- Pork`;
+
+      const result = parseRecipeMarkdown(markdown, 'test-recipe');
+      const parsed = parsedRecipeToRecipe(result);
+      
+      // 15 + 0 + 1440 = 1455 (all times are additive)
+      expect(parsed.totalTime).toBe(1455);
+    });
+
+    it('should handle mixed components with and without waitTime', () => {
+      const markdown = `${validFrontmatter}
+
+## Components
+
+### Marinated
+prepTime: 10
+waitTime: 180
+
+#### Ingredients
+- Chicken
+
+### Quick Prep
+prepTime: 5
+cookTime: 10
+
+#### Ingredients
+- Vegetables
+
+### Long Wait
+waitTime: 1440
+
+#### Instructions
+1. Wait overnight`;
+
+      const result = parseRecipeMarkdown(markdown, 'test-recipe');
+      const parsed = parsedRecipeToRecipe(result);
+      
+      // Component 1: 10 + 0 + 180 = 190
+      // Component 2: 5 + 10 + 0 = 15
+      // Component 3: 0 + 0 + 1440 = 1440
+      // Total: 190 + 15 + 1440 = 1645
+      expect(parsed.totalTime).toBe(1645);
+    });
+
+    it('should handle component with slug and waitTime', () => {
+      const markdown = `${validFrontmatter}
+
+## Components
+
+### Beetroot Tartare
+slug: beetroot-tartare
+prepTime: 10
+cookTime: 0
+waitTime: 180
+
+#### Ingredients
+- Beetroot
+
+#### Instructions
+1. Cook sous vide
+2. Chill for 3 hours`;
+
+      const result = parseRecipeMarkdown(markdown, 'test-recipe');
+      const parsed = parsedRecipeToRecipe(result);
+      
+      expect(parsed.components![0].slug).toBe('beetroot-tartare');
+      expect(parsed.components![0].prepTime).toBe(10);
+      expect(parsed.components![0].cookTime).toBe(0);
+      expect(parsed.components![0].waitTime).toBe(180);
+      expect(parsed.totalTime).toBe(190); // 10 + 0 + 180 = 190
+    });
+
+    it('should handle component with all three timing fields equal', () => {
+      const markdown = `${validFrontmatter}
+
+## Components
+
+### Equal Times
+prepTime: 60
+cookTime: 60
+waitTime: 120
+
+#### Ingredients
+- Food`;
+
+      const result = parseRecipeMarkdown(markdown, 'test-recipe');
+      const parsed = parsedRecipeToRecipe(result);
+      
+      // 60 + 60 + 120 = 240
+      expect(parsed.totalTime).toBe(240);
     });
   });
 });

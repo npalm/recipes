@@ -14,7 +14,7 @@ export default async function HomePage({ params }: Props) {
   const { locale } = await params;
   const t = await getTranslations();
   const recipeService = createRecipeService(locale);
-  const recipes = recipeService.getRecipeCards(
+  const recipes = await recipeService.getRecipeCards(
     { status: ['published'] },
     { field: 'createdAt', direction: 'desc' }
   );

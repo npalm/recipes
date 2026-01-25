@@ -3,8 +3,8 @@ title: "Pittige Coquilles met Mango en Soja"
 slug: "spicy-seared-scallops-mango-soy"
 status: published
 servings: 4
-prepTime: 15
-cookTime: 10
+prepTime: 0
+cookTime: 0
 difficulty: medium
 tags: ["voorgerecht", "zeevruchten", "coquilles", "pittig"]
 images:
@@ -18,6 +18,8 @@ Een elegant voorgerecht met gebakken coquilles met een zoete en hartige mangochu
 ## Onderdelen
 
 ### Mangochutney
+prepTime: 10
+cookTime: 10
 
 #### Ingrediënten
 
@@ -39,6 +41,8 @@ Een elegant voorgerecht met gebakken coquilles met een zoete en hartige mangochu
 4. Laat de chutney afkoelen en bewaar afgedekt in de koelkast tot gebruik. Kan tot een dag van tevoren worden gemaakt.
 
 ### Coquilles
+prepTime: 2
+cookTime: 3
 
 #### Ingrediënten
 
@@ -55,6 +59,7 @@ Een elegant voorgerecht met gebakken coquilles met een zoete en hartige mangochu
 3. Als alternatief kun je de coquilles grillen in een grillpan. Bestrijk ze met een beetje arachideolie en gril 1-1,5 minuut per kant.
 
 ### Montage
+prepTime: 3
 
 #### Ingrediënten
 

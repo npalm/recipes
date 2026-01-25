@@ -20,8 +20,16 @@ import { parseIngredientsFromMarkdown } from '@/modules/ingredient/services/pars
  */
 export interface ParsedRecipeComponent {
   name: string;
+  slug?: string;
+  prepTime?: number;
+  cookTime?: number;
+  waitTime?: number;
   ingredientsMarkdown: string;
   instructionsMarkdown: string;
+  reference?: {
+    recipeSlug: string;
+    componentSlug: string;
+  };
 }
 
 export interface ParsedRecipe {
@@ -81,14 +89,21 @@ function extractSection(
 }
 
 /**
- * Extract description (content before first ## heading)
+ * Extract description (first paragraph only, before first ## heading)
  */
 function extractDescription(content: string): string {
   const firstHeadingIndex = content.search(/^##\s/m);
-  if (firstHeadingIndex === -1) {
-    return content.trim();
+  const contentBeforeHeading = firstHeadingIndex === -1 
+    ? content 
+    : content.slice(0, firstHeadingIndex);
+  
+  // Extract only the first paragraph (content before first blank line)
+  const firstBlankLine = contentBeforeHeading.search(/\n\s*\n/);
+  if (firstBlankLine === -1) {
+    return contentBeforeHeading.trim();
   }
-  return content.slice(0, firstHeadingIndex).trim();
+  
+  return contentBeforeHeading.slice(0, firstBlankLine).trim();
 }
 
 /**
@@ -188,16 +203,99 @@ function parseComponentsSection(content: string): ParsedRecipeComponent[] {
         const name = nameMatch[1].trim();
         const componentBody = componentSections[i + 1] || '';
         
+        // Parse slug, prepTime, cookTime, waitTime, and reference from component body
+        const { slug, prepTime, cookTime, waitTime, reference, cleanedBody } = parseComponentMetadata(componentBody);
+        
         components.push({
           name,
-          ingredientsMarkdown: extractSubSection(componentBody, 'Ingredients') || extractSubSection(componentBody, 'Ingrediënten'),
-          instructionsMarkdown: extractSubSection(componentBody, 'Instructions') || extractSubSection(componentBody, 'Bereiding'),
+          slug,
+          prepTime,
+          cookTime,
+          waitTime,
+          reference,
+          ingredientsMarkdown: extractSubSection(cleanedBody, 'Ingredients') || extractSubSection(cleanedBody, 'Ingrediënten'),
+          instructionsMarkdown: extractSubSection(cleanedBody, 'Instructions') || extractSubSection(cleanedBody, 'Bereiding'),
         });
       }
     }
   }
   
   return components;
+}
+
+/**
+ * Parse component metadata (slug, reference, and time) from component body
+ * Returns cleaned body with metadata lines removed
+ */
+function parseComponentMetadata(componentBody: string): {
+  slug?: string;
+  prepTime?: number;
+  cookTime?: number;
+  waitTime?: number;
+  reference?: { recipeSlug: string; componentSlug: string };
+  cleanedBody: string;
+} {
+  const lines = componentBody.split('\n');
+  let slug: string | undefined;
+  let prepTime: number | undefined;
+  let cookTime: number | undefined;
+  let waitTime: number | undefined;
+  let reference: { recipeSlug: string; componentSlug: string } | undefined;
+  const cleanedLines: string[] = [];
+  
+  for (const line of lines) {
+    const trimmed = line.trim();
+    
+    // Check for slug: line
+    const slugMatch = trimmed.match(/^slug:\s*([a-z0-9-]+)\s*$/);
+    if (slugMatch) {
+      slug = slugMatch[1];
+      continue; // Don't include this line in cleaned body
+    }
+    
+    // Check for prepTime: line (in minutes)
+    const prepTimeMatch = trimmed.match(/^prepTime:\s*(\d+)\s*$/);
+    if (prepTimeMatch) {
+      prepTime = parseInt(prepTimeMatch[1], 10);
+      continue; // Don't include this line in cleaned body
+    }
+    
+    // Check for cookTime: line (in minutes)
+    const cookTimeMatch = trimmed.match(/^cookTime:\s*(\d+)\s*$/);
+    if (cookTimeMatch) {
+      cookTime = parseInt(cookTimeMatch[1], 10);
+      continue; // Don't include this line in cleaned body
+    }
+    
+    // Check for waitTime: line (in minutes)
+    const waitTimeMatch = trimmed.match(/^waitTime:\s*(\d+)\s*$/);
+    if (waitTimeMatch) {
+      waitTime = parseInt(waitTimeMatch[1], 10);
+      continue; // Don't include this line in cleaned body
+    }
+    
+    // Check for @include: line
+    const includeMatch = trimmed.match(/^@include:([a-z0-9-]+)#([a-z0-9-]+)\s*$/);
+    if (includeMatch) {
+      reference = {
+        recipeSlug: includeMatch[1],
+        componentSlug: includeMatch[2],
+      };
+      continue; // Don't include this line in cleaned body
+    }
+    
+    // Keep all other lines
+    cleanedLines.push(line);
+  }
+  
+  return {
+    slug,
+    prepTime,
+    cookTime,
+    waitTime,
+    reference,
+    cleanedBody: cleanedLines.join('\n'),
+  };
 }
 
 /**
@@ -215,10 +313,9 @@ export function parseRecipeMarkdown(
     const validationResult = safeValidateRecipeFrontmatter({
       ...rawFrontmatter,
       slug,
-      // Calculate totalTime if not provided
-      totalTime:
-        rawFrontmatter.totalTime ??
-        (rawFrontmatter.prepTime ?? 0) + (rawFrontmatter.cookTime ?? 0),
+      // Don't auto-calculate totalTime here - will be done in parsedRecipeToRecipe
+      // based on whether it's component-based or not
+      totalTime: rawFrontmatter.totalTime,
     });
 
     if (!validationResult.success) {
@@ -289,12 +386,63 @@ export function parsedRecipeToRecipe(parsed: ParsedRecipe): Recipe {
   if (parsed.components && parsed.components.length > 0) {
     const components: RecipeComponent[] = parsed.components.map((comp) => ({
       name: comp.name,
+      slug: comp.slug,
+      prepTime: comp.prepTime,
+      cookTime: comp.cookTime,
+      waitTime: comp.waitTime,
       ingredients: parseIngredientsFromMarkdown(comp.ingredientsMarkdown),
       instructions: parseInstructions(comp.instructionsMarkdown),
-    }));
+      // Add reference if present (will be resolved later by componentResolver)
+      reference: comp.reference
+        ? {
+            type: 'recipe' as const,
+            recipeSlug: comp.reference.recipeSlug,
+            componentSlug: comp.reference.componentSlug,
+            sourceServings: 0, // Will be populated by resolver
+          }
+        : undefined,
+    } as RecipeComponent));
+
+    // Auto-calculate totalTime from components if not explicitly set
+    // Using Option C: max(activeTime, waitTime) per component
+    let calculatedTotalTime = parsed.metadata.totalTime;
+    if (!calculatedTotalTime) {
+      const componentTimes = components.map((c) => {
+        // Skip components without timing info (like referenced components)
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore - CI TypeScript has caching issues with RecipeComponent type
+        if (!c.prepTime && !c.cookTime && !c.waitTime) return 0;
+        
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore - CI TypeScript has caching issues with RecipeComponent type
+        const activeTime = (c.prepTime ?? 0) + (c.cookTime ?? 0);
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore - CI TypeScript has caching issues with RecipeComponent type
+        const waitTime = c.waitTime ?? 0;
+        // Total time for a component is active time + wait time
+        // Wait time is in addition to active time (cooling, setting, etc.)
+        return activeTime + waitTime;
+      });
+      
+      const totalComponentTime = componentTimes.reduce((sum, time) => sum + time, 0);
+      
+      if (totalComponentTime > 0) {
+        // Sum across all components (different components can be done in parallel in theory,
+        // but we sum them as a conservative estimate)
+        calculatedTotalTime = totalComponentTime;
+      } else {
+        // Fallback to recipe-level times if no component times
+        const activeTime = parsed.metadata.prepTime + parsed.metadata.cookTime;
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore - CI TypeScript has caching issues with RecipeMetadata type
+        const waitTime = parsed.metadata.waitTime ?? 0;
+        calculatedTotalTime = activeTime + waitTime;
+      }
+    }
 
     return {
       ...parsed.metadata,
+      totalTime: calculatedTotalTime,
       description: parsed.description,
       ingredients: [], // Empty for component-based recipes
       instructions: [], // Empty for component-based recipes
@@ -308,8 +456,19 @@ export function parsedRecipeToRecipe(parsed: ParsedRecipe): Recipe {
   const ingredients = parseIngredientsFromMarkdown(parsed.ingredientsMarkdown);
   const instructions = parseInstructions(parsed.instructionsMarkdown);
 
+  // Calculate totalTime if not explicitly set in frontmatter
+  // Use max of (prepTime + cookTime) and waitTime
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore - CI TypeScript has caching issues with RecipeMetadata type
+  const totalTime = parsed.metadata.totalTime ?? 
+    Math.max(
+      parsed.metadata.prepTime + parsed.metadata.cookTime,
+      parsed.metadata.waitTime ?? 0
+    );
+
   return {
     ...parsed.metadata,
+    totalTime,
     description: parsed.description,
     ingredients,
     instructions,

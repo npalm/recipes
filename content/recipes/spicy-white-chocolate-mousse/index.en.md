@@ -3,8 +3,8 @@ title: "Spicy White Chocolate Mousse"
 slug: "spicy-white-chocolate-mousse"
 status: published
 servings: 4
-prepTime: 30
-cookTime: 240
+prepTime: 0
+cookTime: 0
 difficulty: medium
 tags: ["dessert", "chocolate", "mousse", "spicy"]
 images: 
@@ -17,6 +17,9 @@ A surprising combination of sweet white chocolate mousse with a spicy red pepper
 ## Components
 
 ### Red Pepper Jelly
+prepTime: 15
+cookTime: 0
+waitTime: 40
 
 #### Ingredients
 
@@ -40,6 +43,9 @@ A surprising combination of sweet white chocolate mousse with a spicy red pepper
 6. Let cool to room temperature.
 
 ### White Chocolate Mousse
+prepTime: 20
+cookTime: 0
+waitTime: 200
 
 #### Ingredients
 

@@ -8,7 +8,7 @@ type Props = {
 export default async function DinnerPlannerPage({ params }: Props) {
   const { locale } = await params;
   const recipeService = createRecipeService(locale);
-  const recipes = recipeService.getRecipeCards(
+  const recipes = await recipeService.getRecipeCards(
     { status: ['published'] },
     { field: 'createdAt', direction: 'desc' }
   );
