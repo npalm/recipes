@@ -1,14 +1,15 @@
 ---
 title: "Chocolate Panna Cotta with Orange Jelly"
 slug: "chocolate-panna-cotta-orange"
-status: draft
+status: published
 servings: 2
 prepTime: 30
 cookTime: 15
 waitTime: 180
 difficulty: medium
 tags: ["dessert", "chocolate", "orange", "panna cotta", "italian"]
-images: []
+images: 
+  - panna-cotta-chock.jpg
 headerImageRotation: true
 createdAt: "2026-01-25"
 ---

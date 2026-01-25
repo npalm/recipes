@@ -1,13 +1,14 @@
 ---
 title: "Cauliflower Espuma with Coconut Twist"
 slug: "cauliflower-coconut-espuma"
-status: draft
+status: published
 servings: 4
 prepTime: 20
 cookTime: 25
 difficulty: medium
 tags: ["starter", "espuma", "molecular", "coconut", "cauliflower"]
-images: []
+images: 
+  - bloemkool.jpg
 headerImageRotation: true
 createdAt: "2026-01-25"
 ---

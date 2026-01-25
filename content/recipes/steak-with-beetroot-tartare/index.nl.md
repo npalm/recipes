@@ -1,13 +1,14 @@
 ---
 title: "Reebiefstuk met Bietentartaar en Knolselderijpuree"
 slug: "steak-with-beetroot-tartare"
-status: draft
+status: published
 servings: 2
 prepTime: 30
 cookTime: 60
 difficulty: medium
 tags: ["wild", "ree", "hoofdgerecht", "sous vide", "gastronomisch"]
-images: []
+images: 
+  - ree.jpg
 headerImageRotation: true
 createdAt: "2026-01-24"
 ---

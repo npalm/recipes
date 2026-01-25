@@ -1,13 +1,14 @@
 ---
 title: "Espuma van Bloemkool met Kokos Twist"
 slug: "cauliflower-coconut-espuma"
-status: draft
+status: published
 servings: 4
 prepTime: 20
 cookTime: 25
 difficulty: medium
 tags: ["voorgerecht", "espuma", "moleculair", "kokos", "bloemkool"]
-images: []
+images: 
+  - bloemkool.jpg
 headerImageRotation: true
 createdAt: "2026-01-25"
 ---

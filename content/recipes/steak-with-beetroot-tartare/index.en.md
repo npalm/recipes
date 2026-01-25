@@ -1,13 +1,14 @@
 ---
 title: "Venison Steak with Beetroot Tartare and Celeriac Puree"
 slug: "steak-with-beetroot-tartare"
-status: draft
+status: published
 servings: 2
 prepTime: 30
 cookTime: 60
 difficulty: medium
 tags: ["game", "venison", "main course", "sous vide", "gastronomic"]
-images: []
+images: 
+  - ree.jpg
 headerImageRotation: true
 createdAt: "2026-01-24"
 ---
