@@ -1,5 +1,5 @@
 ---
-title: "Bloemkool & Kokos Espuma"
+title: "Espuma van Bloemkool met Kokos Twist"
 slug: "cauliflower-coconut-espuma"
 status: draft
 servings: 4

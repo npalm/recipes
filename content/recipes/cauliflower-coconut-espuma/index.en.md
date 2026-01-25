@@ -1,5 +1,5 @@
 ---
-title: "Cauliflower & Coconut Espuma"
+title: "Cauliflower Espuma with Coconut Twist"
 slug: "cauliflower-coconut-espuma"
 status: draft
 servings: 4
