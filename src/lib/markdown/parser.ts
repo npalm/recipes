@@ -384,24 +384,27 @@ export function parseRecipeMarkdown(
 export function parsedRecipeToRecipe(parsed: ParsedRecipe): Recipe {
   // Check if this is a component-based recipe
   if (parsed.components && parsed.components.length > 0) {
-    const components: RecipeComponent[] = parsed.components.map((comp) => ({
-      name: comp.name,
-      slug: comp.slug,
-      prepTime: comp.prepTime,
-      cookTime: comp.cookTime,
-      waitTime: comp.waitTime,
-      ingredients: parseIngredientsFromMarkdown(comp.ingredientsMarkdown),
-      instructions: parseInstructions(comp.instructionsMarkdown),
-      // Add reference if present (will be resolved later by componentResolver)
-      reference: comp.reference
-        ? {
-            type: 'recipe' as const,
-            recipeSlug: comp.reference.recipeSlug,
-            componentSlug: comp.reference.componentSlug,
-            sourceServings: 0, // Will be populated by resolver
-          }
-        : undefined,
-    }));
+    const components: RecipeComponent[] = parsed.components.map((comp) => {
+      const component: RecipeComponent = {
+        name: comp.name,
+        slug: comp.slug,
+        prepTime: comp.prepTime,
+        cookTime: comp.cookTime,
+        waitTime: comp.waitTime,
+        ingredients: parseIngredientsFromMarkdown(comp.ingredientsMarkdown),
+        instructions: parseInstructions(comp.instructionsMarkdown),
+        // Add reference if present (will be resolved later by componentResolver)
+        reference: comp.reference
+          ? {
+              type: 'recipe' as const,
+              recipeSlug: comp.reference.recipeSlug,
+              componentSlug: comp.reference.componentSlug,
+              sourceServings: 0, // Will be populated by resolver
+            }
+          : undefined,
+      };
+      return component;
+    });
 
     // Auto-calculate totalTime from components if not explicitly set
     // Using Option C: max(activeTime, waitTime) per component
