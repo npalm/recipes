@@ -408,6 +408,9 @@ export function parsedRecipeToRecipe(parsed: ParsedRecipe): Recipe {
     let calculatedTotalTime = parsed.metadata.totalTime;
     if (!calculatedTotalTime) {
       const componentTimes = components.map((c) => {
+        // Skip components with references as they don't have timing info
+        if (c.reference) return 0;
+        
         const activeTime = (c.prepTime ?? 0) + (c.cookTime ?? 0);
         const waitTime = c.waitTime ?? 0;
         // Total time for a component is active time + wait time
