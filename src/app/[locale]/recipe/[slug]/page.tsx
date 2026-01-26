@@ -4,6 +4,7 @@ import { Layout } from '@/components/layout';
 import { RecipeDetail } from '@/modules/recipe/components';
 import { createRecipeService } from '@/modules/recipe/services';
 import { config } from '@/lib/config';
+import { getBaseUrl } from '@/lib/server-utils';
 import { locales } from '@/i18n';
 
 interface RecipePageProps {
@@ -23,9 +24,36 @@ export async function generateMetadata({
     };
   }
 
+  const baseUrl = await getBaseUrl();
+  const recipeUrl = `${baseUrl}/${locale}/recipe/${slug}`;
+  
+  // Construct absolute image URL
+  const imageUrl = recipe.images.length > 0
+    ? `${baseUrl}/content/recipes/${slug}/images/${recipe.images[0]}`
+    : undefined;
+
+  // Create rich description with recipe metadata
+  const description = recipe.description 
+    ? `${recipe.description} • ${recipe.servings} servings • ${recipe.totalTime || recipe.prepTime + recipe.cookTime} min • ${recipe.difficulty.charAt(0).toUpperCase() + recipe.difficulty.slice(1)}`
+    : `${recipe.title} - ${config.appName}`;
+
   return {
     title: recipe.title,
-    description: recipe.description || `${recipe.title} - ${config.appName}`,
+    description,
+    openGraph: {
+      title: recipe.title,
+      description,
+      url: recipeUrl,
+      siteName: config.appName,
+      locale: locale,
+      type: 'website',
+      images: imageUrl ? [
+        {
+          url: imageUrl,
+          alt: recipe.title,
+        }
+      ] : [],
+    },
   };
 }
 

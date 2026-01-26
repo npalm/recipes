@@ -10,6 +10,8 @@ import { ShoppingListEncoder } from '@/modules/shopping/services/encoder';
 import { IngredientAggregator } from '@/modules/shopping/services/aggregation';
 import { UnitConverter } from '@/modules/shopping/services/unitConverter';
 import { ShoppingList } from '@/modules/shopping/components/ShoppingList';
+import { config } from '@/lib/config';
+import { getBaseUrl } from '@/lib/server-utils';
 
 export default async function ShoppingPage({
   params,
@@ -89,7 +91,7 @@ export async function generateMetadata({
 }: {
   params: Promise<{ encoded: string; locale: string }>;
 }) {
-  const { encoded } = await params;
+  const { encoded, locale } = await params;
   const normalizedEncoded = decodeURIComponent(encoded);
   const encoder = new ShoppingListEncoder();
   const shoppingData = encoder.decode(normalizedEncoded);
@@ -100,8 +102,21 @@ export async function generateMetadata({
     };
   }
 
+  const baseUrl = await getBaseUrl();
+  const shoppingUrl = `${baseUrl}/${locale}/shopping/${encoded}`;
+  const title = `${shoppingData.title} - Shopping List`;
+  const description = `Shopping list for ${shoppingData.recipes.length} recipe(s)`;
+
   return {
-    title: `${shoppingData.title} - Shopping List | Niek Kookt`,
-    description: `Shopping list for ${shoppingData.recipes.length} recipe(s)`,
+    title,
+    description,
+    openGraph: {
+      title: `${title} | ${config.appName}`,
+      description,
+      url: shoppingUrl,
+      siteName: config.appName,
+      locale: locale,
+      type: 'website',
+    },
   };
 }

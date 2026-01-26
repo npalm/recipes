@@ -21,6 +21,9 @@ export const config = {
   /** App description */
   appDescription: 'Koken met passie',
 
+  /** Production URL for Open Graph and absolute URLs */
+  productionUrl: 'https://keuken.guldenstraat.nl',
+
   /** Default servings for new recipes */
   defaultServings: 4,
 
