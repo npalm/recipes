@@ -3,6 +3,7 @@ import { getRecipeBySlug } from '@/modules/recipe/repository';
 import { DinnerView } from '@/modules/dinner/components/DinnerView';
 import { config } from '@/lib/config';
 import { getBaseUrl } from '@/lib/server-utils';
+import { getRecipeImageUrl } from '@/lib/image-utils';
 
 interface DinnerData {
   title: string;
@@ -98,7 +99,7 @@ export async function generateMetadata({
   const firstRecipeWithImage = validRecipes.find(r => r.images && r.images.length > 0);
   const ogImage = firstRecipeWithImage
     ? {
-        url: `${baseUrl}/content/recipes/${firstRecipeWithImage.slug}/images/${firstRecipeWithImage.images[0]}`,
+        url: `${baseUrl}${getRecipeImageUrl(firstRecipeWithImage.slug, firstRecipeWithImage.images[0])}`,
         alt: `${dinnerData.title} dinner menu`,
       }
     : undefined;

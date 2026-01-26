@@ -88,7 +88,8 @@ describe('Recipe Page - generateMetadata', () => {
     expect(metadata.openGraph?.images).toHaveLength(1);
     
     const image = (metadata.openGraph?.images as Array<{ url: string; alt: string }>)[0];
-    expect(image.url).toBe('https://keuken.guldenstraat.nl/content/recipes/tuna-tataki/images/tuna-tetaki.jpg');
+    // Image URL should include cache-busting version parameter
+    expect(image.url).toMatch(/^https:\/\/keuken\.guldenstraat\.nl\/content\/recipes\/tuna-tataki\/images\/tuna-tetaki\.jpg\?v=[a-f0-9]{8}$/);
     expect(image.alt).toBe('Tuna Tataki');
   });
 

@@ -9,23 +9,7 @@ import { Button } from '@/components/ui/button';
 import { formatTime } from '@/modules/shared/utils';
 import { getDifficultyConfig } from '@/modules/recipe/components/RecipeCard';
 import { GenerateShoppingListButton } from '@/modules/shopping/components/GenerateShoppingListButton';
-
-/**
- * Check if an image path is an external URL
- */
-function isExternalUrl(path: string): boolean {
-  return path.startsWith('http://') || path.startsWith('https://');
-}
-
-/**
- * Get the full image source path
- */
-function getImageSrc(image: string, slug: string): string {
-  if (isExternalUrl(image)) {
-    return image;
-  }
-  return `/content/recipes/${slug}/images/${image}`;
-}
+import { getImageSrc, isExternalUrl } from '@/lib/image-utils';
 
 interface DinnerViewProps {
   title: string;
