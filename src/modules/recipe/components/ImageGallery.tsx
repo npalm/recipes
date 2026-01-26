@@ -6,29 +6,13 @@ import { ChevronLeft, ChevronRight, ImageIcon } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/button';
 import { config } from '@/lib/config';
+import { getImageSrc, isExternalUrl } from '@/lib/client-image-utils';
 
 interface ImageGalleryProps {
   images: string[];
   slug: string;
   title: string;
   autoRotate?: boolean;
-}
-
-/**
- * Check if an image path is an external URL
- */
-function isExternalUrl(path: string): boolean {
-  return path.startsWith('http://') || path.startsWith('https://');
-}
-
-/**
- * Get the full image source path
- */
-function getImageSrc(image: string, slug: string): string {
-  if (isExternalUrl(image)) {
-    return image;
-  }
-  return `/content/recipes/${slug}/images/${image}`;
 }
 
 /**
