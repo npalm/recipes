@@ -40,3 +40,7 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 tools/cli/node_modules/
+
+# auto-generated files
+src/lib/image-manifest.json
+src/lib/image-manifest.ts
