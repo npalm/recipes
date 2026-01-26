@@ -3,6 +3,7 @@ import { getRecipeBySlug } from '@/modules/recipe/repository';
 import { DinnerView } from '@/modules/dinner/components/DinnerView';
 import { config } from '@/lib/config';
 import { getBaseUrl } from '@/lib/server-utils';
+import { getVersionedRecipeImageUrl } from '@/lib/server-image-utils';
 
 interface DinnerData {
   title: string;
@@ -94,11 +95,11 @@ export async function generateMetadata({
     ? `A ${validRecipes.length}-${courseText} dinner featuring: ${recipeNames}`
     : `Dinner plan with ${dinnerData.recipes.length} recipe(s)`;
 
-  // Use the first recipe's first image for Open Graph
+  // Use the first recipe's first image for Open Graph with cache busting
   const firstRecipeWithImage = validRecipes.find(r => r.images && r.images.length > 0);
   const ogImage = firstRecipeWithImage
     ? {
-        url: `${baseUrl}/content/recipes/${firstRecipeWithImage.slug}/images/${firstRecipeWithImage.images[0]}`,
+        url: `${baseUrl}${getVersionedRecipeImageUrl(firstRecipeWithImage.slug, firstRecipeWithImage.images[0])}`,
         alt: `${dinnerData.title} dinner menu`,
       }
     : undefined;

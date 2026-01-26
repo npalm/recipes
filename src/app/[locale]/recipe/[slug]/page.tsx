@@ -5,6 +5,7 @@ import { RecipeDetail } from '@/modules/recipe/components';
 import { createRecipeService } from '@/modules/recipe/services';
 import { config } from '@/lib/config';
 import { getBaseUrl } from '@/lib/server-utils';
+import { getVersionedRecipeImageUrl } from '@/lib/server-image-utils';
 import { locales } from '@/i18n';
 
 interface RecipePageProps {
@@ -27,9 +28,9 @@ export async function generateMetadata({
   const baseUrl = await getBaseUrl();
   const recipeUrl = `${baseUrl}/${locale}/recipe/${slug}`;
   
-  // Construct absolute image URL
+  // Construct absolute image URL with cache busting for Open Graph
   const imageUrl = recipe.images.length > 0
-    ? `${baseUrl}/content/recipes/${slug}/images/${recipe.images[0]}`
+    ? `${baseUrl}${getVersionedRecipeImageUrl(slug, recipe.images[0])}`
     : undefined;
 
   // Create rich description with recipe metadata
