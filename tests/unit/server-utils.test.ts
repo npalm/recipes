@@ -21,7 +21,7 @@ describe('getBaseUrl', () => {
     
     vi.mocked(headers).mockResolvedValue({
       get: (key: string) => mockHeaders.get(key) || null,
-    } as any);
+    } as unknown as Awaited<ReturnType<typeof headers>>);
 
     const result = await getBaseUrl();
     expect(result).toBe('https://example.com');
@@ -35,7 +35,7 @@ describe('getBaseUrl', () => {
     
     vi.mocked(headers).mockResolvedValue({
       get: (key: string) => mockHeaders.get(key) || null,
-    } as any);
+    } as unknown as Awaited<ReturnType<typeof headers>>);
 
     const result = await getBaseUrl();
     expect(result).toBe('http://localhost:3000');
@@ -46,7 +46,7 @@ describe('getBaseUrl', () => {
     
     vi.mocked(headers).mockResolvedValue({
       get: () => null,
-    } as any);
+    } as unknown as Awaited<ReturnType<typeof headers>>);
 
     const result = await getBaseUrl();
     expect(result).toBe(config.productionUrl);
@@ -70,7 +70,7 @@ describe('getBaseUrl', () => {
     
     vi.mocked(headers).mockResolvedValue({
       get: (key: string) => mockHeaders.get(key) || null,
-    } as any);
+    } as unknown as Awaited<ReturnType<typeof headers>>);
 
     const result = await getBaseUrl();
     expect(result).toBe('https://my-app-abc123.vercel.app');
@@ -85,7 +85,7 @@ describe('getBaseUrl', () => {
     
     vi.mocked(headers).mockResolvedValue({
       get: (key: string) => mockHeaders.get(key) || null,
-    } as any);
+    } as unknown as Awaited<ReturnType<typeof headers>>);
 
     const result = await getBaseUrl();
     expect(result).toBe('https://keuken.guldenstraat.nl');

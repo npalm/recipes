@@ -1,6 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { generateMetadata } from '@/app/[locale]/recipe/[slug]/page';
 import type { Recipe } from '@/modules/recipe/domain/types';
+import type { RecipeService } from '@/modules/recipe/services';
 
 // Mock dependencies
 vi.mock('@/modules/recipe/services', () => ({
@@ -50,7 +51,7 @@ describe('Recipe Page - generateMetadata', () => {
     const mockGetRecipe = vi.fn().mockResolvedValue(mockRecipe);
     vi.mocked(createRecipeService).mockReturnValue({
       getRecipe: mockGetRecipe,
-    } as any);
+    } as unknown as RecipeService);
     vi.mocked(getBaseUrl).mockResolvedValue('https://keuken.guldenstraat.nl');
 
     const params = Promise.resolve({ slug: 'tuna-tataki', locale: 'en' });
@@ -76,7 +77,7 @@ describe('Recipe Page - generateMetadata', () => {
     const mockGetRecipe = vi.fn().mockResolvedValue(mockRecipe);
     vi.mocked(createRecipeService).mockReturnValue({
       getRecipe: mockGetRecipe,
-    } as any);
+    } as unknown as RecipeService);
     vi.mocked(getBaseUrl).mockResolvedValue('https://keuken.guldenstraat.nl');
 
     const params = Promise.resolve({ slug: 'tuna-tataki', locale: 'en' });
@@ -86,7 +87,7 @@ describe('Recipe Page - generateMetadata', () => {
     expect(Array.isArray(metadata.openGraph?.images)).toBe(true);
     expect(metadata.openGraph?.images).toHaveLength(1);
     
-    const image = (metadata.openGraph?.images as any[])[0];
+    const image = (metadata.openGraph?.images as Array<{ url: string; alt: string }>)[0];
     expect(image.url).toBe('https://keuken.guldenstraat.nl/content/recipes/tuna-tataki/images/tuna-tetaki.jpg');
     expect(image.alt).toBe('Tuna Tataki');
   });
@@ -99,7 +100,7 @@ describe('Recipe Page - generateMetadata', () => {
     const mockGetRecipe = vi.fn().mockResolvedValue(recipeWithoutImage);
     vi.mocked(createRecipeService).mockReturnValue({
       getRecipe: mockGetRecipe,
-    } as any);
+    } as unknown as RecipeService);
     vi.mocked(getBaseUrl).mockResolvedValue('https://keuken.guldenstraat.nl');
 
     const params = Promise.resolve({ slug: 'tuna-tataki', locale: 'en' });
@@ -114,7 +115,7 @@ describe('Recipe Page - generateMetadata', () => {
     const mockGetRecipe = vi.fn().mockResolvedValue(null);
     vi.mocked(createRecipeService).mockReturnValue({
       getRecipe: mockGetRecipe,
-    } as any);
+    } as unknown as RecipeService);
 
     const params = Promise.resolve({ slug: 'non-existent', locale: 'en' });
     const metadata = await generateMetadata({ params });
@@ -132,7 +133,7 @@ describe('Recipe Page - generateMetadata', () => {
     const mockGetRecipe = vi.fn().mockResolvedValue(recipeWithoutDescription);
     vi.mocked(createRecipeService).mockReturnValue({
       getRecipe: mockGetRecipe,
-    } as any);
+    } as unknown as RecipeService);
     vi.mocked(getBaseUrl).mockResolvedValue('https://keuken.guldenstraat.nl');
 
     const params = Promise.resolve({ slug: 'tuna-tataki', locale: 'en' });
@@ -148,7 +149,7 @@ describe('Recipe Page - generateMetadata', () => {
     const mockGetRecipe = vi.fn().mockResolvedValue(mockRecipe);
     vi.mocked(createRecipeService).mockReturnValue({
       getRecipe: mockGetRecipe,
-    } as any);
+    } as unknown as RecipeService);
     vi.mocked(getBaseUrl).mockResolvedValue('https://keuken.guldenstraat.nl');
 
     const params = Promise.resolve({ slug: 'tuna-tataki', locale: 'nl' });
@@ -165,7 +166,7 @@ describe('Recipe Page - generateMetadata', () => {
     const mockGetRecipe = vi.fn().mockResolvedValue(mockRecipe);
     vi.mocked(createRecipeService).mockReturnValue({
       getRecipe: mockGetRecipe,
-    } as any);
+    } as unknown as RecipeService);
     vi.mocked(getBaseUrl).mockResolvedValue('https://keuken.guldenstraat.nl');
 
     const params = Promise.resolve({ slug: 'tuna-tataki', locale: 'en' });

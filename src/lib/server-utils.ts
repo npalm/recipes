@@ -20,7 +20,7 @@ export async function getBaseUrl(): Promise<string> {
     if (host) {
       return `${protocol}://${host}`;
     }
-  } catch (error) {
+  } catch {
     // Headers not available during static generation or in client components
   }
   
