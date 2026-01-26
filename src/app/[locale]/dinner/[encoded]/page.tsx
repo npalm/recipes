@@ -1,6 +1,8 @@
 import { notFound } from 'next/navigation';
 import { getRecipeBySlug } from '@/modules/recipe/repository';
 import { DinnerView } from '@/modules/dinner/components/DinnerView';
+import { config } from '@/lib/config';
+import { getBaseUrl } from '@/lib/server-utils';
 
 interface DinnerData {
   title: string;
@@ -49,4 +51,40 @@ export default async function DinnerPage({
   }
 
   return <DinnerView title={dinnerData.title} recipes={validRecipes} locale={locale} />;
+}
+
+/**
+ * Generate metadata for the page
+ */
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ encoded: string; locale: string }>;
+}) {
+  const { encoded, locale } = await params;
+  const dinnerData = decodeDinnerData(encoded);
+
+  if (!dinnerData) {
+    return {
+      title: 'Dinner Plan Not Found',
+    };
+  }
+
+  const baseUrl = await getBaseUrl();
+  const dinnerUrl = `${baseUrl}/${locale}/dinner/${encoded}`;
+  const title = `${dinnerData.title} - Dinner Plan`;
+  const description = `Dinner plan with ${dinnerData.recipes.length} recipe(s)`;
+
+  return {
+    title,
+    description,
+    openGraph: {
+      title: `${title} | ${config.appName}`,
+      description,
+      url: dinnerUrl,
+      siteName: config.appName,
+      locale: locale,
+      type: 'website',
+    },
+  };
 }
