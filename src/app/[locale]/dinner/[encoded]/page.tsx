@@ -70,10 +70,38 @@ export async function generateMetadata({
     };
   }
 
+  // Fetch all recipes to include their details in the metadata
+  const recipes = await Promise.all(
+    dinnerData.recipes.map(async (slug) => {
+      try {
+        return await getRecipeBySlug(slug, locale);
+      } catch {
+        return null;
+      }
+    })
+  );
+
+  const validRecipes = recipes.filter((r) => r !== null);
+  
   const baseUrl = await getBaseUrl();
   const dinnerUrl = `${baseUrl}/${locale}/dinner/${encoded}`;
   const title = `${dinnerData.title} - Dinner Plan`;
-  const description = `Dinner plan with ${dinnerData.recipes.length} recipe(s)`;
+  
+  // Create a rich description with recipe names
+  const recipeNames = validRecipes.map(r => r.title).join(', ');
+  const courseText = validRecipes.length === 1 ? 'course' : 'courses';
+  const description = validRecipes.length > 0 
+    ? `A ${validRecipes.length}-${courseText} dinner featuring: ${recipeNames}`
+    : `Dinner plan with ${dinnerData.recipes.length} recipe(s)`;
+
+  // Use the first recipe's first image for Open Graph
+  const firstRecipeWithImage = validRecipes.find(r => r.images && r.images.length > 0);
+  const ogImage = firstRecipeWithImage
+    ? {
+        url: `${baseUrl}/content/recipes/${firstRecipeWithImage.slug}/images/${firstRecipeWithImage.images[0]}`,
+        alt: `${dinnerData.title} dinner menu`,
+      }
+    : undefined;
 
   return {
     title,
@@ -85,6 +113,7 @@ export async function generateMetadata({
       siteName: config.appName,
       locale: locale,
       type: 'website',
+      images: ogImage ? [ogImage] : [],
     },
   };
 }
