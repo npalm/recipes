@@ -20,8 +20,8 @@
     "dotenv": "^17.2.3",
     "gray-matter": "^4.0.3",
     "node-fetch": "^3.3.2",
-    "ora": "^9.0.0",
-    "zod": "^4.3.5"
+    "ora": "^9.1.0",
+    "zod": "^4.3.6"
   },
   "devDependencies": {
     "@types/node": "^24",
