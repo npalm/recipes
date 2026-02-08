@@ -36,7 +36,7 @@ The creamy and ice-cold heart of your dessert.
 
 #### Instructions
 
-1. Whisk the egg yolks with {{50 g}} sugar and a pinch of salt in a double boiler until thick and pale ({{70°C - 75°C}}).
+1. Whisk the egg yolks with {{50 g}} sugar and a pinch of salt in a double boiler until thick and pale (70°C - 75°C).
 
 2. Continue whisking off the heat until the mixture is lukewarm.
 
@@ -44,7 +44,7 @@ The creamy and ice-cold heart of your dessert.
 
 4. Whip the {{160 ml}} heavy cream to soft peaks (thick like yogurt) and gently fold into the egg mixture.
 
-5. Pour into silicone molds and freeze for at least {{6 hours}}.
+5. Pour into silicone molds and freeze for at least 6 hours.
 
 ### Meringue Shards
 prepTime: 10
@@ -68,7 +68,7 @@ For height and crispy, sweet crunch.
 
 3. Spread very thin ({{2 mm}}) on parchment paper.
 
-4. Dry in the oven at {{90°C}} for {{1.5 to 2 hours}} with the door slightly ajar.
+4. Dry in the oven at 90°C for 1.5 to 2 hours with the door slightly ajar.
 
 5. Let cool completely and break into shards.
 
@@ -86,7 +86,7 @@ The culinary surprise: nutty with the flavor of caramel.
 
 #### Instructions
 
-1. Bake the chocolate pieces on parchment paper in the oven at {{150°C}} for {{5-10 minutes}} until golden brown.
+1. Bake the chocolate pieces on parchment paper in the oven at 150°C for 5-10 minutes until golden brown.
 
 2. Let cool and chop into coarse crumbs.
 
@@ -106,9 +106,9 @@ The fresh counterpoint that completes the dish.
 
 #### Instructions
 
-1. **Pear**: Peel the pear and cut into very small cubes (brunoise). Mix with a drop of lime juice and a little sugar to prevent browning.
+1. Pear: Peel the pear and cut into very small cubes (brunoise). Mix with a drop of lime juice and a little sugar to prevent browning.
 
-2. **Persimmon**: Cut the persimmon into thin, elegant slices (carpaccio-style). Use raw.
+2. Persimmon: Cut the persimmon into thin, elegant slices (carpaccio-style). Use raw.
 
 ### Basil Oil
 
@@ -122,7 +122,7 @@ The aromatic accent.
 
 1. No preparation needed, but dose with a pipette or the back of a small spoon.
 
-2. Use {{3 to 5}} small dots per plate for color and subtle flavor.
+2. Use 3 to 5 small dots per plate for color and subtle flavor.
 
 ## Plating
 

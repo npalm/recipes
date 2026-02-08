@@ -36,7 +36,7 @@ Het romige en ijzig koude hart van je dessert.
 
 #### Bereiding
 
-1. Klop de eidooiers met {{50 g}} suiker en een snufje zout au bain-marie tot een dikke, witte crème ({{70°C - 75°C}}).
+1. Klop de eidooiers met {{50 g}} suiker en een snufje zout au bain-marie tot een dikke, witte crème (70°C - 75°C).
 
 2. Klop daarna koud tot het mengsel handwarm is.
 
@@ -44,7 +44,7 @@ Het romige en ijzig koude hart van je dessert.
 
 4. Klop de {{160 ml}} slagroom lobbig (als dikke yoghurt) en spatel dit voorzichtig door het eimengsel.
 
-5. Giet in je siliconen vorm en vries minimaal {{6 uur}} in.
+5. Giet in je siliconen vorm en vries minimaal 6 uur in.
 
 ### Meringue Schotsen
 prepTime: 10
@@ -68,7 +68,7 @@ Voor de hoogte en de brosse, zoete crunch.
 
 3. Smeer flinterdun ({{2 mm}}) uit op bakpapier.
 
-4. Droog {{1,5 tot 2 uur}} in de oven op {{90°C}} met de deur op een kiertje.
+4. Droog 1.5 tot 2 uur in de oven op 90°C met de deur op een kiertje.
 
 5. Laat volledig afkoelen en breek in scherven.
 
@@ -86,7 +86,7 @@ De culinaire verrassing: nootachtig en met de smaak van caramel.
 
 #### Bereiding
 
-1. Bak de chocoladebrokjes op bakpapier in de oven op {{150°C}} gedurende {{5-10 minuten}} tot ze goudbruin zijn.
+1. Bak de chocoladebrokjes op bakpapier in de oven op 150°C gedurende 5-10 minuten tot ze goudbruin zijn.
 
 2. Laat afkoelen en hak tot een grove kruimel (crumble).
 
@@ -106,9 +106,9 @@ De frisse tegenhanger die het gerecht 'af' maakt.
 
 #### Bereiding
 
-1. **Peer**: Schil de peer en snijd in hele kleine blokjes (brunoise). Meng met een drupje limoensap en een klein beetje suiker tegen het verkleuren.
+1. Peer: Schil de peer en snijd in hele kleine blokjes (brunoise). Meng met een drupje limoensap en een klein beetje suiker tegen het verkleuren.
 
-2. **Kaki**: Snijd de kaki in dunne, elegante partjes of plakjes (carpaccio-stijl). Gebruik deze rauw.
+2. Kaki: Snijd de kaki in dunne, elegante partjes of plakjes (carpaccio-stijl). Gebruik deze rauw.
 
 ### Basilicumolie
 
@@ -122,7 +122,7 @@ Het aromatische accent.
 
 1. Geen bereiding nodig, maar doseer met een pipet of de achterkant van een klein lepeltje.
 
-2. Gebruik {{3 tot 5}} kleine stipjes per bord voor de kleur en de subtiele smaak.
+2. Gebruik 3 tot 5 kleine stipjes per bord voor de kleur en de subtiele smaak.
 
 ## Serveren
 
