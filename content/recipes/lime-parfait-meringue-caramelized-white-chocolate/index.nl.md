@@ -14,7 +14,7 @@ headerImageRotation: true
 createdAt: "2026-02-08"
 ---
 
-Een verfijnd dessert met ijskoude limoenparfait, krokante meringue en gekaramelliseerde witte chocolade. Het fruit en de basilicumolie maken het compleet.
+Een verfijnd dessert met ijskoude limoenparfait, krokante meringue en gekaramelliseerde witte chocolade. Het fruit maakt het compleet.
 
 ## Onderdelen
 
@@ -110,29 +110,14 @@ De frisse tegenhanger die het gerecht 'af' maakt.
 
 2. Kaki: Snijd de kaki in dunne, elegante partjes of plakjes (carpaccio-stijl). Gebruik deze rauw.
 
-### Basilicumolie
-
-Het aromatische accent.
-
-#### Ingrediënten
-
-- Basilicumolie (kant-en-klaar, op kamertemperatuur)
-
-#### Bereiding
-
-1. Geen bereiding nodig, maar doseer met een pipet of de achterkant van een klein lepeltje.
-
-2. Gebruik 3 tot 5 kleine stipjes per bord voor de kleur en de subtiele smaak.
-
 ## Serveren
 
-Haal de limoenparfait uit de vorm en plaats op het bord. Schik de meringue schotsen eromheen, strooi de chocolade-pistache crumble erover, voeg de peer brunoise en kaki plakjes toe. Werk af met kleine stipjes basilicumolie.
+Haal de limoenparfait uit de vorm en plaats op het bord. Schik de meringue schotsen eromheen, strooi de chocolade-pistache crumble erover, voeg de peer brunoise en kaki plakjes toe.
 
 ## Notities
 
 - Veel componenten kunnen van tevoren worden gemaakt
 - Parfait en meringue kunnen parallel gemaakt worden (parfait vriest, meringue droogt in de oven)
 - Fruit pas kort voor serveren snijden voor optimale frisheid
-- Basilicumolie doseren met pipet of achterkant van klein lepeltje voor precisie
 - De meringue kan enkele dagen van tevoren gemaakt worden en bewaard in een luchtdichte doos
 - Zorg dat alle apparatuur voor de meringue vetvrij is voor het beste resultaat

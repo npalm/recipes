@@ -14,7 +14,7 @@ headerImageRotation: true
 createdAt: "2026-02-08"
 ---
 
-An elegant dessert with ice-cold lime parfait, crispy meringue, and caramelized white chocolate. The fruit and basil oil complete the dish.
+An elegant dessert with ice-cold lime parfait, crispy meringue, and caramelized white chocolate. The fruit completes the dish.
 
 ## Components
 
@@ -110,29 +110,14 @@ The fresh counterpoint that completes the dish.
 
 2. Persimmon: Cut the persimmon into thin, elegant slices (carpaccio-style). Use raw.
 
-### Basil Oil
-
-The aromatic accent.
-
-#### Ingredients
-
-- Basil oil (store-bought, at room temperature)
-
-#### Instructions
-
-1. No preparation needed, but dose with a pipette or the back of a small spoon.
-
-2. Use 3 to 5 small dots per plate for color and subtle flavor.
-
 ## Plating
 
-Remove the lime parfait from the mold and place on the plate. Arrange the meringue shards around it, sprinkle the chocolate-pistachio crumble over it, add the pear brunoise and persimmon slices. Finish with small dots of basil oil.
+Remove the lime parfait from the mold and place on the plate. Arrange the meringue shards around it, sprinkle the chocolate-pistachio crumble over it, add the pear brunoise and persimmon slices.
 
 ## Notes
 
 - Many components can be made ahead of time
 - Parfait and meringue can be made in parallel (parfait freezes while meringue dries in the oven)
 - Cut fruit just before serving for optimal freshness
-- Dose basil oil with a pipette or back of a small spoon for precision
 - Meringue can be made several days ahead and stored in an airtight container
 - Ensure all equipment for the meringue is grease-free for best results
