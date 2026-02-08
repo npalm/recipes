@@ -2,7 +2,6 @@
 title: "Duo van Knolselderij & Bospaddenstoelen met Espuma"
 slug: "celeriac-mushroom-espuma"
 description: "Elegant voorgerecht met knolselderij-espuma, gebakken paddenstoelen en knapperige knolselderij-stro"
-image: "./images/celeriac-espuma.jpg"
 tags: ["voorgerecht", "espuma", "moleculair", "knolselderij", "paddenstoelen"]
 prepTime: 30
 cookTime: 35
@@ -10,6 +9,9 @@ waitTime: 0
 difficulty: "medium"
 servings: 2
 status: published
+images:
+  - celeriac-espuma.jpg
+headerImageRotation: true
 createdAt: "2026-02-08"
 ---
 

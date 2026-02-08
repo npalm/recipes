@@ -2,7 +2,6 @@
 title: "Celeriac & Wild Mushroom Espuma"
 slug: "celeriac-mushroom-espuma"
 description: "Elegant starter featuring celeriac espuma, sautéed mushrooms, and crispy celeriac straw"
-image: "./images/celeriac-espuma.jpg"
 tags: ["starter", "espuma", "molecular", "celeriac", "mushrooms"]
 prepTime: 30
 cookTime: 35
@@ -10,6 +9,9 @@ waitTime: 0
 difficulty: "medium"
 servings: 2
 status: published
+images:
+  - celeriac-espuma.jpg
+headerImageRotation: true
 createdAt: "2026-02-08"
 ---
 
