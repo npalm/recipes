@@ -12,6 +12,12 @@ const nextConfig: NextConfig = {
         pathname: '/**',
       },
     ],
+    localPatterns: [
+      {
+        pathname: '/content/recipes/**',
+        search: '',
+      },
+    ],
   },
 };
 
