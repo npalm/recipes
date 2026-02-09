@@ -41,6 +41,5 @@ yarn-error.log*
 next-env.d.ts
 tools/cli/node_modules/
 
-# auto-generated files
-src/lib/image-manifest.json
-src/lib/image-manifest.ts
+# Note: image-manifest.ts is now committed to ensure CI type-checking works
+# It is regenerated during prebuild with the latest image hashes
