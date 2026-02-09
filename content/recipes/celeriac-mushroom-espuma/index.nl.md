@@ -105,8 +105,8 @@ Een verfijnd voorgerecht dat aardse paddenstoelen combineert met fluweelzachte k
 
 ## Notities
 
-- **Timing:** De espuma kan 2-3 uur in de sifon bewaard worden in warm water. Maak de paddenstoelen en het stro vlak voor serveren.
-- **Sifon essentieel:** Voor dit recept heb je een sifon (ook wel espuma-apparaat genoemd) met N2O patronen nodig. Deze zijn verkrijgbaar bij kookwinkels.
-- **Veiligheid:** Werk voorzichtig met de hete frituurolie. Zorg dat de knolselderij goed droog is voor je gaat frituren.
-- **Wijnadvies:** Combineer met een minerale witte wijn zoals een Chablis of Duitse Riesling. De frisheid en mineraliteit complementeren de aardse paddenstoelen en romige knolselderij perfect.
-- **Variatie:** Vervang de bospaddenstoelen door shiitakes of een mix van wilde paddenstoelen voor meer diepte.
+- De espuma kan 2-3 uur in de sifon bewaard worden in warm water. Maak de paddenstoelen en het stro vlak voor serveren.
+- Voor dit recept heb je een sifon (ook wel espuma-apparaat genoemd) met N2O patronen nodig. Deze zijn verkrijgbaar bij kookwinkels.
+- Werk voorzichtig met de hete frituurolie. Zorg dat de knolselderij goed droog is voor je gaat frituren.
+- Combineer met een minerale witte wijn zoals een Chablis of Duitse Riesling. De frisheid en mineraliteit complementeren de aardse paddenstoelen en romige knolselderij perfect.
+- Vervang de bospaddenstoelen door shiitakes of een mix van wilde paddenstoelen voor meer diepte.

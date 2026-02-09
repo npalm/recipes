@@ -105,8 +105,8 @@ A refined starter that combines earthy mushrooms with silky smooth celeriac espu
 
 ## Notes
 
-- **Timing:** The espuma can be kept in the siphon for 2-3 hours in warm water. Prepare the mushrooms and straw just before serving.
-- **Siphon essential:** This recipe requires a siphon (also called an espuma whipper) with N2O chargers. These are available at kitchen supply stores.
-- **Safety:** Work carefully with the hot frying oil. Make sure the celeriac is thoroughly dry before frying.
-- **Wine pairing:** Pair with a mineral white wine such as Chablis or German Riesling. The freshness and minerality complement the earthy mushrooms and creamy celeriac perfectly.
-- **Variation:** Replace the wild mushrooms with shiitakes or a mix of wild mushrooms for more depth.
+- The espuma can be kept in the siphon for 2-3 hours in warm water. Prepare the mushrooms and straw just before serving.
+- This recipe requires a siphon (also called an espuma whipper) with N2O chargers. These are available at kitchen supply stores.
+- Work carefully with the hot frying oil. Make sure the celeriac is thoroughly dry before frying.
+- Pair with a mineral white wine such as Chablis or German Riesling. The freshness and minerality complement the earthy mushrooms and creamy celeriac perfectly.
+- Replace the wild mushrooms with shiitakes or a mix of wild mushrooms for more depth.
