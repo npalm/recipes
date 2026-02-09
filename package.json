@@ -9,8 +9,7 @@
   },
   "scripts": {
     "dev": "next dev",
-    "build": "npm run prebuild && next build",
-    "prebuild": "node scripts/generate-image-manifest.mjs",
+    "build": "next build",
     "start": "next start",
     "lint": "eslint",
     "lint:recipes": "npm run recipe:build && npm run recipe validate content/recipes",
