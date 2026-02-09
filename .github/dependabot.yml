@@ -63,8 +63,10 @@ updates:
       - dependency-name: "@types/node"
         update-types: ["version-update:semver-major"]
     groups:
-      dev-dependencies:
-        dependency-type: "development"
+      # Group all tools/cli dependencies together (dev + prod)
+      all-dependencies:
+        patterns:
+          - "*"
         update-types:
           - "minor"
           - "patch"
