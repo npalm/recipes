@@ -340,7 +340,7 @@ export function parseRecipeMarkdown(
     if (isComponentBased) {
       // Parse component-based recipe
       const components = parseComponentsSection(bodyContent);
-      const notesMarkdown = extractSection(bodyContent, 'Notes');
+      const notesMarkdown = extractSection(bodyContent, 'Notes') || extractSection(bodyContent, 'Notities');
       
       return {
         metadata,
