@@ -1,13 +1,13 @@
 ---
 title: "Sous Vide Miso Salmon with Asian Cauliflower"
 slug: "sous-vide-miso-salmon-asian-cauliflower"
-status: draft
 servings: 2
 prepTime: 20
 cookTime: 45
 difficulty: medium
 tags: ["main", "fish", "salmon", "sous-vide", "asian", "miso"]
-images: []
+images:
+  - miso-salmon.jpg
 headerImageRotation: true
 createdAt: "2026-03-22"
 ---
