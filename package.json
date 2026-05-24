@@ -3,26 +3,25 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
+  "packageManager": "pnpm@11.2.2",
   "engines": {
     "node": ">=24.0.0",
-    "npm": ">=10.0.0"
+    "pnpm": ">=11 <12"
   },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "lint:recipes": "npm run recipe:build && npm run recipe validate content/recipes",
+    "typecheck": "tsc --noEmit && pnpm --filter @recipes/cli typecheck",
+    "lint:recipes": "pnpm recipe:build && pnpm recipe validate content/recipes",
     "test": "vitest",
     "test:coverage": "vitest run --coverage",
     "recipe": "node tools/cli/dist/index.js",
-    "recipe:build": "npm run build --workspace=tools/cli",
-    "cli:dev": "npm run dev --workspace=tools/cli",
+    "recipe:build": "pnpm --filter @recipes/cli build",
+    "cli:dev": "pnpm --filter @recipes/cli dev",
     "prepare": "husky"
   },
-  "workspaces": [
-    "tools/cli"
-  ],
   "dependencies": {
     "@radix-ui/react-label": "^2.1.8",
     "@radix-ui/react-separator": "^1.1.8",

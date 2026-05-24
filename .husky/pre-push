@@ -5,7 +5,7 @@ echo ""
 
 # Type check
 echo "📝 Type checking..."
-npx tsc --noEmit
+pnpm typecheck
 if [ $? -ne 0 ]; then
   echo "❌ Type check failed! Fix type errors before pushing."
   exit 1
@@ -15,7 +15,7 @@ echo ""
 
 # Run tests
 echo "🧪 Running tests..."
-npm test -- --run
+pnpm test -- --run
 if [ $? -ne 0 ]; then
   echo "❌ Tests failed! Fix failing tests before pushing."
   exit 1
@@ -25,7 +25,7 @@ echo ""
 
 # Build check
 echo "🔨 Running build check..."
-npm run build
+pnpm build
 if [ $? -ne 0 ]; then
   echo "❌ Build failed! Fix the build before pushing."
   exit 1

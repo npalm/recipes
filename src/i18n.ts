@@ -5,7 +5,7 @@ export const defaultLocale = 'en' as const;
 export type Locale = (typeof locales)[number];
 
 export default getRequestConfig(async ({ requestLocale }) => {
-  // `requestLocale` contains the locale that was matched by the middleware
+  // `requestLocale` contains the locale that was matched by the proxy
   let locale = await requestLocale;
   
   // Validate that the incoming `locale` parameter is valid

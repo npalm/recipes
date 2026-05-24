@@ -441,6 +441,7 @@ describe('Recipe Domain Schemas', () => {
     describe('createdAt validation', () => {
       it('requires createdAt field', () => {
         const { createdAt, ...frontmatterWithoutCreatedAt } = validFrontmatter;
+        expect(createdAt).toBeDefined();
         expect(() => recipeFrontmatterSchema.parse(frontmatterWithoutCreatedAt)).toThrow();
       });
 

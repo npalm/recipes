@@ -1,4 +1,4 @@
 #!/usr/bin/env sh
 
 # Run lint-staged with explicit config to avoid conflicts with workspace packages
-npx lint-staged --config .lintstagedrc.json
+pnpm exec lint-staged --config .lintstagedrc.json

@@ -248,7 +248,7 @@ When user adjusts to 6 servings:
 References are validated automatically:
 
 ```bash
-npm run lint:recipes
+pnpm lint:recipes
 ```
 
 **Validation checks:**
@@ -893,7 +893,7 @@ All recipe markdown files are validated automatically:
 
 - **Pre-commit**: Validates changed recipes before commit
 - **CI/CD**: Validates all recipes in pull requests
-- **Manual**: Run `npm run lint:recipes` to validate
+- **Manual**: Run `pnpm lint:recipes` to validate
 
 See [VALIDATION.md](./VALIDATION.md) for details on validation rules and troubleshooting.
 

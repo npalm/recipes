@@ -30,6 +30,10 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
+# npm lockfiles are intentionally not used; this repo is managed by pnpm.
+package-lock.json
+tools/**/package-lock.json
+
 # env files (can opt-in for committing if needed)
 .env*
 

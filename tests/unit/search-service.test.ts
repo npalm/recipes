@@ -10,8 +10,6 @@ import {
   createSearchIndex,
   buildSearchIndexData,
   highlightMatches,
-  SearchResult,
-  SearchOptions,
 } from '@/modules/search/services/searchService';
 import { RecipeCard } from '@/modules/recipe/domain';
 
