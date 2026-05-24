@@ -4,7 +4,7 @@ A Next.js recipe site with localized recipe content, recipe validation tooling, 
 
 ## Requirements
 
-- Node.js 24 or newer
+- Node.js 24.x LTS
 - pnpm 11.2.2 through Corepack
 
 Enable Corepack once on your machine:
@@ -44,6 +44,7 @@ Open [http://localhost:3000](http://localhost:3000).
 This repo is managed with pnpm 11 and a single `pnpm-lock.yaml`.
 
 - `packageManager` pins pnpm to `11.2.2`.
+- Vercel uses `corepack pnpm install --frozen-lockfile` so deployments use the pinned pnpm version instead of falling back to npm.
 - `minimumReleaseAge: 10080` requires dependency versions to be at least 7 days old before resolution.
 - `strictDepBuilds: true` fails installs when a dependency has an unreviewed install script.
 - `allowBuilds` explicitly approves the current dependencies that need install-time native builds.
