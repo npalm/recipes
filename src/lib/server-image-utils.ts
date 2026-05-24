@@ -24,7 +24,7 @@ export function getImageHash(imagePath: string): string {
   }
 
   try {
-    const fullPath = path.join(process.cwd(), imagePath);
+    const fullPath = path.join(/* turbopackIgnore: true */ process.cwd(), imagePath);
     const fileBuffer = fs.readFileSync(fullPath);
     const hash = crypto.createHash('md5').update(fileBuffer).digest('hex');
     const shortHash = hash.substring(0, 8);

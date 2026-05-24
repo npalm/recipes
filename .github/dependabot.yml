@@ -1,6 +1,7 @@
 version: 2
 updates:
-  # Enable version updates for npm (main project)
+  # Enable version updates for pnpm-managed Node dependencies.
+  # Dependabot uses package-ecosystem "npm" for npm, pnpm, and Yarn.
   # Checks weekly (7-day interval between checks)
   # Limit PRs to prevent overwhelming reviewers (pedantic mode requirement)
   - package-ecosystem: "npm"
@@ -16,7 +17,7 @@ updates:
       - "npalm"
     labels:
       - "dependencies"
-      - "npm"
+      - "pnpm"
     commit-message:
       prefix: "chore(deps)"
     ignore:
@@ -38,7 +39,8 @@ updates:
           - "minor"
           - "patch"
 
-  # Enable version updates for npm (CLI tool)
+  # Enable version updates for pnpm-managed CLI dependencies.
+  # Dependabot uses package-ecosystem "npm" for npm, pnpm, and Yarn.
   # Checks weekly (7-day interval between checks)
   # Limit PRs to prevent overwhelming reviewers (pedantic mode requirement)
   - package-ecosystem: "npm"
@@ -54,7 +56,7 @@ updates:
       - "npalm"
     labels:
       - "dependencies"
-      - "npm"
+      - "pnpm"
       - "tools"
     commit-message:
       prefix: "chore(deps)"

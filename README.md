@@ -1,36 +1,54 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Recipes
 
-## Getting Started
+A Next.js recipe site with localized recipe content, recipe validation tooling, shopping-list helpers, and a workspace CLI for creating and validating recipes.
 
-First, run the development server:
+## Requirements
+
+- Node.js 24.x LTS
+- pnpm 11.2.2 through Corepack
+
+Enable Corepack once on your machine:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+corepack enable
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Install dependencies:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+pnpm install --frozen-lockfile
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Run the development server:
 
-## Learn More
+```bash
+pnpm dev
+```
 
-To learn more about Next.js, take a look at the following resources:
+Open [http://localhost:3000](http://localhost:3000).
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Scripts
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- `pnpm dev` - start the Next.js development server
+- `pnpm build` - build the application
+- `pnpm lint` - run ESLint
+- `pnpm typecheck` - type-check the app and CLI workspace
+- `pnpm test` - run unit tests
+- `pnpm test:coverage` - run unit tests with coverage thresholds
+- `pnpm lint:recipes` - build the CLI and validate recipe markdown
+- `pnpm recipe validate content/recipes` - validate recipes directly
+- `pnpm recipe:build` - build the workspace CLI
 
-## Deploy on Vercel
+## Dependency Security
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+This repo is managed with pnpm 11 and a single `pnpm-lock.yaml`.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- `packageManager` pins pnpm to `11.2.2`.
+- Vercel uses `corepack pnpm install --frozen-lockfile` so deployments use the pinned pnpm version instead of falling back to npm.
+- `minimumReleaseAge: 10080` requires dependency versions to be at least 7 days old before resolution.
+- `strictDepBuilds: true` fails installs when a dependency has an unreviewed install script.
+- `allowBuilds` explicitly approves the current dependencies that need install-time native builds.
+- Dependabot uses a 7-day cooldown for dependency and GitHub Actions updates.
+- CI runs lint, type checks, tests, coverage, builds, recipe validation, OSV Scanner, OSSF Scorecard, zizmor, and CodeQL.
+
+When pnpm reports a new dependency with an ignored build, review it before adding it to `allowBuilds` with `true` or `false`.

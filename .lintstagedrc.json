@@ -1,6 +1,6 @@
 {
   "content/recipes/**/*.md": [
-    "npm run recipe validate --"
+    "pnpm recipe validate --"
   ],
   "*.{ts,tsx,js,jsx}": [
     "eslint --fix"

@@ -39,16 +39,16 @@ The CLI tool validates recipe markdown files using the same schema as the main a
 
 ```bash
 # Validate all recipes
-npm run lint:recipes
+pnpm lint:recipes
 
 # Validate specific file or directory
-npm run recipe validate <path>
+pnpm recipe validate <path>
 
 # Strict mode (additional checks)
-npm run recipe validate --strict
+pnpm recipe validate --strict
 
 # JSON output (for CI/CD)
-npm run recipe validate --json
+pnpm recipe validate --json
 ```
 
 #### Features
@@ -71,7 +71,7 @@ Automatically validates changed recipe files before commit.
 // .lintstagedrc.js
 export default {
   'content/recipes/**/*.md': [
-    'npm run recipe validate --'
+    'pnpm recipe validate --'
   ],
   '*.{ts,tsx}': [
     'eslint --fix'
@@ -172,8 +172,8 @@ If you need to update validation rules:
 
 1. **Update the schema** in `src/modules/recipe/domain/schemas.ts`
 2. **Sync the CLI tool** in `tools/cli/src/commands/validate.ts`
-3. **Rebuild the CLI**: `npm run recipe:build`
-4. **Test validation**: `npm run lint:recipes`
+3. **Rebuild the CLI**: `pnpm recipe:build`
+4. **Test validation**: `pnpm lint:recipes`
 5. **Update this README** with new rules
 
 ## Troubleshooting
@@ -182,19 +182,19 @@ If you need to update validation rules:
 
 ```bash
 # Reinstall husky
-npm run prepare
+pnpm prepare
 ```
 
 ### Validation passing locally but failing in CI
 
-- Ensure you've rebuilt the CLI tool: `npm run recipe:build`
+- Ensure you've rebuilt the CLI tool: `pnpm recipe:build`
 - Check that all changes are committed
-- Run `npm run lint:recipes` to see full validation output
+- Run `pnpm lint:recipes` to see full validation output
 
 ### All recipes suddenly failing validation
 
 - Check recent schema changes in `src/modules/recipe/domain/schemas.ts`
-- Ensure CLI tool is rebuilt: `npm run recipe:build`
+- Ensure CLI tool is rebuilt: `pnpm recipe:build`
 - Run with `--json` flag to get detailed error messages
 
 ## Resources

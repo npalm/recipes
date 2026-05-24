@@ -1,0 +1,17 @@
+packages:
+  - 'tools/cli'
+
+engineStrict: true
+minimumReleaseAge: 10080
+minimumReleaseAgeStrict: true
+minimumReleaseAgeIgnoreMissingTime: false
+blockExoticSubdeps: true
+strictDepBuilds: true
+dangerouslyAllowAllBuilds: false
+
+allowBuilds:
+  '@parcel/watcher': true
+  '@swc/core': true
+  esbuild: true
+  sharp: true
+  unrs-resolver: true
