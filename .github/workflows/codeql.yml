@@ -40,9 +40,9 @@ jobs:
     name: Analyze JavaScript and TypeScript
     runs-on: ubuntu-latest
     permissions:
-      actions: read
-      contents: read
-      security-events: write
+      actions: read # Required by CodeQL to read workflow/action metadata for analysis.
+      contents: read # Required by actions/checkout and CodeQL to read repository source.
+      security-events: write # Required by CodeQL to upload code scanning results.
     steps:
       - name: Checkout code
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
