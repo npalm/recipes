@@ -24,13 +24,13 @@ cookTime: 3
 
 - 200 - 250 g fresh cherries {scale}
 - 3 tbsp Kirsch {scale}
-- 2 tbsp palm sugar (finely chopped or grated) {scale}
+- 2 tbsp palm sugar {scale}
 
 #### Instructions
 
 1. Pit the fresh cherries. You can lightly bruise them with the flat side of a knife to help release their juices.
 
-2. Place the cherries, Kirsch, and finely chopped palm sugar in a small saucepan. Heat over low heat, stirring gently until the palm sugar has completely dissolved and the cherries just begin to release their juices (about {{2-3}} minutes).
+2. Place the cherries, Kirsch, and palm sugar in a small saucepan. Heat over low heat, stirring gently until the palm sugar has completely dissolved and the cherries just begin to release their juices (about {{2-3}} minutes).
 
 3. Remove from the heat immediately, cover the pan with a lid, and let it steep for the rest of the day.
 

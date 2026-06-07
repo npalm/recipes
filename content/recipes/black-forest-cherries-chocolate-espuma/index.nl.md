@@ -24,13 +24,13 @@ cookTime: 3
 
 - 200 - 250 g verse kersen {scale}
 - 3 el Kirsch {scale}
-- 2 el palmsuiker (fijngesneden of geraspt) {scale}
+- 2 el palmsuiker {scale}
 
 #### Bereiding
 
 1. Ontpit de verse kersen. Kneus ze eventueel lichtjes met de platte kant van een mes zodat de sappen makkelijker vrijkomen.
 
-2. Doe de kersen samen met de Kirsch en de fijngesneden palmsuiker in een klein steelpannetje. Verwarm dit op laag vuur, roer voorzichtig tot de palmsuiker volledig is opgelost en de kersen net iets sap loslaten (ongeveer {{2-3}} minuten).
+2. Doe de kersen samen met de Kirsch en de palmsuiker in een klein steelpannetje. Verwarm dit op laag vuur, roer voorzichtig tot de palmsuiker volledig is opgelost en de kersen net iets sap loslaten (ongeveer {{2-3}} minuten).
 
 3. Haal direct van het vuur, doe de deksel op de pan en laat de rest van de dag intrekken.
 
