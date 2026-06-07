@@ -69,7 +69,9 @@ cookTime: 5
 
 2. Grill or torch the broccoli florets briefly for a nice 'crunch' and a lightly charred flavor.
 
-## Serving
+### Plating and Serving
+
+#### Instructions
 
 1. Gently reheat the sweet potato cream.
 

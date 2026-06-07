@@ -57,7 +57,9 @@ prepTime: 10
 
 3. Briefly toast the sesame seeds in a dry, hot pan until fragrant, then set aside.
 
-## Serving
+### Plating and Serving
+
+#### Instructions
 
 1. Briefly warm the cooked stems in the vacuum bag (e.g., in the sous-vide bath that has been cooled down for a subsequent course).
 

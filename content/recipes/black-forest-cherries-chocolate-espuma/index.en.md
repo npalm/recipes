@@ -56,7 +56,9 @@ waitTime: 120
 
 4. Charge the siphon with 1 nitrogen cartridge (N2O), shake vigorously 4 to 5 times up and down, and place the siphon in the refrigerator for at least {{2}} hours (preferably lying down).
 
-## Serving
+### Plating and Serving
+
+#### Instructions
 
 1. Just before serving, place the saucepan with the cherries and syrup back over medium-high heat for a very brief moment ({{1-2}} minutes). They only need to be lukewarm; do not let them boil.
 

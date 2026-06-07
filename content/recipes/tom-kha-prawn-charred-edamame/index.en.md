@@ -64,7 +64,9 @@ prepTime: 5
 
 2. Use a blowtorch to char the edamame beans until they show dark, roasted spots.
 
-## Serving
+### Plating and Serving
+
+#### Instructions
 
 1. Bring the Tom Kha broth to a boil, remove from heat, and stir in the lime juice. Use an immersion blender to froth the soup into a thick, white emulsion.
 

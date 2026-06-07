@@ -69,7 +69,9 @@ cookTime: 5
 
 2. Grill of brand de broccoliroosjes kort voor een lekkere 'crunch' en een licht gebrande smaak.
 
-## Serveren
+### Opmaak en Serveren
+
+#### Bereiding
 
 1. Warm de aardappelzalf voorzichtig op.
 

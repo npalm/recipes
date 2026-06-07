@@ -64,7 +64,9 @@ prepTime: 5
 
 2. Gebruik een gasbrander om de edamame-boontjes aan te schroeien tot ze donkere plekjes vertonen.
 
-## Serveren
+### Opmaak en Serveren
+
+#### Bereiding
 
 1. Breng de Tom Kha bouillon aan de kook, haal van het vuur en voeg het limoensap toe. Gebruik een staafmixer om de soep op te schuimen tot een dikke, witte emulsie.
 

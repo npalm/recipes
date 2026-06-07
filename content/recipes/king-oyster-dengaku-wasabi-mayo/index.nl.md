@@ -57,7 +57,9 @@ prepTime: 10
 
 3. Rooster het sesamzaad kort in een droge, hete pan tot het gaat geuren en zet apart.
 
-## Serveren
+### Opmaak en Serveren
+
+#### Bereiding
 
 1. Warm de gegaarde stammen kort op in de vacuümzak (bijvoorbeeld in het sous-vide bad dat is teruggekoeld voor een volgende gang).
 

@@ -56,7 +56,9 @@ waitTime: 120
 
 4. Laad de sifon met 1 stikstofpatroon (N2O), schud 4 tot 5 keer krachtig op en neer en leg de sifon minimaal {{2}} uur (bij voorkeur liggend) in de koelkast.
 
-## Serveren
+### Opmaak en Serveren
+
+#### Bereiding
 
 1. Zet het pannetje met de kersen en de siroop vlak voor het serveren nog heel even op middelhoog vuur ({{1-2}} minuten). Ze hoeven alleen lauwwarm te worden, laat ze niet koken.
 
