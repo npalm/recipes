@@ -33,7 +33,7 @@ waitTime: 35
 
 3. Verwarm het sous-vide bad naar {{43-45°C}} en gaar de zalm gedurende {{30-40 minuten}}.
 
-4. Haal de zalm uit de zak en pel de huid er in één beweging af — dat gaat heel makkelijk na het sous-vide garen.
+4. Haal de zalm uit de zak en pel de huid er in één beweging af; dat gaat heel makkelijk na het sous-vide garen.
 
 5. Dep de bovenkant van de zalm beenderdroog met keukenpapier en bestrijk met een druppel olie.
 
@@ -73,6 +73,6 @@ cookTime: 10
 ## Notities
 
 - Het bereik van 43-45°C geeft een boterachtige, bijna doorschijnende textuur. Verhoog naar 50°C voor een steviger, klassiekere structuur.
-- De zalm goed droogdeppen vóór het afbranden is essentieel voor een mooie kleur — vocht aan de oppervlakte stoomt in plaats van te schroeien.
+- De zalm goed droogdeppen vóór het afbranden is essentieel voor een mooie kleur; vocht aan de oppervlakte stoomt in plaats van te schroeien.
 - Een roestvrijstalen ondergrond kaatst de hitte van de brander terug in de vis; anti-aanbaklagen kunnen verschroeien en dampen afgeven.
 - Vervang de edamame eventueel door peultjes of tuinbonen.

@@ -114,6 +114,7 @@ export interface RecipeCard {
   tags: string[];
   images: string[];
   status: RecipeStatus;
+  createdAt: string;
 }
 
 /**

@@ -106,6 +106,7 @@ const mockRecipeCards: RecipeCard[] = [
     tags: ['italian', 'pasta', 'dinner'],
     images: ['carbonara.jpg'],
     status: 'published',
+    createdAt: '2024-01-01T00:00:00Z',
   },
   {
     slug: 'caesar-salad',
@@ -118,6 +119,7 @@ const mockRecipeCards: RecipeCard[] = [
     tags: ['salad', 'lunch', 'healthy'],
     images: ['salad.jpg'],
     status: 'published',
+    createdAt: '2024-01-01T00:00:00Z',
   },
   {
     slug: 'beef-wellington',
@@ -130,6 +132,7 @@ const mockRecipeCards: RecipeCard[] = [
     tags: ['beef', 'dinner', 'fancy'],
     images: ['wellington.jpg'],
     status: 'draft',
+    createdAt: '2024-01-01T00:00:00Z',
   },
   {
     slug: 'chocolate-cake',
@@ -142,6 +145,7 @@ const mockRecipeCards: RecipeCard[] = [
     tags: ['dessert', 'chocolate', 'baking'],
     images: ['cake.jpg'],
     status: 'published',
+    createdAt: '2024-01-01T00:00:00Z',
   },
 ];
 

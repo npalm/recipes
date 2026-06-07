@@ -129,6 +129,7 @@ export function recipeToCard(recipe: Recipe): RecipeCard {
     tags: recipe.tags,
     images: recipe.images,
     status: recipe.status,
+    createdAt: recipe.createdAt,
   };
 }
 
