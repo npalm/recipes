@@ -7,6 +7,7 @@ prepTime: 25
 cookTime: 25
 difficulty: medium
 tags: ["main-course", "tuna", "sous-vide", "sweet-potato", "ginger", "broccoli"]
+images: ["silky-tuna.jpg"]
 headerImageRotation: true
 createdAt: "2026-06-07"
 ---
