@@ -71,3 +71,4 @@ waitTime: 120
 - Serveertip: Serveer dit dessert met een klein glaasje Ginjinha (Krinja) ernaast. De authentieke, zoetzure smaak van deze Portugese kersenlikeur versterkt de gemarineerde kersen op het bord en snijdt prachtig door de romige, pure chocolade heen.
 - Zeef de ganache altijd voordat je de sifon vult, om verstopping van de spuitmond te voorkomen.
 - De kersen kunnen enkele uren van tevoren worden gemarineerd; hoe langer ze trekken, hoe dieper de smaak.
+- Ontpittruc: verwijder het steeltje, zet de kers op de hals van een lege bierfles (of vergelijkbaar) en duw de pit er met een satéprikker door de bovenkant uit.
