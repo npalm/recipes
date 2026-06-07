@@ -79,6 +79,8 @@ cookTime: 5
 
 3. Place the tuna on top and arrange the broccoli around it for a beautiful contrast. Finish with sesame seeds if desired.
 
+4. Lightly glaze the tuna on the plate with a brush, using a mix of equal parts soy sauce and mirin for extra shine and umami.
+
 ## Notes
 
 - Sashimi grade tuna is essential: the core temperature stays at 45°C, so the fish must be safe to eat raw.

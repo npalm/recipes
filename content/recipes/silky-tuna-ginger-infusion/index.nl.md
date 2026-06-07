@@ -79,6 +79,8 @@ cookTime: 5
 
 3. Leg de tonijn daarop en verdeel de broccoli eromheen voor een prachtig contrast. Werk eventueel af met sesamzaadjes.
 
+4. Lak de tonijn op het bord heel licht af met een kwastje met een mengsel van gelijke delen sojasaus en mirin voor extra glans en umami.
+
 ## Notities
 
 - Sashimi kwaliteit tonijn is essentieel: de kerntemperatuur blijft op 45°C, dus de vis moet rauw eetbaar zijn.
