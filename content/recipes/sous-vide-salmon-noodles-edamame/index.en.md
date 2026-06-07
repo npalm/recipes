@@ -33,7 +33,7 @@ waitTime: 35
 
 3. Preheat the sous-vide bath to {{43-45°C}} and cook the salmon for {{30-40 minutes}}.
 
-4. Remove from the bag and peel the skin off in one motion — it releases easily after sous-vide cooking.
+4. Remove from the bag and peel the skin off in one motion; it releases easily after sous-vide cooking.
 
 5. Pat the top of the salmon completely dry with paper towels and brush with a drop of oil.
 
@@ -73,6 +73,6 @@ cookTime: 10
 ## Notes
 
 - The 43-45°C range gives a buttery, almost translucent texture. Push up to 50°C for a firmer, more traditional flake.
-- Drying the salmon well before torching is essential for proper colour — any surface moisture will steam instead of sear.
+- Drying the salmon well before torching is essential for proper colour; any surface moisture will steam instead of sear.
 - A stainless-steel surface reflects the torch heat back into the fish; non-stick coatings can scorch and release fumes.
 - Swap edamame for sugar snaps or broad beans if you can't find them.

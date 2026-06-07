@@ -1,5 +1,5 @@
 ---
-title: "Onsen Tamago — Sous-Vide"
+title: "Onsen Tamago: Sous-Vide"
 slug: "onsen-tamago"
 status: published
 servings: 2
@@ -36,6 +36,6 @@ A classic Japanese appetizer where the egg is slowly cooked sous-vide. The white
 ## Notes
 
 - Use the freshest eggs you can find; older eggs have a thinner white that drains away too easily.
-- Holding the bath exactly at 64°C is critical — even 1°C makes a noticeable difference in yolk texture.
+- Holding the bath exactly at 64°C is critical; even 1°C makes a noticeable difference in yolk texture.
 - The eggs can hold for up to 60 minutes at 64°C without overcooking, useful when timing the rest of a menu.
 - A light dashi base lifts the dish from a side note to a proper starter; try kombu-bonito dashi.
