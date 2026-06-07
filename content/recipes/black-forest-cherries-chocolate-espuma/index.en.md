@@ -8,6 +8,7 @@ cookTime: 5
 waitTime: 120
 difficulty: medium
 tags: ["dessert", "chocolate", "cherries", "espuma", "siphon"]
+images: ["black-forest.jpg"]
 headerImageRotation: true
 createdAt: "2026-06-07"
 ---
