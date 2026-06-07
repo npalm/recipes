@@ -66,7 +66,7 @@ function extractSection(
 ): string | undefined {
   // Match ## Section Name and capture content until next ## heading or end of content
   const regex = new RegExp(
-    `^##\\s+${sectionName}\\s*\\n([\\s\\S]*?)(?=^##\\s|\\Z)`,
+    `^##\\s+${sectionName}\\s*\\n([\\s\\S]*?)(?=^##\\s|(?![\\s\\S]))`,
     'm'
   );
   const match = content.match(regex);
