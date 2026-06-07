@@ -107,6 +107,7 @@ const mockCard1: RecipeCard = {
   tags: ['italian', 'pasta', 'dinner'],
   images: ['carbonara.jpg'],
   status: 'published',
+  createdAt: '2024-01-01T00:00:00Z',
 };
 
 const mockCard2: RecipeCard = {
@@ -120,6 +121,7 @@ const mockCard2: RecipeCard = {
   tags: ['salad', 'lunch'],
   images: ['salad.jpg'],
   status: 'published',
+  createdAt: '2024-01-01T00:00:00Z',
 };
 
 const mockCard3: RecipeCard = {
@@ -133,6 +135,7 @@ const mockCard3: RecipeCard = {
   tags: ['beef', 'dinner', 'fancy'],
   images: ['wellington.jpg'],
   status: 'published',
+  createdAt: '2024-01-01T00:00:00Z',
 };
 
 const mockCard4: RecipeCard = {
@@ -146,6 +149,7 @@ const mockCard4: RecipeCard = {
   tags: ['italian', 'pasta', 'baking'],
   images: ['lasagna.jpg'],
   status: 'published',
+  createdAt: '2024-01-01T00:00:00Z',
 };
 
 const mockRecipeCards: RecipeCard[] = [mockCard1, mockCard2, mockCard3, mockCard4];

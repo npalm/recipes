@@ -168,6 +168,10 @@ export function sortRecipeCards(
       case 'title':
         comparison = a.title.localeCompare(b.title);
         break;
+      case 'createdAt':
+        comparison =
+          new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
+        break;
       case 'totalTime':
         comparison = a.totalTime - b.totalTime;
         break;

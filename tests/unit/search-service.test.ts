@@ -26,6 +26,7 @@ const mockRecipes: RecipeCard[] = [
     tags: ['italian', 'pasta', 'dinner'],
     images: ['carbonara.jpg'],
     status: 'published',
+    createdAt: '2024-01-01T00:00:00Z',
   },
   {
     slug: 'chicken-curry',
@@ -38,6 +39,7 @@ const mockRecipes: RecipeCard[] = [
     tags: ['indian', 'curry', 'dinner'],
     images: ['curry.jpg'],
     status: 'published',
+    createdAt: '2024-01-01T00:00:00Z',
   },
   {
     slug: 'chocolate-cake',
@@ -50,6 +52,7 @@ const mockRecipes: RecipeCard[] = [
     tags: ['dessert', 'chocolate', 'baking'],
     images: ['cake.jpg'],
     status: 'published',
+    createdAt: '2024-01-01T00:00:00Z',
   },
   {
     slug: 'caesar-salad',
@@ -62,6 +65,7 @@ const mockRecipes: RecipeCard[] = [
     tags: ['salad', 'lunch', 'healthy'],
     images: ['salad.jpg'],
     status: 'published',
+    createdAt: '2024-01-01T00:00:00Z',
   },
   {
     slug: 'pasta-primavera',
@@ -74,6 +78,7 @@ const mockRecipes: RecipeCard[] = [
     tags: ['pasta', 'vegetarian', 'italian'],
     images: ['primavera.jpg'],
     status: 'published',
+    createdAt: '2024-01-01T00:00:00Z',
   },
 ];
 
@@ -357,6 +362,7 @@ describe('RecipeSearchIndex', () => {
           tags: ['italian', 'pizza'],
           images: ['pizza.jpg'],
           status: 'published',
+          createdAt: '2024-01-01T00:00:00Z',
         },
       ];
 
@@ -384,6 +390,7 @@ describe('RecipeSearchIndex', () => {
           tags: ['italian', 'pizza'],
           images: ['pizza.jpg'],
           status: 'published',
+          createdAt: '2024-01-01T00:00:00Z',
         },
       ];
 
