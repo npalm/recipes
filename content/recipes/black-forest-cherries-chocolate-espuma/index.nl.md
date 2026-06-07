@@ -26,7 +26,7 @@ cookTime: 3
 - 3 el Kirsch {scale}
 - 2 el palmsuiker (fijngesneden of geraspt) {scale}
 
-#### Bereidingswijze
+#### Bereiding
 
 1. Ontpit de verse kersen. Kneus ze eventueel lichtjes met de platte kant van een mes zodat de sappen makkelijker vrijkomen.
 
@@ -46,7 +46,7 @@ waitTime: 120
 - 100 ml volle melk {scale}
 - 1 N2O-patroon (voor de sifon)
 
-#### Bereidingswijze
+#### Bereiding
 
 1. Breek de pure chocolade in kleine stukjes en smelt deze au bain-marie of heel voorzichtig in de magnetron.
 
@@ -66,6 +66,6 @@ waitTime: 120
 
 ## Notities
 
-- **Serveertip van de chef:** Serveer dit dessert met een klein glaasje **Ginjinha (Krinja)** ernaast. De authentieke, zoetzure smaak van deze Portugese kersenlikeur versterkt de gemarineerde kersen op het bord en snijdt prachtig door de romige, pure chocolade heen.
+- Serveertip: Serveer dit dessert met een klein glaasje Ginjinha (Krinja) ernaast. De authentieke, zoetzure smaak van deze Portugese kersenlikeur versterkt de gemarineerde kersen op het bord en snijdt prachtig door de romige, pure chocolade heen.
 - Zeef de ganache altijd voordat je de sifon vult, om verstopping van de spuitmond te voorkomen.
 - De kersen kunnen enkele uren van tevoren worden gemarineerd; hoe langer ze trekken, hoe dieper de smaak.

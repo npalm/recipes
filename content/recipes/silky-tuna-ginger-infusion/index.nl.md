@@ -26,7 +26,7 @@ cookTime: 15
 - 80 ml volvette kokosmelk {scale}
 - Snufje zout
 
-#### Bereidingswijze
+#### Bereiding
 
 1. Schil de gember eenvoudig door met de rand van een theelepel de schil eraf te schrapen; dit is de meest efficiënte methode voor de onregelmatige vormen van gember.
 
@@ -45,7 +45,7 @@ cookTime: 25
 - 3 tot 5 druppels sesamolie
 - Scheutje neutrale olie (voor het schroeien)
 
-#### Bereidingswijze
+#### Bereiding
 
 1. Dep de steaks droog. Vacumeer ze met een klein drupje olijfolie en slechts 3 tot 5 druppels sesamolie. Bewaar in de koelkast.
 
@@ -63,7 +63,7 @@ cookTime: 5
 - Snufje zout
 - Optioneel: sesamzaadjes
 
-#### Bereidingswijze
+#### Bereiding
 
 1. Blancheer de roosjes {{2}} minuten in kokend gezouten water. Schrik direct in ijswater, dep droog en bewaar.
 

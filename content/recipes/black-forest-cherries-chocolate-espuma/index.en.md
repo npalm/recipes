@@ -66,6 +66,6 @@ waitTime: 120
 
 ## Notes
 
-- **Chef's serving tip:** Serve this dessert with a small glass of **Ginjinha (Krinja)** on the side. The authentic, sweet and sour taste of this Portuguese cherry liqueur beautifully enhances the macerated cherries on the plate and cuts right through the rich, dark chocolate.
+- Serving tip: Serve this dessert with a small glass of Ginjinha (Krinja) on the side. The authentic, sweet and sour taste of this Portuguese cherry liqueur beautifully enhances the macerated cherries on the plate and cuts right through the rich, dark chocolate.
 - Always strain the ganache before filling the siphon to avoid clogging the nozzle.
 - The cherries can be macerated several hours ahead; the longer they steep, the deeper the flavour.

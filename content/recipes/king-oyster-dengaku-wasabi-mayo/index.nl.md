@@ -29,7 +29,7 @@ cookTime: 45
 - 1 tl suiker (of extra mirin voor de lak) {scale}
 - Klontje roomboter
 
-#### Bereidingswijze
+#### Bereiding
 
 1. Snijd de hoedjes van de stammen. Kerf de platte bovenkant van de stammen en de bolle kant van de hoedjes ondiep en kruislings in. Bewaar de hoedjes in de koelkast.
 
@@ -49,7 +49,7 @@ prepTime: 10
 - 1 tl suiker {scale}
 - 1 tl sesamzaad (wit of zwart) {scale}
 
-#### Bereidingswijze
+#### Bereiding
 
 1. Snijd de radijsjes (met schil) in flinterdunne plakjes. Meng de rijstazijn met de suiker. Doe de radijsplakjes met de zoetzure vloeistof in een vacuümzak en vacumeer strak om het vocht en de kleur de cellen in te persen.
 

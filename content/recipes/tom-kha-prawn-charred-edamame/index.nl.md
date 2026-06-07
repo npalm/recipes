@@ -25,7 +25,7 @@ cookTime: 30
 - 1 klein stukje citroengras (gekneusd)
 - 10 g roomboter (of kokosolie) {scale}
 
-#### Bereidingswijze
+#### Bereiding
 
 1. Dep de schoongemaakte gamba's kurkdroog. Doe ze in een vacuümzak met het gekneusde stukje citroengras en de roomboter. Vacumeer en bewaar in de koelkast.
 
@@ -44,7 +44,7 @@ cookTime: 20
 - 1 el bruine suiker {scale}
 - Sap van ½ limoen {scale}
 
-#### Bereidingswijze
+#### Bereiding
 
 1. Breng de kokosmelk, citroengras, galanga, vissaus en suiker in een pannetje tegen de kook aan. Laat {{20}} minuten op het laagste vuur trekken.
 
@@ -58,7 +58,7 @@ prepTime: 5
 - Handje edamame boontjes (ontdooid) {scale}
 - Chili-olie (voor de finishing touch)
 
-#### Bereidingswijze
+#### Bereiding
 
 1. Dep de ontdooide boontjes kurkdroog en hussel met een drupje neutrale olie.
 
