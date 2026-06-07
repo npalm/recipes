@@ -7,6 +7,7 @@ prepTime: 20
 cookTime: 30
 difficulty: medium
 tags: ["soep", "gamba", "tom-kha", "kokosmelk", "edamame", "sous-vide", "thais"]
+images: ["tom-kha-prawn.jpg"]
 headerImageRotation: true
 createdAt: "2026-06-07"
 ---

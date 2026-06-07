@@ -7,6 +7,7 @@ prepTime: 20
 cookTime: 30
 difficulty: medium
 tags: ["soup", "prawn", "tom-kha", "coconut-milk", "edamame", "sous-vide", "thai"]
+images: ["tom-kha-prawn.jpg"]
 headerImageRotation: true
 createdAt: "2026-06-07"
 ---
