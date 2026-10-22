@@ -21,7 +21,7 @@ export const recipeStatusSchema = z.enum(['draft', 'published']);
  * Recipe source schema (external links/inspirations)
  */
 export const recipeSourceSchema = z.object({
-  url: z.string().url('Invalid URL format'),
+  url: z.url({ protocol: /^https?$/ }),
   title: z.string().optional(),
   importedAt: z.string().datetime().optional(),
 });

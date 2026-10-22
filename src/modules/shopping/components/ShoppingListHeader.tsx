@@ -6,6 +6,9 @@
 'use client';
 
 import { useState } from 'react';
+import { useTranslations } from 'next-intl';
+import { config } from '@/lib/config';
+import { ShoppingListEncoder } from '../services/encoder';
 import { Button } from '@/components/ui/button';
 import type { ShoppingItem } from '../domain/types';
 
@@ -15,7 +18,7 @@ type ShoppingListHeaderProps = {
   items: ShoppingItem[];
   checkedCount: number;
   locale: string;
-  encodedListData: string;
+  defaultServings: number;
   targetServings: number;
   onTargetServingsChange: (servings: number) => void;
 };
@@ -26,15 +29,17 @@ export function ShoppingListHeader({
   items,
   checkedCount,
   locale,
-  encodedListData,
+  defaultServings,
   targetServings,
   onTargetServingsChange,
 }: ShoppingListHeaderProps) {
+  const t = useTranslations('shopping');
+  const recipeT = useTranslations('recipe');
   const [copied, setCopied] = useState(false);
   const [linkCopied, setLinkCopied] = useState(false);
 
   const handleCopyToClipboard = () => {
-    const text = generatePlainText(title, recipes, items);
+    const text = generatePlainText(title, recipes.map(recipe => ({ ...recipe, servings: targetServings })), items, t);
     navigator.clipboard.writeText(text).then(() => {
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
@@ -42,7 +47,9 @@ export function ShoppingListHeader({
   };
 
   const handleCopyLink = () => {
-    const url = `${window.location.origin}/${locale}/shopping/${encodedListData}`;
+    const url = new ShoppingListEncoder().generateUrl({
+      title, recipes: recipes.map(recipe => ({ slug: recipe.slug, servings: targetServings })),
+    }, locale, window.location.origin);
     navigator.clipboard.writeText(url).then(() => {
       setLinkCopied(true);
       setTimeout(() => setLinkCopied(false), 2000);
@@ -58,51 +65,54 @@ export function ShoppingListHeader({
   return (
     <div className="space-y-4 print:space-y-2">
       {/* Title */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-wrap items-center justify-between gap-3">
         <h1 className="text-3xl font-bold print:text-2xl">{title}</h1>
         <div className="flex gap-2 print:hidden">
           <Button variant="outline" size="sm" onClick={handleCopyLink}>
-            {linkCopied ? 'Link Copied!' : 'Share Link'}
+            {linkCopied ? t('linkCopied') : t('shareLink')}
           </Button>
           <Button variant="outline" size="sm" onClick={handleCopyToClipboard}>
-            {copied ? 'Copied!' : 'Copy List'}
+            {copied ? t('copied') : t('copyList')}
           </Button>
           <Button variant="outline" size="sm" onClick={handlePrint}>
-            Print
+            {t('print')}
           </Button>
         </div>
       </div>
 
       {/* Servings Controls */}
       <div className="flex items-center gap-3 print:hidden">
-        <span className="text-sm font-medium">Servings:</span>
+        <span className="text-sm font-medium">{t('servings')}:</span>
         <div className="flex items-center gap-2">
           <Button
             variant="outline"
             size="sm"
+            aria-label={recipeT('decreaseServings')}
             onClick={() => onTargetServingsChange(Math.max(1, targetServings - 1))}
             disabled={targetServings <= 1}
           >
             -
           </Button>
           <span className="min-w-[4rem] text-center font-medium">
-            {targetServings} {targetServings === 1 ? 'person' : 'persons'}
+            {t('people', { count: targetServings })}
           </span>
           <Button
             variant="outline"
             size="sm"
+            aria-label={recipeT('increaseServings')}
+            disabled={targetServings >= 100}
             onClick={() => onTargetServingsChange(targetServings + 1)}
           >
             +
           </Button>
-          {targetServings !== 2 && (
+          {targetServings !== defaultServings && (
             <Button
               variant="ghost"
               size="sm"
-              onClick={() => onTargetServingsChange(2)}
+              onClick={() => onTargetServingsChange(defaultServings)}
               className="text-xs"
             >
-              Reset to 2
+              {t('reset', { count: defaultServings })}
             </Button>
           )}
         </div>
@@ -110,7 +120,7 @@ export function ShoppingListHeader({
 
       {/* Recipes */}
       <div className="text-sm text-muted-foreground print:text-xs">
-        <span className="font-medium">Recipes: </span>
+        <span className="font-medium">{t('recipes')}: </span>
         {recipes.map((recipe, index) => (
           <span key={recipe.slug}>
             {index > 0 && ', '}
@@ -123,7 +133,7 @@ export function ShoppingListHeader({
               {recipe.title}
             </a>
             <span className="text-xs ml-1">
-              (original: {recipe.servings} servings)
+              ({t('original', { count: recipe.servings })})
             </span>
           </span>
         ))}
@@ -138,7 +148,7 @@ export function ShoppingListHeader({
           />
         </div>
         <span className="text-sm text-muted-foreground whitespace-nowrap">
-          {checkedCount} of {items.length} items
+          {t('progress', { checked: checkedCount, total: items.length })}
         </span>
       </div>
     </div>
@@ -151,7 +161,8 @@ export function ShoppingListHeader({
 function generatePlainText(
   title: string,
   recipes: Array<{ title: string; servings: number }>,
-  items: ShoppingItem[]
+  items: ShoppingItem[],
+  t: ReturnType<typeof useTranslations<'shopping'>>
 ): string {
   const lines: string[] = [];
 
@@ -160,14 +171,14 @@ function generatePlainText(
   lines.push('');
 
   // Recipes
-  lines.push('Recipes:');
+  lines.push(t('recipes') + ':');
   recipes.forEach((recipe) => {
-    lines.push(`  - ${recipe.title} (${recipe.servings} servings)`);
+    lines.push(`  - ${recipe.title} (${t('servingCount', { count: recipe.servings })})`);
   });
   lines.push('');
 
   // Items
-  lines.push('Shopping List:');
+  lines.push(t('title') + ':');
   items.forEach((item) => {
     const quantity = item.quantity
       ? `${item.quantity}${item.quantityMax ? `-${item.quantityMax}` : ''} ${item.unit || ''}`
@@ -177,12 +188,12 @@ function generatePlainText(
 
     // Add source info
     const sources = item.sources.map((s) => `${s.title}`).join(', ');
-    lines.push(`    From: ${sources}`);
+    lines.push(`    ${t('from')}: ${sources}`);
   });
 
   lines.push('');
   lines.push('---');
-  lines.push('Generated by Niek Kookt');
+  lines.push(t('generatedBy', { name: config.appName }));
 
   return lines.join('\n');
 }

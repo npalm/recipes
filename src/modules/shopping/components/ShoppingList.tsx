@@ -6,18 +6,19 @@
 
 'use client';
 
-import { useState, useEffect, useMemo, useRef } from 'react';
-import type { ShoppingItem } from '../domain/types';
+import { useState, useEffect, useMemo } from 'react';
+import type { ShoppingRecipe } from '../domain/types';
+import { IngredientAggregator } from '../services/aggregation';
+import { useTranslations } from 'next-intl';
 import { ShoppingListItem } from './ShoppingListItem';
 import { ShoppingListHeader } from './ShoppingListHeader';
 
 type ShoppingListProps = {
   title: string;
   recipes: Array<{ slug: string; title: string; servings: number }>;
-  items: ShoppingItem[];
+  sourceRecipes: ShoppingRecipe[];
   locale: string;
   listId: string; // Unique ID for localStorage key
-  encodedListData: string; // For generating share link
 };
 
 type ShoppingListStorageState = {
@@ -29,94 +30,53 @@ type ShoppingListStorageState = {
 export function ShoppingList({
   title,
   recipes,
-  items,
+  sourceRecipes,
   locale,
   listId,
-  encodedListData,
 }: ShoppingListProps) {
-  // Load initial state from localStorage using lazy initialization
-  const [checkedItems, setCheckedItems] = useState<Record<string, boolean>>(() => {
-    if (typeof window === 'undefined') return {};
-    
-    const storageKey = `shopping-list-${listId}`;
-    console.log('[ShoppingList] Loading from localStorage with key:', storageKey);
-    const saved = localStorage.getItem(storageKey);
-    console.log('[ShoppingList] Saved data:', saved);
+  const t = useTranslations('shopping');
+  const defaultServings = recipes.length && recipes.every(recipe => recipe.servings === recipes[0].servings)
+    ? recipes[0].servings : 2;
+  const [state, setState] = useState<ShoppingListStorageState>({ checked: {}, removed: {}, targetServings: defaultServings });
+  const [loadedListId, setLoadedListId] = useState<string | null>(null);
+  const { checked: checkedItems, removed: removedItems, targetServings } = state;
 
-    if (saved) {
-      try {
-        const parsed: ShoppingListStorageState = JSON.parse(saved);
-        console.log('[ShoppingList] Parsed data:', parsed);
-        console.log('[ShoppingList] State loaded successfully');
-        return parsed.checked || {};
-      } catch {
-        console.error('Failed to load shopping list state');
-        return {};
-      }
-    }
-    
-    console.log('[ShoppingList] No saved state found');
-    return {};
-  });
-
-  const [removedItems, setRemovedItems] = useState<Record<string, boolean>>(() => {
-    if (typeof window === 'undefined') return {};
-    
-    const storageKey = `shopping-list-${listId}`;
-    const saved = localStorage.getItem(storageKey);
-
-    if (saved) {
-      try {
-        const parsed: ShoppingListStorageState = JSON.parse(saved);
-        return parsed.removed || {};
-      } catch {
-        return {};
-      }
-    }
-    
-    return {};
-  });
-
-  const [targetServings, setTargetServings] = useState<number>(() => {
-    if (typeof window === 'undefined') return 2;
-    
-    const storageKey = `shopping-list-${listId}`;
-    const saved = localStorage.getItem(storageKey);
-
-    if (saved) {
-      try {
-        const parsed: ShoppingListStorageState = JSON.parse(saved);
-        return parsed.targetServings || 2;
-      } catch {
-        return 2;
-      }
-    }
-    
-    return 2;
-  });
-
-  // Track if this is the first render to prevent saving on initial load
-  const isFirstRender = useRef(true);
-
-  // Save state to localStorage whenever it changes (but not on initial load)
   useEffect(() => {
-    // Skip saving on first render since we just loaded from localStorage
-    if (isFirstRender.current) {
-      isFirstRender.current = false;
-      return;
-    }
+    let next: ShoppingListStorageState = { checked: {}, removed: {}, targetServings: defaultServings };
+    try {
+      const saved = localStorage.getItem(`shopping-list-${listId}`);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        const booleanMap = (value: unknown): value is Record<string, boolean> =>
+          !!value && typeof value === 'object' && !Array.isArray(value) &&
+          Object.values(value).every(entry => typeof entry === 'boolean');
+        next = {
+          checked: booleanMap(parsed.checked) ? parsed.checked : {},
+          removed: booleanMap(parsed.removed) ? parsed.removed : {},
+          targetServings: Number.isInteger(parsed.targetServings) && parsed.targetServings >= 1 && parsed.targetServings <= 100
+            ? parsed.targetServings : defaultServings,
+        };
+      }
+    } catch { /* Unavailable or invalid storage should not prevent shopping. */ }
+    // Storage must be loaded after hydration so the server and browser render the same markup.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setState(next);
+    setLoadedListId(listId);
+  }, [listId, defaultServings]);
 
-    if (typeof window === 'undefined') return;
+  useEffect(() => {
+    if (loadedListId !== listId) return;
+    try {
+      localStorage.setItem(`shopping-list-${listId}`, JSON.stringify(state));
+    } catch { /* Shopping remains usable when storage is disabled or full. */ }
+  }, [state, listId, loadedListId]);
 
-    const storageKey = `shopping-list-${listId}`;
-    const state: ShoppingListStorageState = {
-      checked: checkedItems,
-      removed: removedItems,
-      targetServings,
-    };
-    console.log('[ShoppingList] Saving to localStorage:', storageKey, state);
-    localStorage.setItem(storageKey, JSON.stringify(state));
-  }, [checkedItems, removedItems, targetServings, listId]);
+  const setCheckedItems = (update: (items: Record<string, boolean>) => Record<string, boolean>) =>
+    setState(previous => ({ ...previous, checked: update(previous.checked) }));
+  const setRemovedItems = (update: (items: Record<string, boolean>) => Record<string, boolean>) =>
+    setState(previous => ({ ...previous, removed: update(previous.removed) }));
+  const setTargetServings = (value: number) =>
+    setState(previous => ({ ...previous, targetServings: Math.max(1, Math.min(100, value)) }));
 
   const toggleItem = (itemId: string) => {
     setCheckedItems((prev) => ({
@@ -140,27 +100,10 @@ export function ShoppingList({
     });
   };
 
-  // Scale items based on target servings
-  // Calculate multiplier for each recipe based on target servings vs original servings
-  const scaledItems = useMemo(() => {
-    return items.map((item) => {
-      // Calculate weighted average multiplier based on all source recipes
-      let totalMultiplier = 0;
-      item.sources.forEach((source) => {
-        const recipeMultiplier = targetServings / source.servings;
-        totalMultiplier += recipeMultiplier;
-      });
-      const avgMultiplier = totalMultiplier / item.sources.length;
-
-      if (avgMultiplier === 1 || !item.quantity) return item;
-
-      return {
-        ...item,
-        quantity: item.quantity * avgMultiplier,
-        quantityMax: item.quantityMax ? item.quantityMax * avgMultiplier : undefined,
-      };
-    });
-  }, [items, targetServings]);
+  // Scale each original contribution before combining quantities and converting units.
+  const scaledItems = useMemo(() => new IngredientAggregator().aggregate(
+    sourceRecipes, sourceRecipes.map(() => targetServings)
+  ), [sourceRecipes, targetServings]);
 
   // Filter out removed items
   const visibleItems = scaledItems.filter((item) => !removedItems[item.id]);
@@ -176,7 +119,7 @@ export function ShoppingList({
         items={visibleItems}
         checkedCount={checkedCount}
         locale={locale}
-        encodedListData={encodedListData}
+        defaultServings={defaultServings}
         targetServings={targetServings}
         onTargetServingsChange={setTargetServings}
       />
@@ -202,7 +145,7 @@ export function ShoppingList({
         <div className="mt-8 print:hidden">
           <details className="rounded-lg border p-4">
             <summary className="cursor-pointer font-medium text-muted-foreground">
-              Removed items ({removedItemsList.length})
+              {t('removedItems', { count: removedItemsList.length })}
             </summary>
             <ul className="mt-4 space-y-2">
               {removedItemsList.map((item) => (
@@ -215,7 +158,7 @@ export function ShoppingList({
                     onClick={() => restoreItem(item.id)}
                     className="text-primary underline hover:text-primary/80"
                   >
-                    Restore
+                    {t('restore')}
                   </button>
                 </li>
               ))}
@@ -226,15 +169,15 @@ export function ShoppingList({
 
       {visibleItems.length === 0 && removedItemsList.length === 0 && (
         <div className="text-center text-muted-foreground py-12">
-          <p className="text-lg">No items in shopping list</p>
-          <p className="text-sm mt-2">Add recipes to generate a shopping list</p>
+          <p className="text-lg">{t('empty')}</p>
+          <p className="text-sm mt-2">{t('addRecipes')}</p>
         </div>
       )}
 
       {visibleItems.length === 0 && removedItemsList.length > 0 && (
         <div className="text-center text-muted-foreground py-12">
-          <p className="text-lg">All items removed</p>
-          <p className="text-sm mt-2">Restore items from the removed section below</p>
+          <p className="text-lg">{t('allRemoved')}</p>
+          <p className="text-sm mt-2">{t('restoreHint')}</p>
         </div>
       )}
     </div>

@@ -29,7 +29,7 @@ export function SearchPageClient({
   }));
 
   // Create search index
-  const [searchIndex] = useState(() => createSearchIndex(initialRecipes));
+  const searchIndex = useMemo(() => createSearchIndex(initialRecipes), [initialRecipes]);
 
   // Calculate results using useMemo to avoid setState in effect
   const results = useMemo(() => {
@@ -37,7 +37,7 @@ export function SearchPageClient({
 
     if (query.trim()) {
       // Use search index for text search
-      const searchResults = searchIndex.search(query);
+      const searchResults = searchIndex.search(query, { limit: initialRecipes.length });
       filteredRecipes = searchResults.map((r) => r.item);
     } else {
       filteredRecipes = initialRecipes;
@@ -88,6 +88,13 @@ export function SearchPageClient({
               autoFocus
             />
           </div>
+
+          <details className="mb-6 rounded-lg border p-4 lg:hidden">
+            <summary className="cursor-pointer font-medium">{t('search.filters')}</summary>
+            <div className="mt-4">
+              <FilterPanel filters={filters} availableTags={availableTags} onFiltersChange={setFilters} />
+            </div>
+          </details>
 
           {/* Results count */}
           <p className="mb-4 text-sm text-muted-foreground">

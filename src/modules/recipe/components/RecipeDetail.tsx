@@ -1,6 +1,6 @@
 'use client';
 
-import Link from 'next/link';
+import { Link } from '@/navigation';
 import {
   Clock,
   ChefHat,
@@ -370,10 +370,10 @@ export function RecipeDetail({ recipe, locale }: RecipeDetailProps) {
         <div className="flex items-center gap-4">
           <span className="flex items-center gap-1">
             <Calendar className="h-4 w-4" />
-            {t('recipe.created')}: {formatDate(recipe.createdAt)}
+            {t('recipe.created')}: {formatDate(recipe.createdAt, locale)}
           </span>
           {recipe.updatedAt && (
-            <span>{t('recipe.lastUpdated')}: {formatDate(recipe.updatedAt)}</span>
+            <span>{t('recipe.lastUpdated')}: {formatDate(recipe.updatedAt, locale)}</span>
           )}
         </div>
         <Button variant="outline" size="sm" asChild className="print:hidden">

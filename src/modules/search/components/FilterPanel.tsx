@@ -80,9 +80,10 @@ export function FilterPanel({
                 key={difficulty}
                 variant={isActive ? 'default' : 'outline'}
                 className="cursor-pointer capitalize"
+                asChild
                 onClick={() => toggleDifficulty(difficulty)}
               >
-                {t(`recipe.difficultyLevels.${difficulty}`)}
+                <button type="button" aria-pressed={Boolean(isActive)}>{t(`recipe.difficultyLevels.${difficulty}`)}</button>
               </Badge>
             );
           })}
@@ -112,9 +113,10 @@ export function FilterPanel({
                 key={label}
                 variant={isActive ? 'default' : 'outline'}
                 className="cursor-pointer"
+                asChild
                 onClick={() => setMaxTime(value)}
               >
-                {t(translationKey)}
+                <button type="button" aria-pressed={Boolean(isActive)}>{t(translationKey)}</button>
               </Badge>
             );
           })}
@@ -135,9 +137,10 @@ export function FilterPanel({
                   key={tag}
                   variant={isActive ? 'default' : 'outline'}
                   className="cursor-pointer"
+                  asChild
                   onClick={() => toggleTag(tag)}
                 >
-                  {tag}
+                  <button type="button" aria-pressed={Boolean(isActive)}>{tag}</button>
                 </Badge>
               );
             })}

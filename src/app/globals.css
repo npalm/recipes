@@ -183,7 +183,7 @@
   }
   
   /* Larger checkboxes for print */
-  .shopping-list-item span[role="checkbox"] {
+  .shopping-list-item [role="checkbox"] {
     width: 1.5rem;
     height: 1.5rem;
     border: 2px solid #000;

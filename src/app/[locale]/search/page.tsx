@@ -1,3 +1,4 @@
+import { getTranslations } from 'next-intl/server';
 import { Suspense } from 'react';
 import { Metadata } from 'next';
 import { createRecipeService } from '@/modules/recipe/services';
@@ -12,15 +13,16 @@ type Props = {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: 'meta' });
   const baseUrl = await getBaseUrl();
   const searchUrl = `${baseUrl}/${locale}/search`;
 
   return {
-    title: 'Search Recipes',
-    description: 'Search and filter recipes by name, ingredients, tags, and more',
+    title: t('searchTitle'),
+    description: t('searchDescription'),
     openGraph: {
-      title: `Search Recipes | ${config.appName}`,
-      description: 'Search and filter recipes by name, ingredients, tags, and more',
+      title: t('searchTitle'),
+      description: t('searchDescription'),
       url: searchUrl,
       siteName: config.appName,
       locale: locale,

@@ -1,7 +1,7 @@
 import { NextIntlClientProvider } from 'next-intl';
-import { getMessages, setRequestLocale } from 'next-intl/server';
+import { getMessages, getTranslations, setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
-import { locales } from '@/i18n';
+import { locales } from '@/routing';
 import { ThemeProvider } from '@/components/theme/ThemeProvider';
 import { config } from '@/lib/config';
 
@@ -14,13 +14,15 @@ export function generateStaticParams() {
   return locales.map((locale) => ({ locale }));
 }
 
-export async function generateMetadata() {
+export async function generateMetadata({ params }: Props) {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: 'meta' });
   return {
     title: {
       default: config.appName,
       template: `%s | ${config.appName}`,
     },
-    description: config.appDescription,
+    description: t('defaultDescription'),
   };
 }
 

@@ -1,8 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { Link } from '@/navigation';
+import { usePathname } from '@/navigation';
 import { useTranslations } from 'next-intl';
 import {
   UtensilsCrossed,
@@ -37,6 +37,7 @@ function NavLink({
   return (
     <Link
       href={href}
+      aria-current={isActive ? 'page' : undefined}
       onClick={onClick}
       className={`flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
         isActive
@@ -113,6 +114,8 @@ export function Header() {
               variant="ghost"
               size="icon"
               className="h-9 w-9 md:hidden"
+              aria-expanded={mobileMenuOpen}
+              aria-controls="mobile-navigation"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             >
               {mobileMenuOpen ? (
@@ -128,7 +131,7 @@ export function Header() {
         {/* Mobile Navigation */}
         {mobileMenuOpen && (
           <div className="border-t bg-background md:hidden">
-            <nav className="container flex flex-col gap-1 py-4">
+            <nav id="mobile-navigation" className="container flex flex-col gap-1 py-4">
               <NavLink href="/" onClick={closeMobileMenu}>
                 <Home className="h-4 w-4" />
                 {t('navigation.recipes')}

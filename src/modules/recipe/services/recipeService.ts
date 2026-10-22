@@ -14,7 +14,7 @@ import {
 import {
   getAllRecipes,
   getAllRecipeCards,
-  getRecipeBySlug,
+  getPublishedRecipeBySlug,
   getAllTags,
   recipeToCard,
 } from '@/modules/recipe/repository';
@@ -74,7 +74,7 @@ export class RecipeService {
    * Get a single recipe by slug
    */
   async getRecipe(slug: string): Promise<Recipe | null> {
-    return await getRecipeBySlug(slug, this.locale);
+    return await getPublishedRecipeBySlug(slug, this.locale);
   }
 
   /**

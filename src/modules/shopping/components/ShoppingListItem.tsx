@@ -5,6 +5,7 @@
 
 'use client';
 
+import { useTranslations } from 'next-intl';
 import type { ShoppingItem } from '../domain/types';
 import { formatQuantity } from '@/modules/ingredient/services/scaling';
 
@@ -23,6 +24,7 @@ export function ShoppingListItem({
   onRemove,
   locale,
 }: ShoppingListItemProps) {
+  const t = useTranslations('shopping');
   // Format the quantity display
   const quantityDisplay = item.quantity
     ? `${formatQuantity(item.quantity)}${item.quantityMax ? `-${formatQuantity(item.quantityMax)}` : ''}`
@@ -33,19 +35,14 @@ export function ShoppingListItem({
       className={`shopping-list-item group flex cursor-pointer items-start gap-3 rounded-lg p-3 transition-colors hover:bg-muted/50 print:border-b print:p-2 ${
         isChecked ? 'opacity-50' : ''
       }`}
-      role="checkbox"
-      aria-checked={isChecked}
-      tabIndex={0}
     >
       {/* Checkbox */}
-      <span
+      <button
+        type="button"
+        role="checkbox"
+        aria-checked={isChecked}
+        aria-label={item.displayName}
         onClick={onToggle}
-        onKeyDown={(e) => {
-          if (e.key === 'Enter' || e.key === ' ') {
-            e.preventDefault();
-            onToggle();
-          }
-        }}
         className={`mt-0.5 flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-md border-2 transition-colors print:border-black ${
           isChecked
             ? 'border-primary bg-primary text-primary-foreground'
@@ -68,7 +65,7 @@ export function ShoppingListItem({
             />
           </svg>
         )}
-      </span>
+      </button>
 
       {/* Content */}
       <div className="flex-1 space-y-1" onClick={onToggle}>
@@ -88,9 +85,9 @@ export function ShoppingListItem({
 
         {/* Source recipes */}
         <div className="text-sm text-muted-foreground print:hidden">
-          <span className="mr-1">From:</span>
+          <span className="mr-1">{t('from')}:</span>
           {item.sources.map((source, index) => (
-            <span key={source.slug}>
+            <span key={`${source.slug}-${index}`}>
               {index > 0 && ', '}
               <a
                 href={`/${locale}/recipe/${source.slug}`}
@@ -101,7 +98,7 @@ export function ShoppingListItem({
               >
                 {source.title}
               </a>
-              <span className="text-xs ml-1">({source.servings} servings)</span>
+              <span className="text-xs ml-1">({t('servingCount', { count: source.servings })})</span>
             </span>
           ))}
         </div>
@@ -113,9 +110,9 @@ export function ShoppingListItem({
           e.stopPropagation();
           onRemove();
         }}
-        className="print:hidden opacity-0 group-hover:opacity-100 transition-opacity text-muted-foreground hover:text-destructive p-1"
-        title="Remove item (I have this in stock)"
-        aria-label="Remove item"
+        className="print:hidden opacity-100 md:opacity-0 md:group-hover:opacity-100 focus:opacity-100 transition-opacity text-muted-foreground hover:text-destructive p-1"
+        title={t('removeHint')}
+        aria-label={t('remove')}
       >
         <svg
           className="h-4 w-4"

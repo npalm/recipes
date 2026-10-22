@@ -1,4 +1,5 @@
 import { notFound } from 'next/navigation';
+import { getTranslations } from 'next-intl/server';
 import { Metadata } from 'next';
 import { Layout } from '@/components/layout';
 import { RecipeDetail } from '@/modules/recipe/components';
@@ -6,7 +7,7 @@ import { createRecipeService } from '@/modules/recipe/services';
 import { config } from '@/lib/config';
 import { getBaseUrl } from '@/lib/server-utils';
 import { getVersionedRecipeImageUrl } from '@/lib/server-image-utils';
-import { locales } from '@/i18n';
+import { locales } from '@/routing';
 
 interface RecipePageProps {
   params: Promise<{ slug: string; locale: string }>;
@@ -16,12 +17,13 @@ export async function generateMetadata({
   params,
 }: RecipePageProps): Promise<Metadata> {
   const { slug, locale } = await params;
+  const t = await getTranslations({ locale });
   const recipeService = createRecipeService(locale);
   const recipe = await recipeService.getRecipe(slug);
 
-  if (!recipe) {
+  if (!recipe || recipe.status !== 'published') {
     return {
-      title: 'Recipe Not Found',
+      title: t('recipe.notFound'),
     };
   }
 
@@ -35,12 +37,13 @@ export async function generateMetadata({
 
   // Create rich description with recipe metadata
   const description = recipe.description 
-    ? `${recipe.description} • ${recipe.servings} servings • ${recipe.totalTime || recipe.prepTime + recipe.cookTime} min • ${recipe.difficulty.charAt(0).toUpperCase() + recipe.difficulty.slice(1)}`
+    ? `${recipe.description} • ${t('recipe.metadataServings', { count: recipe.servings })} • ${recipe.totalTime || recipe.prepTime + recipe.cookTime} min • ${t(`recipe.difficultyLevels.${recipe.difficulty}`)}`
     : `${recipe.title} - ${config.appName}`;
 
   return {
     title: recipe.title,
     description,
+    alternates: { canonical: recipeUrl },
     openGraph: {
       title: recipe.title,
       description,
@@ -63,7 +66,7 @@ export async function generateStaticParams() {
   
   for (const locale of locales) {
     const recipeService = createRecipeService(locale);
-    const recipes = await recipeService.getRecipeCards();
+    const recipes = await recipeService.getRecipeCards({ status: ['published'] });
     
     for (const recipe of recipes) {
       allParams.push({
@@ -81,7 +84,7 @@ export default async function RecipePage({ params }: RecipePageProps) {
   const recipeService = createRecipeService(locale);
   const recipe = await recipeService.getRecipe(slug);
 
-  if (!recipe) {
+  if (!recipe || recipe.status !== 'published') {
     notFound();
   }
 
