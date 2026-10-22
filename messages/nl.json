@@ -261,5 +261,40 @@
     "card": "Open deze kaartfoto in de lokale editor",
     "hero": "Open deze receptfoto in de lokale editor",
     "full": "Open deze carouselfoto in de lokale editor"
+  },
+  "cooking": {
+    "title": "Kookmodus",
+    "start": "Start met koken",
+    "exit": "Kookmodus sluiten",
+    "step": "Stap {current} van {total}",
+    "completed": "Afgerond",
+    "previous": "Vorige",
+    "skip": "Volgende stap",
+    "completeNext": "Afgerond, volgende",
+    "finish": "Terug naar recept",
+    "restart": "Opnieuw beginnen",
+    "markIncomplete": "Markeer deze stap als niet afgerond",
+    "allSteps": "Alle stappen",
+    "saveHint": "Je voortgang wordt op dit apparaat bewaard.",
+    "storageUnavailable": "Je voortgang kan in deze browser niet worden bewaard.",
+    "keepAwake": "Scherm aanhouden",
+    "wake": {
+      "off": "Optioneel — houd je recept in beeld.",
+      "requesting": "Scherm wordt aangehouden…",
+      "active": "Je scherm blijft aan.",
+      "paused": "Scherm aanhouden is gepauzeerd. Zet uit en weer aan om opnieuw te proberen.",
+      "error": "Scherm aanhouden is niet gelukt. Zet uit en weer aan om opnieuw te proberen.",
+      "unsupported": "Deze browser ondersteunt scherm aanhouden niet."
+    },
+    "presenterView": "Presentatieweergave",
+    "enterFullscreen": "Volledig scherm",
+    "exitFullscreen": "Volledig scherm sluiten",
+    "fullscreenUnsupported": "Volledig scherm is niet beschikbaar in deze browser.",
+    "fullscreenError": "Volledig scherm kon niet starten. Je kunt de presentatieweergave blijven gebruiken.",
+    "overview": "Stappenoverzicht",
+    "goToStep": "Ga naar stap {number}",
+    "keyboardHint": "← → Bladeren · Spatie: afgerond, volgende",
+    "sectionIngredients": "Ingrediënten voor dit onderdeel",
+    "recipeIngredients": "Ingrediënten voor dit recept"
   }
 }
