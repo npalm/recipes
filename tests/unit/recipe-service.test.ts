@@ -321,25 +321,25 @@ describe('RecipeService', () => {
 
   describe('getRecipe', () => {
     it('returns recipe by slug', async () => {
-      (repository.getRecipeBySlug as Mock).mockResolvedValue(mockRecipe1);
+      (repository.getPublishedRecipeBySlug as Mock).mockResolvedValue(mockRecipe1);
       
       const result = await service.getRecipe('spaghetti-carbonara');
       
       expect(result).toEqual(mockRecipe1);
-      expect(repository.getRecipeBySlug).toHaveBeenCalledWith('spaghetti-carbonara', 'en');
+      expect(repository.getPublishedRecipeBySlug).toHaveBeenCalledWith('spaghetti-carbonara', 'en');
     });
 
     it('calls repository with correct locale', async () => {
       const nlService = new RecipeService('nl');
-      (repository.getRecipeBySlug as Mock).mockResolvedValue(null);
+      (repository.getPublishedRecipeBySlug as Mock).mockResolvedValue(null);
       
       await nlService.getRecipe('test-slug');
       
-      expect(repository.getRecipeBySlug).toHaveBeenCalledWith('test-slug', 'nl');
+      expect(repository.getPublishedRecipeBySlug).toHaveBeenCalledWith('test-slug', 'nl');
     });
 
     it('returns null when recipe not found', async () => {
-      (repository.getRecipeBySlug as Mock).mockResolvedValue(null);
+      (repository.getPublishedRecipeBySlug as Mock).mockResolvedValue(null);
       
       const result = await service.getRecipe('nonexistent');
       
@@ -347,12 +347,12 @@ describe('RecipeService', () => {
     });
 
     it('returns null for empty slug', async () => {
-      (repository.getRecipeBySlug as Mock).mockResolvedValue(null);
+      (repository.getPublishedRecipeBySlug as Mock).mockResolvedValue(null);
       
       const result = await service.getRecipe('');
       
       expect(result).toBeNull();
-      expect(repository.getRecipeBySlug).toHaveBeenCalledWith('', 'en');
+      expect(repository.getPublishedRecipeBySlug).toHaveBeenCalledWith('', 'en');
     });
   });
 
@@ -373,18 +373,18 @@ describe('RecipeService', () => {
     });
 
     it('returns recipe card by slug', async () => {
-      (repository.getRecipeBySlug as Mock).mockResolvedValue(mockRecipe1);
+      (repository.getPublishedRecipeBySlug as Mock).mockResolvedValue(mockRecipe1);
       
       const result = await service.getRecipeCard('spaghetti-carbonara');
       
       expect(result).toBeDefined();
       expect(result?.slug).toBe('spaghetti-carbonara');
-      expect(repository.getRecipeBySlug).toHaveBeenCalledWith('spaghetti-carbonara', 'en');
+      expect(repository.getPublishedRecipeBySlug).toHaveBeenCalledWith('spaghetti-carbonara', 'en');
       expect(repository.recipeToCard).toHaveBeenCalledWith(mockRecipe1);
     });
 
     it('returns null when recipe not found', async () => {
-      (repository.getRecipeBySlug as Mock).mockResolvedValue(null);
+      (repository.getPublishedRecipeBySlug as Mock).mockResolvedValue(null);
       
       const result = await service.getRecipeCard('nonexistent');
       
@@ -393,7 +393,7 @@ describe('RecipeService', () => {
     });
 
     it('converts recipe to card correctly', async () => {
-      (repository.getRecipeBySlug as Mock).mockResolvedValue(mockRecipe2);
+      (repository.getPublishedRecipeBySlug as Mock).mockResolvedValue(mockRecipe2);
       
       const result = await service.getRecipeCard('caesar-salad');
       
@@ -476,7 +476,7 @@ describe('RecipeService', () => {
 
   describe('getRelatedRecipes', () => {
     beforeEach(() => {
-      (repository.getRecipeBySlug as Mock).mockImplementation((slug: string) => {
+      (repository.getPublishedRecipeBySlug as Mock).mockImplementation((slug: string) => {
         return Promise.resolve(mockRecipes.find(r => r.slug === slug) || null);
       });
       (repository.getAllRecipeCards as Mock).mockResolvedValue(mockRecipeCards);
@@ -533,7 +533,7 @@ describe('RecipeService', () => {
     });
 
     it('returns empty array when recipe not found', async () => {
-      (repository.getRecipeBySlug as Mock).mockResolvedValue(null);
+      (repository.getPublishedRecipeBySlug as Mock).mockResolvedValue(null);
       
       const result = await service.getRelatedRecipes('nonexistent');
       
@@ -542,7 +542,7 @@ describe('RecipeService', () => {
 
     it('returns empty array when recipe has no tags', async () => {
       const recipeWithoutTags = { ...mockRecipe1, tags: [] };
-      (repository.getRecipeBySlug as Mock).mockResolvedValue(recipeWithoutTags);
+      (repository.getPublishedRecipeBySlug as Mock).mockResolvedValue(recipeWithoutTags);
       
       const result = await service.getRelatedRecipes('spaghetti-carbonara');
       
@@ -554,7 +554,7 @@ describe('RecipeService', () => {
         ...mockRecipe1,
         tags: ['unique-tag-1', 'unique-tag-2'],
       };
-      (repository.getRecipeBySlug as Mock).mockResolvedValue(uniqueRecipe);
+      (repository.getPublishedRecipeBySlug as Mock).mockResolvedValue(uniqueRecipe);
       
       const result = await service.getRelatedRecipes('spaghetti-carbonara');
       

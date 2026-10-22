@@ -6,9 +6,8 @@
  * - Dependency Inversion: Depends on abstractions (UnitConverter)
  */
 
-import type { Recipe } from '@/modules/recipe/domain/types';
 import type { Ingredient } from '@/modules/recipe/domain/types';
-import type { ShoppingItem, IngredientSource } from '../domain/types';
+import type { ShoppingItem, IngredientSource, ShoppingRecipe } from '../domain/types';
 import type { ScaledIngredient } from '@/modules/ingredient/domain/types';
 import { UnitConverter } from './unitConverter';
 import { scaleIngredient } from '@/modules/ingredient/services/scaling';
@@ -48,7 +47,7 @@ export class IngredientAggregator {
    * @param servings Array of serving sizes for each recipe (same order as recipes)
    * @returns Aggregated shopping items sorted alphabetically
    */
-  aggregate(recipes: Recipe[], servings: number[]): ShoppingItem[] {
+  aggregate(recipes: ShoppingRecipe[], servings: number[]): ShoppingItem[] {
     if (recipes.length !== servings.length) {
       throw new Error('Recipes and servings arrays must have the same length');
     }
@@ -70,7 +69,7 @@ export class IngredientAggregator {
    * Extract all ingredients from all recipes and scale them
    */
   private extractAllIngredients(
-    recipes: Recipe[],
+    recipes: ShoppingRecipe[],
     servings: number[]
   ): Array<{
     ingredient: Ingredient;
@@ -80,12 +79,11 @@ export class IngredientAggregator {
 
     recipes.forEach((recipe, index) => {
       const targetServings = servings[index];
-      const originalServings = recipe.servings;
 
       // Handle both simple and component-based recipes
       const ingredients = this.getAllIngredientsFromRecipe(recipe);
 
-      ingredients.forEach((ingredient) => {
+      ingredients.forEach(({ ingredient, originalServings }) => {
         // Scale the ingredient if needed
         let scaledIngredient: Ingredient;
         
@@ -117,19 +115,22 @@ export class IngredientAggregator {
   /**
    * Get all ingredients from a recipe (handles both simple and component-based)
    */
-  private getAllIngredientsFromRecipe(recipe: Recipe): Ingredient[] {
-    const ingredients: Ingredient[] = [];
+  private getAllIngredientsFromRecipe(recipe: ShoppingRecipe): Array<{ ingredient: Ingredient; originalServings: number }> {
+    const ingredients: Array<{ ingredient: Ingredient; originalServings: number }> = [];
 
     // Add top-level ingredients if present
     if (recipe.ingredients && recipe.ingredients.length > 0) {
-      ingredients.push(...recipe.ingredients);
+      ingredients.push(...recipe.ingredients.map(ingredient => ({ ingredient, originalServings: recipe.servings })));
     }
 
     // Add component ingredients if present
     if (recipe.components && recipe.components.length > 0) {
       recipe.components.forEach((component) => {
         if (component.ingredients) {
-          ingredients.push(...component.ingredients);
+          ingredients.push(...component.ingredients.map(ingredient => ({
+            ingredient,
+            originalServings: component.reference?.sourceServings ?? recipe.servings,
+          })));
         }
       });
     }

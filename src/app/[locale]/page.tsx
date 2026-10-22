@@ -15,15 +15,17 @@ type Props = {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: 'meta' });
   const baseUrl = await getBaseUrl();
   const homeUrl = `${baseUrl}/${locale}`;
 
   return {
     title: config.appName,
-    description: config.appDescription,
+    alternates: { canonical: homeUrl },
+    description: t('defaultDescription'),
     openGraph: {
       title: config.appName,
-      description: config.appDescription,
+      description: t('defaultDescription'),
       url: homeUrl,
       siteName: config.appName,
       locale: locale,

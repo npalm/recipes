@@ -83,6 +83,10 @@ const mockRecipes: RecipeCard[] = [
 ];
 
 describe('RecipeSearchIndex', () => {
+  it('finds ingredients that are absent from the title, description, and tags', () => {
+    const index = createSearchIndex([{ ...mockRecipes[0], ingredientNames: ['guanciale'] }]);
+    expect(index.search('guanciale').map(result => result.item.slug)).toEqual(['spaghetti-carbonara']);
+  });
   let searchIndex: RecipeSearchIndex;
 
   beforeEach(() => {

@@ -1,25 +1,12 @@
+import { getTranslations } from 'next-intl/server';
 import { notFound } from 'next/navigation';
-import { getRecipeBySlug } from '@/modules/recipe/repository';
+import { getPublishedRecipeBySlug } from '@/modules/recipe/repository';
 import { DinnerView } from '@/modules/dinner/components/DinnerView';
 import { config } from '@/lib/config';
 import { getBaseUrl } from '@/lib/server-utils';
 import { getVersionedRecipeImageUrl } from '@/lib/server-image-utils';
 
-interface DinnerData {
-  title: string;
-  recipes: string[];
-}
-
-function decodeDinnerData(encoded: string): DinnerData | null {
-  try {
-    // URL-decode first (Next.js might have already done this, but be safe)
-    const urlDecoded = decodeURIComponent(encoded);
-    const decoded = atob(urlDecoded);
-    return JSON.parse(decoded);
-  } catch {
-    return null;
-  }
-}
+import { decodeDinnerData } from '@/modules/dinner/services/encoder';
 
 export default async function DinnerPage({
   params,
@@ -37,7 +24,7 @@ export default async function DinnerPage({
   const recipes = await Promise.all(
     dinnerData.recipes.map(async (slug) => {
       try {
-        return await getRecipeBySlug(slug, locale);
+        return await getPublishedRecipeBySlug(slug, locale);
       } catch {
         return null;
       }
@@ -63,11 +50,12 @@ export async function generateMetadata({
   params: Promise<{ encoded: string; locale: string }>;
 }) {
   const { encoded, locale } = await params;
+  const t = await getTranslations({ locale, namespace: 'dinner' });
   const dinnerData = decodeDinnerData(encoded);
 
   if (!dinnerData) {
     return {
-      title: 'Dinner Plan Not Found',
+      title: t('notFound'),
     };
   }
 
@@ -75,7 +63,7 @@ export async function generateMetadata({
   const recipes = await Promise.all(
     dinnerData.recipes.map(async (slug) => {
       try {
-        return await getRecipeBySlug(slug, locale);
+        return await getPublishedRecipeBySlug(slug, locale);
       } catch {
         return null;
       }
@@ -86,27 +74,25 @@ export async function generateMetadata({
   
   const baseUrl = await getBaseUrl();
   const dinnerUrl = `${baseUrl}/${locale}/dinner/${encoded}`;
-  const title = `${dinnerData.title} - Dinner Plan`;
+  const title = `${dinnerData.title} - ${t('yourPlan')}`;
   
   // Create a rich description with recipe names
   const recipeNames = validRecipes.map(r => r.title).join(', ');
-  const courseText = validRecipes.length === 1 ? 'course' : 'courses';
-  const description = validRecipes.length > 0 
-    ? `A ${validRecipes.length}-${courseText} dinner featuring: ${recipeNames}`
-    : `Dinner plan with ${dinnerData.recipes.length} recipe(s)`;
+  const description = `${t('courseCount', { count: validRecipes.length })}: ${recipeNames}`;
 
   // Use the first recipe's first image for Open Graph with cache busting
   const firstRecipeWithImage = validRecipes.find(r => r.images && r.images.length > 0);
   const ogImage = firstRecipeWithImage
     ? {
         url: `${baseUrl}${getVersionedRecipeImageUrl(firstRecipeWithImage.slug, firstRecipeWithImage.images[0])}`,
-        alt: `${dinnerData.title} dinner menu`,
+        alt: dinnerData.title,
       }
     : undefined;
 
   return {
     title,
     description,
+    robots: { index: false, follow: false },
     openGraph: {
       title: `${title} | ${config.appName}`,
       description,

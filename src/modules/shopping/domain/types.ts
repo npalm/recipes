@@ -1,3 +1,7 @@
+import type { Recipe } from '@/modules/recipe/domain/types';
+
+export type ShoppingRecipe = Pick<Recipe, 'slug' | 'title' | 'servings' | 'ingredients' | 'components'>;
+
 /**
  * Shopping list domain types
  * Follows SOLID principles with clear separation of concerns

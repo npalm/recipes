@@ -107,6 +107,7 @@ export interface RecipeCard {
   slug: string;
   title: string;
   description: string;
+  ingredientNames?: string[];
   difficulty: Difficulty;
   prepTime: number;
   cookTime: number;

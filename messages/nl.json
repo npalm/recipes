@@ -113,7 +113,8 @@
     "decreaseServings": "Verlaag porties",
     "increaseServings": "Verhoog porties",
     "markStepComplete": "Markeer stap {number} als voltooid",
-    "markStepIncomplete": "Markeer stap {number} als niet voltooid"
+    "markStepIncomplete": "Markeer stap {number} als niet voltooid",
+    "metadataServings": "{count} porties"
   },
   "search": {
     "title": "Recepten Zoeken",
@@ -176,7 +177,13 @@
     "createOwn": "Maak je eigen diner",
     "courseCount": "{count} gang(en)",
     "courseNumber": "Gang {number}",
-    "createYourOwnPlan": "Maak Je Eigen Diner Plan"
+    "createYourOwnPlan": "Maak Je Eigen Diner Plan",
+    "defaultTitle": "Mijn diner",
+    "openPlan": "Dinerplan openen",
+    "copied": "Gekopieerd!",
+    "copyLink": "Link kopiëren",
+    "removeRecipe": "{title} verwijderen",
+    "notFound": "Dinerplan niet gevonden"
   },
   "time": {
     "minutes": "{count} min",
@@ -209,5 +216,34 @@
     "dinnerTitle": "Diner Generator - Niek Kookt",
     "searchTitle": "Recepten Zoeken - Niek Kookt",
     "searchDescription": "Zoek en filter recepten op naam, ingrediënten of tags"
+  },
+  "shopping": {
+    "title": "Boodschappenlijst",
+    "generating": "Bezig met maken...",
+    "generateError": "De boodschappenlijst kon niet worden gemaakt. Probeer het opnieuw.",
+    "shareLink": "Link delen",
+    "linkCopied": "Link gekopieerd!",
+    "copied": "Gekopieerd!",
+    "copyList": "Lijst kopiëren",
+    "print": "Afdrukken",
+    "servings": "Porties",
+    "people": "{count, plural, one {# persoon} other {# personen}}",
+    "reset": "Terug naar {count}",
+    "recipes": "Recepten",
+    "original": "origineel: {count} porties",
+    "progress": "{checked} van {total} producten",
+    "removedItems": "Verwijderde producten ({count})",
+    "restore": "Terugzetten",
+    "empty": "Geen producten op de boodschappenlijst",
+    "addRecipes": "Voeg recepten toe om een boodschappenlijst te maken",
+    "allRemoved": "Alle producten zijn verwijderd",
+    "restoreHint": "Zet producten terug via de sectie met verwijderde producten",
+    "from": "Uit",
+    "remove": "Product verwijderen",
+    "removeHint": "Product verwijderen (heb ik op voorraad)",
+    "servingCount": "{count} porties",
+    "generatedBy": "Gemaakt met {name}",
+    "description": "Boodschappenlijst voor {count} recept(en)",
+    "notFound": "Boodschappenlijst niet gevonden"
   }
 }

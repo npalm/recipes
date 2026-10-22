@@ -1,8 +1,7 @@
 import { getRequestConfig } from 'next-intl/server';
 
-export const locales = ['en', 'nl'] as const;
-export const defaultLocale = 'en' as const;
-export type Locale = (typeof locales)[number];
+import { locales, defaultLocale, type Locale } from './routing';
+export { locales, defaultLocale, type Locale } from './routing';
 
 export default getRequestConfig(async ({ requestLocale }) => {
   // `requestLocale` contains the locale that was matched by the proxy

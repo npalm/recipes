@@ -15,6 +15,8 @@ import { resolveComponentReferences } from '@/modules/recipe/services/componentR
  */
 export interface RecipeRepositoryConfig {
   contentDir: string;
+  publishedOnly?: boolean;
+  resolutionStack?: string[];
 }
 
 /**
@@ -62,6 +64,9 @@ export async function getRecipeBySlug(
   locale: string = 'en',
   config = DEFAULT_CONFIG
 ): Promise<Recipe | null> {
+  if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(slug) || !['en', 'nl'].includes(locale)) return null;
+  const resolutionStack = config.resolutionStack ?? [];
+  if (resolutionStack.includes(slug) || resolutionStack.length >= 5) return null;
   const contentDir = config.contentDir;
   const recipePath = path.join(contentDir, slug, `index.${locale}.md`);
 
@@ -72,12 +77,15 @@ export async function getRecipeBySlug(
 
     const content = fs.readFileSync(recipePath, 'utf-8');
     let recipe = parseRecipe(content, slug);
+    if (config.publishedOnly && recipe.status !== 'published') return null;
 
     // Resolve component references if any exist
     if (recipe.components?.some((c) => c.reference)) {
       recipe = await resolveComponentReferences(
         recipe,
-        { getRecipeBySlug: (s, l) => getRecipeBySlug(s, l, config) },
+        { getRecipeBySlug: (s, l) => getRecipeBySlug(s, l, {
+          ...config, resolutionStack: [...resolutionStack, slug],
+        }) },
         { locale }
       );
     }
@@ -122,6 +130,10 @@ export function recipeToCard(recipe: Recipe): RecipeCard {
     slug: recipe.slug,
     title: recipe.title,
     description: recipe.description,
+    ingredientNames: Array.from(new Set([
+      ...recipe.ingredients.map(ingredient => ingredient.name),
+      ...(recipe.components ?? []).flatMap(component => component.ingredients.map(ingredient => ingredient.name)),
+    ])),
     difficulty: recipe.difficulty,
     prepTime: recipe.prepTime,
     cookTime: recipe.cookTime,
@@ -155,6 +167,7 @@ export async function getAllTags(
   const tagSet = new Set<string>();
 
   for (const recipe of recipes) {
+    if (recipe.status !== 'published') continue;
     for (const tag of recipe.tags) {
       tagSet.add(tag);
     }
@@ -181,4 +194,11 @@ export function recipeExists(
   const contentDir = config.contentDir;
   const recipePath = path.join(contentDir, slug, `index.${locale}.md`);
   return fs.existsSync(recipePath);
+}
+
+/** Public routes must never return drafts, even when the slug is known. */
+export async function getPublishedRecipeBySlug(slug: string, locale: string = 'en', config = DEFAULT_CONFIG): Promise<Recipe | null> {
+  if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(slug) || !['en', 'nl'].includes(locale)) return null;
+  const recipe = await getRecipeBySlug(slug, locale, { ...config, publishedOnly: true });
+  return recipe?.status === 'published' ? recipe : null;
 }

@@ -1,7 +1,17 @@
+import { createTranslator } from 'next-intl';
+import enMessages from '../../messages/en.json';
+import nlMessages from '../../messages/nl.json';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { generateMetadata } from '@/app/[locale]/recipe/[slug]/page';
 import type { Recipe } from '@/modules/recipe/domain/types';
 import type { RecipeService } from '@/modules/recipe/services';
+
+vi.mock('next-intl/server', () => ({
+  getRequestConfig: vi.fn(config => config),
+  getTranslations: async ({ locale }: { locale: string }) => createTranslator({ locale, messages: locale === 'nl' ? nlMessages : enMessages }),
+}));
+
+vi.mock('@/navigation', () => ({ Link: () => null }));
 
 // Mock dependencies
 vi.mock('@/modules/recipe/services', () => ({
@@ -121,7 +131,17 @@ describe('Recipe Page - generateMetadata', () => {
     const params = Promise.resolve({ slug: 'non-existent', locale: 'en' });
     const metadata = await generateMetadata({ params });
 
-    expect(metadata.title).toBe('Recipe Not Found');
+    expect(metadata.title).toBe(enMessages.recipe.notFound);
+    expect(metadata.openGraph).toBeUndefined();
+  });
+
+  it('does not expose draft metadata', async () => {
+    const { createRecipeService } = await import('@/modules/recipe/services');
+    vi.mocked(createRecipeService).mockReturnValue({
+      getRecipe: vi.fn().mockResolvedValue({ ...mockRecipe, status: 'draft' }),
+    } as unknown as RecipeService);
+    const metadata = await generateMetadata({ params: Promise.resolve({ slug: mockRecipe.slug, locale: 'nl' }) });
+    expect(metadata.title).toBe(nlMessages.recipe.notFound);
     expect(metadata.openGraph).toBeUndefined();
   });
 

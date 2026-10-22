@@ -6,6 +6,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/button';
 import { ShoppingListEncoder } from '../services/encoder';
 import type { RecipeReference } from '../domain/types';
@@ -27,6 +28,7 @@ export function GenerateShoppingListButton({
   size = 'default',
   className,
 }: GenerateShoppingListButtonProps) {
+  const t = useTranslations('shopping');
   const [isGenerating, setIsGenerating] = useState(false);
 
   const handleGenerate = () => {
@@ -36,7 +38,7 @@ export function GenerateShoppingListButton({
 
     try {
       const encoder = new ShoppingListEncoder();
-      const shoppingListTitle = title || 'Shopping List';
+      const shoppingListTitle = title || t('title');
 
       const url = encoder.generateUrl(
         {
@@ -51,7 +53,7 @@ export function GenerateShoppingListButton({
       window.open(url, '_blank', 'noopener,noreferrer');
     } catch (error) {
       console.error('Failed to generate shopping list:', error);
-      alert('Failed to generate shopping list. Please try again.');
+      alert(t('generateError'));
     } finally {
       setIsGenerating(false);
     }
@@ -67,7 +69,7 @@ export function GenerateShoppingListButton({
       disabled={isDisabled}
       className={className}
     >
-      {isGenerating ? 'Generating...' : 'Shopping List'}
+      {isGenerating ? t('generating') : t('title')}
     </Button>
   );
 }

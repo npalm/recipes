@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useMemo } from 'react';
+import { encodeDinnerData } from '@/modules/dinner/services/encoder';
 import Link from 'next/link';
 import { useTranslations, useLocale } from 'next-intl';
 import { RecipeCard } from '@/modules/recipe/domain';
@@ -42,6 +43,8 @@ export function DinnerPlanner({ recipes }: DinnerPlannerProps) {
   }, [recipes, searchQuery]);
 
   const addRecipe = (recipe: RecipeCard) => {
+    if (selectedRecipes.length >= 30) return;
+    setShareLink('');
     if (selectedRecipes.find((r) => r.slug === recipe.slug)) return;
     
     setSelectedRecipes([
@@ -55,6 +58,7 @@ export function DinnerPlanner({ recipes }: DinnerPlannerProps) {
   };
 
   const removeRecipe = (slug: string) => {
+    setShareLink('');
     setSelectedRecipes(selectedRecipes.filter((r) => r.slug !== slug));
   };
 
@@ -71,6 +75,7 @@ export function DinnerPlanner({ recipes }: DinnerPlannerProps) {
     newRecipes.splice(draggedIndex, 1);
     newRecipes.splice(index, 0, draggedRecipe);
 
+    setShareLink('');
     setSelectedRecipes(newRecipes);
     setDraggedIndex(index);
   };
@@ -81,13 +86,11 @@ export function DinnerPlanner({ recipes }: DinnerPlannerProps) {
 
   const generateShareLink = () => {
     const dinnerData = {
-      title: dinnerTitle || 'My Dinner',
+      title: dinnerTitle.trim() || t('defaultTitle'),
       recipes: selectedRecipes.map((r) => r.slug),
     };
     
-    const encoded = btoa(JSON.stringify(dinnerData));
-    // URL-encode the base64 string to handle special characters like = + /
-    const urlSafe = encodeURIComponent(encoded);
+    const urlSafe = encodeDinnerData(dinnerData);
     const link = `${window.location.origin}/${locale}/dinner/${urlSafe}`;
     setShareLink(link);
   };
@@ -150,7 +153,7 @@ export function DinnerPlanner({ recipes }: DinnerPlannerProps) {
                     <button
                       key={recipe.slug}
                       onClick={() => addRecipe(recipe)}
-                      disabled={selectedRecipes.some((r) => r.slug === recipe.slug)}
+                      disabled={selectedRecipes.length >= 30 || selectedRecipes.some((r) => r.slug === recipe.slug)}
                       className="w-full rounded-md border p-3 text-left transition-colors hover:bg-muted disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                       <div className="font-medium">{recipe.title}</div>
@@ -180,8 +183,9 @@ export function DinnerPlanner({ recipes }: DinnerPlannerProps) {
                   type="text"
                   id="dinner-title"
                   placeholder={t('dinner.dinnerTitlePlaceholder')}
+                  maxLength={200}
                   value={dinnerTitle}
-                  onChange={(e) => setDinnerTitle(e.target.value)}
+                  onChange={(e) => { setDinnerTitle(e.target.value); setShareLink(''); }}
                 />
               </div>
 
@@ -215,6 +219,7 @@ export function DinnerPlanner({ recipes }: DinnerPlannerProps) {
                           </div>
                         </div>
                         <button
+                          aria-label={t('removeRecipe', { title: recipe.title })}
                           onClick={() => removeRecipe(recipe.slug)}
                           className="rounded-md p-1 hover:bg-muted-foreground/20"
                         >
@@ -250,18 +255,18 @@ export function DinnerPlanner({ recipes }: DinnerPlannerProps) {
                       className="flex-1 flex items-center justify-center gap-2 rounded-md border bg-background px-4 py-2 text-sm font-medium hover:bg-muted transition-colors"
                     >
                       <Share2 className="h-4 w-4" />
-                      Click to open dinner plan
+                      {t('openPlan')}
                     </a>
                     <Button onClick={copyToClipboard} variant="outline" size="sm" className="sm:w-auto">
                       {copied ? (
                         <>
                           <Check className="mr-2 h-4 w-4" />
-                          Copied!
+                          {t('copied')}
                         </>
                       ) : (
                         <>
                           <Copy className="mr-2 h-4 w-4" />
-                          Copy Link
+                          {t('copyLink')}
                         </>
                       )}
                     </Button>

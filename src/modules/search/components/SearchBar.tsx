@@ -21,7 +21,7 @@ interface SearchBarProps {
 export function SearchBar({
   initialQuery = '',
   onSearch,
-  placeholder = 'Search recipes...',
+  placeholder,
   autoFocus = false,
 }: SearchBarProps) {
   const t = useTranslations();
@@ -58,6 +58,7 @@ export function SearchBar({
       <Input
         ref={inputRef}
         type="search"
+        aria-label={t('search.placeholder')}
         value={query}
         onChange={(e) => setQuery(e.target.value)}
         placeholder={placeholder || t('search.placeholder')}

@@ -26,10 +26,10 @@ export function formatTime(minutes: number): string {
 /**
  * Format a date string for display
  */
-export function formatDate(dateString: string): string {
+export function formatDate(dateString: string, locale: string = 'en'): string {
   try {
     const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', {
+    return date.toLocaleDateString(locale === 'nl' ? 'nl-NL' : 'en-US', {
       year: 'numeric',
       month: 'long',
       day: 'numeric',

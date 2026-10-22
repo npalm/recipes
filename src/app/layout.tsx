@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { getLocale } from 'next-intl/server';
 import { Geist, Geist_Mono } from 'next/font/google';
 import './globals.css';
 
@@ -28,13 +29,14 @@ const themeScript = `
   })();
 `;
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const locale = await getLocale();
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang={locale} suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
       </head>

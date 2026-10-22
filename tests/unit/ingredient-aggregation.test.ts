@@ -68,6 +68,18 @@ describe('IngredientAggregator', () => {
   });
 
   describe('aggregate', () => {
+    it('scales referenced components from their source serving count', () => {
+      const recipe = {
+        ...mockRecipe1, ingredients: [], servings: 2,
+        components: [{
+          name: 'Sauce', ingredients: [{ raw: '400 g sauce', name: 'sauce', quantity: 400, unit: 'g', scalable: true }],
+          instructions: [],
+          reference: { type: 'recipe' as const, recipeSlug: 'sauce', componentSlug: 'sauce', sourceServings: 4 },
+        }],
+      };
+      expect(aggregator.aggregate([recipe], [2])[0].quantity).toBe(200);
+    });
+
     it('aggregates ingredients from a single recipe', () => {
       const result = aggregator.aggregate([mockRecipe1], [4]);
 

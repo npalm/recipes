@@ -15,6 +15,9 @@ import {
 } from '@/modules/recipe/domain/schemas';
 
 describe('Recipe Domain Schemas', () => {
+  it.each(['javascript:alert(1)', 'data:text/html,test', 'file:///etc/passwd'])('rejects non-HTTP source links: %s', url => {
+    expect(recipeSourceSchema.safeParse({ url }).success).toBe(false);
+  });
   describe('difficultySchema', () => {
     it('accepts valid difficulty values', () => {
       expect(difficultySchema.parse('easy')).toBe('easy');

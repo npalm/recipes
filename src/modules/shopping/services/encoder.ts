@@ -4,6 +4,7 @@
  * Handles encoding and decoding shopping list data to/from URL-safe format
  */
 
+import { encodeSharedData, decodeSharedData } from '@/lib/share-codec';
 import { shoppingListDataSchema } from '../domain/schemas';
 import type { ShoppingListData } from '../domain/types';
 
@@ -22,67 +23,14 @@ export class ShoppingListEncoder {
     // Validate data
     const validated = shoppingListDataSchema.parse(data);
 
-    // Convert to JSON
-    const json = JSON.stringify(validated);
-
-    // Encode to Base64
-    const base64 = this.toBase64(json);
-
-    // Make URL-safe
-    const urlSafe = encodeURIComponent(base64);
-
-    return urlSafe;
+    return encodeSharedData(validated);
   }
 
-  /**
-   * Decode URL parameter to shopping list data
-   * @param encoded URL-safe encoded string
-   * @returns Decoded shopping list data or null if invalid
-   */
   decode(encoded: string): ShoppingListData | null {
     try {
-      // Decode URL encoding
-      const base64 = decodeURIComponent(encoded);
-
-      // Decode Base64
-      const json = this.fromBase64(base64);
-
-      // Parse JSON
-      const data = JSON.parse(json);
-
-      // Validate against schema
-      const validated = shoppingListDataSchema.parse(data);
-
-      return validated;
-    } catch (error) {
-      console.error('Failed to decode shopping list data:', error);
+      return shoppingListDataSchema.parse(decodeSharedData(encoded));
+    } catch {
       return null;
-    }
-  }
-
-  /**
-   * Convert string to Base64 (works in both browser and Node.js)
-   */
-  private toBase64(str: string): string {
-    if (typeof window !== 'undefined') {
-      // Browser environment
-      return btoa(str);
-    } else {
-      // Node.js environment
-      return Buffer.from(str, 'utf-8').toString('base64');
-    }
-  }
-
-  /**
-   * Convert Base64 to string (works in both browser and Node.js)
-   */
-  private fromBase64(base64: string): string {
-    if (typeof window !== 'undefined') {
-      // Browser environment
-      return atob(base64);
-    } else {
-      // Node.js environment
-      return Buffer.from(base64, 'base64').toString('utf-8');
     }
   }
 

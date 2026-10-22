@@ -1,8 +1,8 @@
 'use client';
 
 import { useLocale, useTranslations } from 'next-intl';
-import { useRouter, usePathname } from 'next/navigation';
-import { locales, type Locale } from '@/i18n';
+import { useRouter, usePathname } from '@/navigation';
+import { locales, type Locale } from '@/routing';
 
 export default function LanguageSwitcher() {
   const locale = useLocale();
@@ -11,11 +11,7 @@ export default function LanguageSwitcher() {
   const pathname = usePathname();
 
   const switchLanguage = (newLocale: Locale) => {
-    // Remove the current locale prefix from the pathname
-    const pathnameWithoutLocale = pathname.replace(`/${locale}`, '');
-    
-    // Navigate to the same path with the new locale
-    router.push(`/${newLocale}${pathnameWithoutLocale}`);
+    router.replace(`${pathname}${window.location.search}${window.location.hash}`, { locale: newLocale });
   };
 
   const getLanguageName = (loc: Locale): string => {
@@ -28,6 +24,7 @@ export default function LanguageSwitcher() {
         <button
           key={loc}
           onClick={() => switchLanguage(loc)}
+          aria-pressed={locale === loc}
           className={`px-3 py-1 text-sm font-medium rounded transition-colors ${
             locale === loc
               ? 'bg-blue-600 text-white'

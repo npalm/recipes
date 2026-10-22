@@ -8,8 +8,10 @@ import { z } from 'zod';
 /**
  * Schema for recipe reference in shopping list
  */
+export const recipeSlugSchema = z.string().max(100).regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/);
+
 export const recipeReferenceSchema = z.object({
-  slug: z.string().min(1, 'Recipe slug is required'),
+  slug: recipeSlugSchema,
   servings: z.number().int().min(1).max(100),
 });
 
@@ -18,7 +20,7 @@ export const recipeReferenceSchema = z.object({
  */
 export const shoppingListDataSchema = z.object({
   title: z.string().min(1).max(200),
-  recipes: z.array(recipeReferenceSchema).min(1, 'At least one recipe is required'),
+  recipes: z.array(recipeReferenceSchema).min(1, 'At least one recipe is required').max(30),
 });
 
 /**

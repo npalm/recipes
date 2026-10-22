@@ -1,3 +1,4 @@
+import { getTranslations } from 'next-intl/server';
 import { Metadata } from 'next';
 import { createRecipeService } from '@/modules/recipe/services';
 import { DinnerPlanner } from '@/modules/dinner/components/DinnerPlanner';
@@ -10,15 +11,16 @@ type Props = {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: 'dinner' });
   const baseUrl = await getBaseUrl();
   const plannerUrl = `${baseUrl}/${locale}/dinner/plan`;
 
   return {
-    title: 'Dinner Planner',
-    description: 'Plan your dinners and create shopping lists',
+    title: t('planTitle'),
+    description: t('planDescription'),
     openGraph: {
-      title: `Dinner Planner | ${config.appName}`,
-      description: 'Plan your dinners and create shopping lists',
+      title: `${t('planTitle')} | ${config.appName}`,
+      description: t('planDescription'),
       url: plannerUrl,
       siteName: config.appName,
       locale: locale,

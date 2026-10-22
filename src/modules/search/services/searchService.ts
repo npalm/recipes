@@ -39,6 +39,7 @@ const DEFAULT_FUSE_OPTIONS: IFuseOptions<RecipeCard> = {
     { name: 'title', weight: 2 },
     { name: 'description', weight: 1.5 },
     { name: 'tags', weight: 1 },
+    { name: 'ingredientNames', weight: 1.5 },
   ],
   // Search options
   threshold: 0.4, // Fairly lenient matching
