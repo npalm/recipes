@@ -8,7 +8,7 @@ cookTime: 10
 difficulty: medium
 tags: ["starter", "seafood", "scallops", "spicy"]
 images:
-  - scallops.jpg
+  - scallops-artistic.jpg
 headerImageRotation: true
 createdAt: "2026-01-18"
 ---

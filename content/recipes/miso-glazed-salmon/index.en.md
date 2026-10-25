@@ -8,7 +8,7 @@ cookTime: 10
 difficulty: medium
 tags: ["salmon", "soba", "miso", "wok"]
 images: 
-  - miso-glazed-salmon.jpg
+  - miso-glazed-salmon-artistic.jpg
 createdAt: "2026-10-04"
 ---
 

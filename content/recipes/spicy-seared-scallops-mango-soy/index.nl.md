@@ -8,7 +8,7 @@ cookTime: 0
 difficulty: medium
 tags: ["voorgerecht", "zeevruchten", "coquilles", "pittig"]
 images:
-  - scallops.jpg
+  - scallops-artistic.jpg
 headerImageRotation: true
 createdAt: "2026-01-18"
 ---

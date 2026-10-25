@@ -44,3 +44,7 @@ tools/**/package-lock.json
 *.tsbuildinfo
 next-env.d.ts
 tools/cli/node_modules/
+
+# Local image studio drafts and generation history
+/.local/image-enhancements/
+/.pnpm-store/

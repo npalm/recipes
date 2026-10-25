@@ -7,8 +7,7 @@ prepTime: 0
 cookTime: 0
 difficulty: medium
 tags: ["dessert", "chocolade", "mousse", "pikant"]
-images: 
-  - spicy-white-cholate-mouse.jpg
+images: ["spicy-white-cholate-mouse-enhanced-f3fee15f-9aa7-48dc-8c42-8cd371bee04c.jpg"]
 createdAt: "2026-01-20"
 ---
 

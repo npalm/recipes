@@ -8,7 +8,7 @@ cookTime: 60
 difficulty: medium
 tags: ["wild", "ree", "hoofdgerecht", "sous vide", "gastronomisch"]
 images: 
-  - ree.jpg
+  - ree-artistic.jpg
 headerImageRotation: true
 createdAt: "2026-01-24"
 ---

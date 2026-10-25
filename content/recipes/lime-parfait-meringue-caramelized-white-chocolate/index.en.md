@@ -9,7 +9,7 @@ waitTime: 405
 difficulty: medium
 tags: ["dessert", "lime", "parfait", "meringue", "white chocolate"]
 images: 
-  - lime-parfait.jpg
+  - lime-parfait-artistic.jpg
 headerImageRotation: true
 createdAt: "2026-02-08"
 ---

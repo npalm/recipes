@@ -8,7 +8,7 @@ cookTime: 0
 difficulty: hard
 tags: ["sous vide", "veal", "langoustine", "main course", "gourmet"]
 images: 
-  - veal-cheeks.jpg
+  - veal-cheeks-artistic.jpg
 headerImageRotation: true
 createdAt: "2026-01-18"
 ---

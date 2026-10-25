@@ -7,8 +7,7 @@ prepTime: 20
 cookTime: 5
 difficulty: easy
 tags: ["tonijn", "japans", "voorgerecht", "sashimi", "sesam"]
-images: 
-  - tuna-tetaki.jpg
+images: ["tuna-tetaki-enhanced-b1deb887-5e3f-4f92-9ee2-5ec2cc9ed9c2.jpg"]
 createdAt: "2026-01-20"
 ---
 

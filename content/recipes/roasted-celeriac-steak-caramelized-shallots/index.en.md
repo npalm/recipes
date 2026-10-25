@@ -9,7 +9,7 @@ waitTime: 5
 difficulty: medium
 tags: ["main course", "vegetarian", "celeriac", "mushrooms", "shallots"]
 images: 
-  - celeriac-steak.jpg
+  - celeriac-steak-artistic.jpg
 headerImageRotation: true
 createdAt: "2026-02-08"
 ---

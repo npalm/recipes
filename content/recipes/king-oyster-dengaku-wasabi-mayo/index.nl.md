@@ -7,7 +7,7 @@ prepTime: 20
 cookTime: 45
 difficulty: medium
 tags: ["voorgerecht", "oesterzwam", "sous-vide", "miso", "wasabi", "radijs", "japans"]
-images: ["king-oyster-dengaku.jpg"]
+images: ["king-oyster-dengaku-enhanced-14652544-164b-4ac9-917d-dc2caeb681ec.jpg"]
 headerImageRotation: true
 createdAt: "2026-06-07"
 ---

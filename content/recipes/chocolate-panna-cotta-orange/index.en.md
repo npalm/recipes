@@ -8,8 +8,7 @@ cookTime: 15
 waitTime: 180
 difficulty: medium
 tags: ["dessert", "chocolate", "orange", "panna cotta", "italian"]
-images: 
-  - panna-cotta-chock.jpg
+images: ["panna-cotta-chock-enhanced-271d7eaa-bc60-4106-ad99-d36f9d585f59.jpg"]
 headerImageRotation: true
 createdAt: "2026-01-25"
 ---

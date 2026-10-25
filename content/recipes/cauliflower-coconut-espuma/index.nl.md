@@ -8,7 +8,7 @@ cookTime: 25
 difficulty: medium
 tags: ["voorgerecht", "espuma", "moleculair", "kokos", "bloemkool"]
 images: 
-  - bloemkool.jpg
+  - bloemkool-artistic.jpg
 headerImageRotation: true
 createdAt: "2026-01-25"
 ---

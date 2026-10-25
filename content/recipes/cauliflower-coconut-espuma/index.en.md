@@ -8,7 +8,7 @@ cookTime: 25
 difficulty: medium
 tags: ["starter", "espuma", "molecular", "coconut", "cauliflower"]
 images: 
-  - bloemkool.jpg
+  - bloemkool-artistic.jpg
 headerImageRotation: true
 createdAt: "2026-01-25"
 ---
