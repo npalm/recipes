@@ -105,7 +105,7 @@ export function RecipeDetail({ recipe, locale, imageCrop }: RecipeDetailProps) {
                   <span className="ml-1">{difficulty.label}</span>
                 </Badge>
               </div>
-              <h1 className="text-3xl font-bold tracking-tight md:text-4xl lg:text-5xl">
+              <h1 className="font-display text-[1.875rem] font-semibold leading-[1.15] tracking-[-0.035em] md:text-[2.5rem] lg:text-[2.75rem]">
                 {recipe.title}
               </h1>
             </div>

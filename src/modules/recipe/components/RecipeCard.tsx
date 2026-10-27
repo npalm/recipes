@@ -86,7 +86,7 @@ export function RecipeCard({ recipe }: RecipeCardProps) {
             {recipe.images.length > 1 && <span className="ml-auto inline-flex items-center gap-1.5" aria-label={t('recipe.photosCount', { count: recipe.images.length })}><Images className="h-3.5 w-3.5" aria-hidden="true" />{recipe.images.length}</span>}
           </div>
           {/* Title */}
-          <h3 className="mb-2 text-base font-semibold leading-snug tracking-tight transition-colors group-hover:text-primary sm:text-lg">
+          <h3 className="mb-2 font-display text-lg font-semibold leading-[1.3] tracking-[-0.025em] transition-colors group-hover:text-primary sm:text-xl">
             {recipe.title}
           </h3>
 

@@ -41,7 +41,7 @@ export function HomeCarousel({ slides, locale, initialIndex = 0 }: { slides: Hom
           <p className="mb-4 flex items-center gap-3 text-[11px] font-medium uppercase tracking-[0.2em] text-white/80">
             <span className="h-px w-7 bg-primary" aria-hidden="true" />{t('featuredRecipes')}
           </p>
-          <h1 className="mb-6 text-[1.75rem] leading-[1.14] font-medium tracking-tight text-white sm:text-4xl lg:text-[2.75rem]">{slide.title}</h1>
+          <h1 className="mb-6 font-display text-[1.875rem] font-semibold leading-[1.15] tracking-[-0.035em] text-white sm:text-[2.5rem] lg:text-[2.75rem]">{slide.title}</h1>
           <Link className="inline-flex min-h-11 items-center gap-3 border-b border-white/60 pb-1 text-sm font-medium text-white transition-colors hover:border-primary hover:text-primary focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
             href={`/${locale}/recipe/${slide.slug}`}>{t('viewRecipe')}<ArrowRight className="h-4 w-4" /></Link>
         </div>

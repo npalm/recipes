@@ -57,7 +57,7 @@ export default async function HomePage({ params }: Props) {
             <Sparkles className="h-4 w-4" />
             {t('home.personalCollection')}
           </div>
-          <h1 className="mb-4 text-4xl font-bold tracking-tight md:text-5xl lg:text-6xl">
+          <h1 className="mb-4 font-display text-4xl font-semibold leading-[1.1] tracking-tight md:text-5xl lg:text-6xl">
             {t('home.myRecipes')}
           </h1>
           <p className="mb-8 max-w-2xl text-lg text-muted-foreground md:text-xl">
@@ -101,7 +101,7 @@ export default async function HomePage({ params }: Props) {
       {/* Recipes Section */}
       <section>
         <div className="mb-6 flex items-center justify-between">
-          <h2 className="text-2xl font-semibold tracking-tight">{t('home.latestRecipes')}</h2>
+          <h2 className="font-display text-[1.75rem] font-semibold leading-tight tracking-tight sm:text-3xl">{t('home.latestRecipes')}</h2>
           <Button variant="ghost" size="sm" asChild>
             <Link href={`/${locale}/search`}>{t('home.viewAll')}</Link>
           </Button>
