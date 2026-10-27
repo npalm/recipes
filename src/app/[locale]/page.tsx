@@ -1,3 +1,4 @@
+import { randomInt } from 'node:crypto';
 import Link from 'next/link';
 import { getTranslations } from 'next-intl/server';
 import { Metadata } from 'next';
@@ -7,6 +8,8 @@ import { RecipeGrid } from '@/modules/recipe/components';
 import { Button } from '@/components/ui/button';
 import { createRecipeService } from '@/modules/recipe/services';
 import { config } from '@/lib/config';
+import { HomeCarousel } from '@/modules/recipe/components/HomeCarousel';
+import { getHomeHighlights } from '@/lib/home-highlights';
 import { getBaseUrl } from '@/lib/server-utils';
 
 type Props = {
@@ -43,9 +46,11 @@ export default async function HomePage({ params }: Props) {
     { field: 'createdAt', direction: 'desc' }
   );
 
+  const highlights = await getHomeHighlights(recipes);
+
   return (
     <Layout>
-      {/* Hero Section */}
+      {highlights.length > 0 ? <HomeCarousel key={JSON.stringify(highlights)} slides={highlights} locale={locale} initialIndex={randomInt(highlights.length)} /> : (
       <section className="relative mb-12 overflow-hidden rounded-3xl bg-gradient-to-br from-primary/10 via-primary/5 to-background p-8 md:p-12">
         <div className="relative z-10">
           <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-primary/10 px-3 py-1 text-sm font-medium text-primary">
@@ -72,6 +77,7 @@ export default async function HomePage({ params }: Props) {
         <div className="absolute -right-20 -top-20 h-64 w-64 rounded-full bg-primary/10 blur-3xl" />
         <div className="absolute -bottom-32 -left-32 h-96 w-96 rounded-full bg-primary/5 blur-3xl" />
       </section>
+      )}
 
       {/* Stats Section (if recipes exist) */}
       {recipes.length > 0 && (

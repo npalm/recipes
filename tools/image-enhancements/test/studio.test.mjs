@@ -214,24 +214,23 @@ test('browser interface loads originals, creates a variant and selects it withou
   assert.equal(document.getElementById('preview-label').textContent, 'Fotocorrectie');
   assert.equal((await library.photo(originalId)).active, 'original.png');
   assert.equal(document.getElementById('apply').disabled, false);
-  // Preview the chosen variant's card crop without applying or generating again.
+  // Preview the chosen variant in both site frames without applying or generating again.
   const selectedSource = document.getElementById('preview-image').src;
   const previewMode = document.getElementById('preview-mode');
   previewMode.value = 'card';
   previewMode.dispatchEvent(new dom.window.Event('change', { bubbles: true }));
   assert.ok(document.getElementById('photo-comparison').classList.contains('site-card-preview'));
   assert.equal(document.getElementById('zoom').disabled, true);
-  assert.equal(document.getElementById('card-hover-control').hidden, false);
-  const hover = document.getElementById('card-hover'); hover.checked = true;
-  hover.dispatchEvent(new dom.window.Event('change', { bubbles: true }));
-  assert.ok(document.getElementById('photo-comparison').classList.contains('site-card-hover'));
+  previewMode.value = 'hero';
+  previewMode.dispatchEvent(new dom.window.Event('change', { bubbles: true }));
+  assert.ok(document.getElementById('photo-comparison').classList.contains('site-hero-preview'));
   assert.equal(document.getElementById('preview-image').src, selectedSource);
   assert.equal((await library.photo(originalId)).active, 'original.png');
   assert.equal((await library.jobs()).length, 1);
   previewMode.value = 'full';
   previewMode.dispatchEvent(new dom.window.Event('change', { bubbles: true }));
   assert.ok(!document.getElementById('photo-comparison').classList.contains('site-card-preview'));
-  assert.ok(!document.getElementById('photo-comparison').classList.contains('site-card-hover'));
+  assert.ok(!document.getElementById('photo-comparison').classList.contains('site-hero-preview'));
   assert.equal(document.getElementById('zoom').disabled, false);
   const codexRadio = document.querySelector('input[value=codex]'); codexRadio.checked = true;
   codexRadio.dispatchEvent(new dom.window.Event('input', { bubbles: true }));
@@ -239,6 +238,14 @@ test('browser interface loads originals, creates a variant and selects it withou
   instructions.dispatchEvent(new dom.window.Event('input', { bubbles: true }));
   assert.ok(document.getElementById('prompt-preview').textContent.includes('Bewaar de rumfles.'));
   assert.equal(document.getElementById('ai-options').hidden, false);
+  document.getElementById('add-gallery').click();
+  const addedDeadline = Date.now() + 5000;
+  while (!document.getElementById('add-gallery').disabled && Date.now() < addedDeadline) await new Promise(resolve => setTimeout(resolve, 20));
+  while ((await library.photo(originalId)).gallery.length < 3 && Date.now() < addedDeadline) await new Promise(resolve => setTimeout(resolve, 20));
+  while (document.querySelectorAll('.gallery-item').length < 3 && Date.now() < addedDeadline) await new Promise(resolve => setTimeout(resolve, 20));
+  assert.equal(document.querySelectorAll('.gallery-item').length, 3);
+  assert.equal((await library.photo(originalId)).active, 'original.png');
+  assert.equal(document.getElementById('add-gallery').disabled, true);
 });
 
 test('URL restores photo, variant and crop after reload and supports browser history', async t => {
@@ -257,17 +264,17 @@ test('URL restores photo, variant and crop after reload and supports browser his
     return dom;
   };
   const url = new URL(origin);
-  url.search = new URLSearchParams({ photo: originalId, variant: `job:${job.id}`, view: 'card', hover: '1' });
+  url.search = new URLSearchParams({ photo: originalId, variant: `job:${job.id}`, view: 'hero' });
   const first = await open(url.href);
   const { document } = first.window;
   assert.equal(document.getElementById('photo-filename').textContent, 'original.png');
   assert.equal(document.getElementById('preview-label').textContent, 'Fotocorrectie');
-  assert.equal(document.getElementById('preview-mode').value, 'card');
-  assert.ok(document.getElementById('photo-comparison').classList.contains('site-card-hover'));
+  assert.equal(document.getElementById('preview-mode').value, 'hero');
+  assert.ok(document.getElementById('photo-comparison').classList.contains('site-hero-preview'));
   const selectedSource = document.getElementById('preview-image').src;
   const reloaded = await open(first.window.location.href);
   assert.equal(reloaded.window.document.getElementById('preview-image').src, selectedSource);
-  assert.equal(reloaded.window.document.getElementById('preview-mode').value, 'card');
+  assert.equal(reloaded.window.document.getElementById('preview-mode').value, 'hero');
   document.querySelector('.variant-card').click();
   assert.equal(new URL(first.window.location.href).searchParams.get('variant'), originalId);
   const back = new Promise(resolve => first.window.addEventListener('popstate', resolve, { once: true }));
@@ -283,4 +290,406 @@ test('URL restores photo, variant and crop after reload and supports browser his
   assert.equal(missingVariant.window.document.getElementById('preview-label').textContent, 'Origineel');
   assert.equal((await library.photo(originalId)).active, 'original.png');
   assert.equal((await library.jobs()).length, 1);
+});
+
+test('gallery additions, hero choice, ordering and removal persist in all locales without deleting files', async t => {
+  const { library, dir, original } = await fixture(t);
+  const queue = new JobQueue(library); t.after(() => queue.stop());
+  const before = await fs.readFile(original);
+  const [job] = await queue.enqueue(request()); await finished(library, [job.id]);
+  const added = await library.gallery({ photoId: originalId, action: 'add', imageId: `job:${job.id}` });
+  assert.equal(added.locales, 2);
+  assert.deepEqual(added.images, ['original.png', 'extra.png', added.filename]);
+  await library.gallery({ photoId: originalId, action: 'add', imageId: `job:${job.id}` });
+  assert.equal((await library.photo(originalId)).gallery.length, 3);
+  const moved = await library.gallery({ photoId: originalId, action: 'move', filename: added.filename, direction: -1 });
+  assert.deepEqual(moved.images, ['original.png', added.filename, 'extra.png']);
+  const promoted = await library.gallery({ photoId: originalId, action: 'hero', filename: added.filename });
+  assert.deepEqual(promoted.images, [added.filename, 'original.png', 'extra.png']);
+  const changed = await library.gallery({ photoId: originalId, action: 'remove', filename: added.filename });
+  assert.deepEqual(changed.images, ['original.png', 'extra.png']);
+  await fs.access(path.join(dir, 'images', added.filename));
+  assert.deepEqual(await fs.readFile(original), before);
+  for (const locale of ['nl', 'en']) {
+    const content = await fs.readFile(path.join(dir, `index.${locale}.md`), 'utf8');
+    assert.deepEqual(matter(content).data.images, ['original.png', 'extra.png']);
+    assert.ok(content.endsWith('\n\nLaat de recepttekst exact staan.\n'));
+  }
+  await library.gallery({ photoId: originalId, action: 'remove', filename: 'extra.png' });
+  await assert.rejects(library.gallery({ photoId: originalId, action: 'remove', filename: 'original.png' }), /minstens/);
+  await assert.rejects(library.gallery({ photoId: originalId, action: 'hero', filename: '../outside.png' }), /niet in deze galerij/);
+  await assert.rejects(library.gallery({ photoId: originalId, action: 'move', filename: 'original.png', direction: 1 }), /niet verder/);
+  await assert.rejects(library.gallery({ photoId: originalId, action: 'move', filename: 'original.png', direction: 12 }), /Ongeldige/);
+  assert.equal((await library.photo(originalId)).active, 'original.png');
+});
+
+test('gallery endpoint requires a token and rejects unrelated image references', async t => {
+  const { post, library } = await runningStudio(t);
+  assert.equal((await post('/api/gallery', { photoId: originalId, action: 'remove', filename: 'extra.png' }, { 'X-Studio-Token': 'wrong' })).status, 403);
+  assert.equal((await post('/api/gallery', { photoId: originalId, action: 'add', imageId: 'mousse/extra.png' })).status, 400);
+  const response = await post('/api/gallery', { photoId: originalId, action: 'hero', filename: 'extra.png' });
+  assert.equal(response.status, 200);
+  assert.deepEqual((await response.json()).images, ['extra.png', 'original.png']);
+  assert.equal((await library.photo(originalId)).active, 'extra.png');
+});
+
+test('homepage highlights persist variant files independently of recipe galleries and support ordering/removal', async t => {
+  const { library, dir, root } = await fixture(t);
+  const before = await fs.readFile(path.join(dir, 'index.nl.md'));
+  const queue = new JobQueue(library); t.after(() => queue.stop());
+  const [job] = await queue.enqueue(request()); await finished(library, [job.id]);
+  const added = await library.highlights({ action: 'add', photoId: originalId, imageId: `job:${job.id}` });
+  const first = added.slides[0];
+  assert.match(first.filename, /^original-enhanced-/);
+  await fs.access(path.join(dir, 'images', first.filename));
+  await library.highlights({ action: 'add', photoId: originalId, imageId: `job:${job.id}` });
+  assert.equal((await library.readHighlights()).length, 1);
+  await library.highlights({ action: 'add', photoId: originalId, imageId: originalId });
+  const moved = await library.highlights({ action: 'move', ...first, direction: 1 });
+  assert.equal(moved.slides[0].filename, 'original.png');
+  await assert.rejects(library.highlights({ action: 'move', ...first, direction: 1 }), /niet verder/);
+  const reopened = new Library(root, path.join(root, '.new-history'));
+  assert.deepEqual(await reopened.readHighlights(), moved.slides);
+  assert.equal((await reopened.catalog()).highlights[1].title, 'Mousse & rum');
+  await library.highlights({ action: 'remove', ...first });
+  await fs.access(path.join(dir, 'images', first.filename));
+  assert.deepEqual(await fs.readFile(path.join(dir, 'index.nl.md')), before);
+
+  for (let i = 0; i < 4; i++) {
+    await fs.copyFile(path.join(dir, 'images/original.png'), path.join(dir, `images/extra-${i}.png`));
+    await library.highlights({ action: 'add', photoId: `mousse/extra-${i}.png`, imageId: `mousse/extra-${i}.png` });
+  }
+  await assert.rejects(library.highlights({ action: 'add', photoId: 'mousse/extra.png', imageId: 'mousse/extra.png' }), /maximaal vijf/);
+  await assert.rejects(library.highlights({ action: 'remove', slug: 'mousse', filename: '../private.png' }), /niet in/);
+  await fs.writeFile(path.join(dir, 'index.nl.md'), (await fs.readFile(path.join(dir, 'index.nl.md'), 'utf8')).replace('slug: mousse', 'slug: mousse\nstatus: draft'));
+  await assert.rejects(library.highlights({ action: 'add', photoId: originalId, imageId: originalId }), /Publiceer/);
+});
+
+test('homepage editor can select, reorder and remove highlights with authenticated endpoints', async t => {
+  const { origin, post, library } = await runningStudio(t);
+  assert.equal((await post('/api/highlights', { action: 'add', photoId: originalId, imageId: originalId }, { 'X-Studio-Token': 'wrong' })).status, 403);
+  assert.equal((await post('/api/highlights', { action: 'add', photoId: originalId, imageId: 'mousse/extra.png' })).status, 400);
+  const dom = new JSDOM(await (await fetch(origin + '/')).text(), { url: origin + '/?photo=' + encodeURIComponent(originalId), runScripts: 'outside-only' });
+  t.after(() => dom.window.close());
+  dom.window.fetch = (url, options) => fetch(new URL(url, origin), options);
+  dom.window.sharedBuildPrompt = buildPrompt;
+  const source = await fs.readFile(fileURLToPath(new URL('../public/app.js', import.meta.url)), 'utf8');
+  await dom.window.eval(`(async () => { ${source.replace("import { buildPrompt } from '/prompts.mjs';", 'const buildPrompt = window.sharedBuildPrompt;')} })()`);
+  const doc = dom.window.document;
+  doc.getElementById('add-highlight').click();
+  const waitFor = async predicate => {
+    const deadline = Date.now() + 3000;
+    while (!predicate() && Date.now() < deadline) await new Promise(resolve => setTimeout(resolve, 20));
+    assert.ok(predicate());
+  };
+  await waitFor(() => doc.getElementById('highlight-count').textContent === '1 / 5 foto’s' && doc.getElementById('add-highlight').disabled);
+  assert.equal((await library.readHighlights())[0].filename, 'original.png');
+  const second = await post('/api/highlights', { action: 'add', photoId: 'mousse/extra.png', imageId: 'mousse/extra.png' });
+  assert.equal(second.status, 200);
+  const moved = await post('/api/highlights', { action: 'move', slug: 'mousse', filename: 'extra.png', direction: -1 });
+  assert.equal((await moved.json()).slides[0].filename, 'extra.png');
+  doc.querySelector('#highlights button[aria-label^="Uit carousel verwijderen"]').click();
+  await waitFor(() => doc.getElementById('highlight-count').textContent === '1 / 5 foto’s' && !doc.getElementById('add-highlight').disabled);
+  assert.deepEqual((await library.readHighlights()).map(s => s.filename), ['extra.png']);
+});
+
+test('desktop carousel position survives reload and reordering and resets without touching photo bytes or recipe metadata', async t => {
+  const { library, root, dir, original } = await fixture(t);
+  const imageBefore = await fs.readFile(original);
+  const recipeBefore = await fs.readFile(path.join(dir, 'index.nl.md'));
+  await library.highlights({ action: 'add', photoId: originalId, imageId: originalId });
+  await library.highlights({ action: 'add', photoId: 'mousse/extra.png', imageId: 'mousse/extra.png' });
+  const reference = { slug: 'mousse', filename: 'original.png' };
+  await library.highlights({ action: 'position', ...reference, desktopPosition: { x: 25, y: 80 } });
+  await library.highlights({ action: 'move', ...reference, direction: 1 });
+  assert.deepEqual((await new Library(root).readHighlights())[1].desktopPosition, { x: 25, y: 80 });
+  for (const desktopPosition of [{ x: -1, y: 0 }, { x: 50, y: 101 }, { x: '50', y: 50 }, { x: 0 }, undefined]) {
+    await assert.rejects(library.highlights({ action: 'position', ...reference, desktopPosition }), /Ongeldige desktopuitsnede/);
+  }
+  assert.deepEqual(await fs.readFile(original), imageBefore);
+  assert.deepEqual(await fs.readFile(path.join(dir, 'index.nl.md')), recipeBefore);
+  await library.highlights({ action: 'position', ...reference, desktopPosition: null });
+  assert.equal((await library.readHighlights())[1].desktopPosition, undefined);
+});
+
+test('card crops are per active photo, preserve originals and carousel, and can be reset', async t => {
+  const { library, dir, root, original } = await fixture(t);
+  const imageBefore = await fs.readFile(original);
+  const recipeBefore = await fs.readFile(path.join(dir, 'index.nl.md'));
+  await library.highlights({ action: 'add', photoId: originalId, imageId: originalId });
+  const highlightsBefore = await library.readHighlights();
+  const crop = { ratio: '4:3', x: 20, y: 70, zoom: 1.5 };
+  await library.cardCrop({ photoId: originalId, filename: 'original.png', crop });
+  const reopened = new Library(root);
+  assert.deepEqual((await reopened.photo(originalId)).cardCrop, { slug: 'mousse', filename: 'original.png', ...crop });
+  assert.deepEqual(await library.readHighlights(), highlightsBefore);
+  assert.deepEqual(await fs.readFile(original), imageBefore);
+  assert.deepEqual(await fs.readFile(path.join(dir, 'index.nl.md')), recipeBefore);
+  for (const invalid of [{ ...crop, ratio: 'bad' }, { ...crop, x: -1 }, { ...crop, zoom: 0.5 }, { ...crop, zoom: 20 }]) await assert.rejects(library.cardCrop({ photoId: originalId, filename: 'original.png', crop: invalid }), /Ongeldige/);
+  await assert.rejects(library.cardCrop({ photoId: originalId, filename: '../private.png', crop }), /hoofdfoto is gewijzigd/);
+  await library.gallery({ photoId: originalId, action: 'hero', filename: 'extra.png' });
+  assert.equal((await library.photo(originalId)).cardCrop, null);
+  await library.gallery({ photoId: originalId, action: 'hero', filename: 'original.png' });
+  assert.equal((await library.photo(originalId)).cardCrop.zoom, 1.5);
+  await library.cardCrop({ photoId: originalId, filename: 'original.png', crop: null });
+  assert.equal((await reopened.photo(originalId)).cardCrop, null);
+});
+
+test('card crop endpoints require a token and retain carousel zoom through reordering', async t => {
+  const { post, library } = await runningStudio(t);
+  const body = { photoId: originalId, filename: 'original.png', crop: { ratio: '1:1', x: 50, y: 50, zoom: 2 } };
+  assert.equal((await post('/api/card-crop', body, { 'X-Studio-Token': 'wrong' })).status, 403);
+  assert.equal((await post('/api/card-crop', body)).status, 200);
+  assert.equal((await library.photo(originalId)).cardCrop.zoom, 2);
+  await library.highlights({ action: 'add', photoId: originalId, imageId: originalId });
+  await library.highlights({ action: 'add', photoId: 'mousse/extra.png', imageId: 'mousse/extra.png' });
+  const reference = { slug: 'mousse', filename: 'original.png' };
+  await library.highlights({ action: 'position', ...reference, desktopPosition: { x: 20, y: 30, zoom: 2 } });
+  await library.highlights({ action: 'move', ...reference, direction: 1 });
+  assert.equal((await library.readHighlights())[1].desktopPosition.zoom, 2);
+  await assert.rejects(library.highlights({ action: 'position', ...reference, desktopPosition: { x: 20, y: 30, zoom: 5 } }), /Ongeldige/);
+});
+
+test('crop dialogs close after saving, recover an expired token and show failures inside the dialog', async t => {
+  const { origin, library } = await runningStudio(t);
+  await library.highlights({ action: 'add', photoId: originalId, imageId: originalId });
+  const dom = new JSDOM(await (await fetch(origin + '/')).text(), { url: origin + '/?photo=' + encodeURIComponent(originalId), runScripts: 'outside-only' });
+  t.after(() => dom.window.close());
+  dom.window.HTMLDialogElement.prototype.showModal = function () { this.open = true; };
+  dom.window.HTMLDialogElement.prototype.close = function () { this.open = false; };
+  dom.window.HTMLElement.prototype.scrollIntoView = function () {};
+  let expired = true; let fail = false; let configRequests = 0;
+  dom.window.fetch = (url, options) => {
+    if (url === '/api/config') configRequests++;
+    if (url === '/api/card-crop' && expired) { expired = false; return Promise.resolve(Response.json({ error: 'Ververs de pagina om opnieuw te verbinden.' }, { status: 403 })); }
+    if (url === '/api/card-crop' && fail) return Promise.resolve(Response.json({ error: 'Opslaan mislukt — probeer opnieuw.' }, { status: 400 }));
+    return fetch(new URL(url, origin), options);
+  };
+  dom.window.sharedBuildPrompt = buildPrompt;
+  const source = await fs.readFile(fileURLToPath(new URL('../public/app.js', import.meta.url)), 'utf8');
+  await dom.window.eval(`(async () => { ${source.replace("import { buildPrompt } from '/prompts.mjs';", 'const buildPrompt = window.sharedBuildPrompt;')} })()`);
+  const doc = dom.window.document;
+  const waitFor = async predicate => {
+    const deadline = Date.now() + 3000;
+    while (!predicate() && Date.now() < deadline) await new Promise(resolve => setTimeout(resolve, 20));
+    assert.ok(predicate());
+  };
+  doc.getElementById('card-crop').click();
+  assert.ok(doc.getElementById('crop-dialog').open);
+  doc.getElementById('crop-save').click();
+  await waitFor(() => !doc.getElementById('crop-dialog').open && !doc.getElementById('crop-save').disabled);
+  assert.equal(configRequests, 2);
+  assert.ok((await library.photo(originalId)).cardCrop);
+  const highlightButton = () => doc.querySelector('#highlights button[aria-label^="Carouseluitsnede"]');
+  assert.equal(highlightButton().disabled, false);
+
+  fail = true;
+  doc.getElementById('card-crop').click(); doc.getElementById('crop-save').click();
+  await waitFor(() => !doc.getElementById('crop-error').hidden && !doc.getElementById('crop-save').disabled);
+  assert.ok(doc.getElementById('crop-dialog').open);
+  assert.match(doc.getElementById('crop-error').textContent, /Opslaan mislukt/);
+  fail = false; doc.getElementById('crop-save').click();
+  await waitFor(() => !doc.getElementById('crop-dialog').open && !doc.getElementById('crop-save').disabled);
+  highlightButton().click();
+  doc.getElementById('crop-zoom-in').click();
+  doc.getElementById('crop-save').click();
+  await waitFor(() => !doc.getElementById('crop-dialog').open && !doc.getElementById('crop-save').disabled);
+  assert.equal((await library.readHighlights())[0].desktopPosition.zoom, 1.15);
+  const cardBefore = (await library.photo(originalId)).cardCrop;
+  doc.getElementById('preview-mode').value = 'hero';
+  doc.getElementById('preview-mode').dispatchEvent(new dom.window.Event('change'));
+  assert.equal(doc.getElementById('card-crop').textContent, 'Receptuitsnede — grote foto');
+  doc.getElementById('card-crop').click();
+  assert.match(doc.getElementById('crop-eyebrow').textContent, /RECEPTUITSNEDE/);
+  doc.getElementById('crop-save').click();
+  await waitFor(() => !doc.getElementById('crop-dialog').open && !doc.getElementById('crop-save').disabled);
+  assert.ok((await library.photo(originalId)).recipeCrop);
+  assert.deepEqual((await library.photo(originalId)).cardCrop, cardBefore);
+});
+
+test('free card ratios and their unlocked mode survive saving and reject invalid ratios', async t => {
+  const { library } = await fixture(t);
+  const crop = { ratio: '0.563721:1', x: 30, y: 40, zoom: 1.2, free: true };
+  await library.cardCrop({ photoId: originalId, filename: 'original.png', crop });
+  const saved = (await library.photo(originalId)).cardCrop;
+  assert.equal(saved.ratio, crop.ratio); assert.equal(saved.free, true);
+  for (const ratio of ['0:1', '1:0', '-1:1', 'auto', '1 / 1', 'NaN:1', '1:1;background:red']) {
+    await assert.rejects(library.cardCrop({ photoId: originalId, filename: 'original.png', crop: { ...crop, ratio } }), /Ongeldige/);
+  }
+  assert.equal((await library.photo(originalId)).cardCrop.ratio, crop.ratio);
+});
+
+test('recipe crops are independent of card and carousel crops and bind to the active recipe photo', async t => {
+  const { post, library, dir } = await runningStudio(t);
+  const before = await fs.readFile(path.join(dir, 'index.nl.md'));
+  const crop = { ratio: '0.7:1', x: 30, y: 60, zoom: 1.3, free: true };
+  const reference = { photoId: originalId, filename: 'original.png' };
+  await library.cardCrop({ ...reference, crop: { ...crop, ratio: '4:3' } });
+  assert.equal((await post('/api/recipe-crop', { ...reference, crop }, { 'X-Studio-Token': 'bad' })).status, 403);
+  assert.equal((await post('/api/recipe-crop', { ...reference, crop })).status, 200);
+  const photo = await library.photo(originalId);
+  assert.equal(photo.recipeCrop.ratio, '0.7:1');
+  assert.equal(photo.cardCrop.ratio, '4:3');
+  assert.equal((await library.readHighlights()).length, 0);
+  assert.deepEqual(await fs.readFile(path.join(dir, 'index.nl.md')), before);
+  await library.gallery({ photoId: originalId, action: 'hero', filename: 'extra.png' });
+  assert.equal((await library.photo(originalId)).recipeCrop, null);
+  await library.gallery({ photoId: originalId, action: 'hero', filename: 'original.png' });
+  await library.recipeCrop({ ...reference, crop: null });
+  assert.equal((await library.photo(originalId)).recipeCrop, null);
+  assert.equal((await library.photo(originalId)).cardCrop.ratio, '4:3');
+});
+
+test('cropping an unselected site variant stores its own crop without changing the site photo', async t => {
+  const { origin, library, queue } = await runningStudio(t);
+  const [job] = await queue.enqueue(request()); await finished(library, [job.id]);
+  const before = (await library.photo(originalId)).active;
+  const url = origin + '/?' + new URLSearchParams({ photo: originalId, variant: `job:${job.id}`, view: 'hero' });
+  const dom = new JSDOM(await (await fetch(origin + '/')).text(), { url, runScripts: 'outside-only' });
+  t.after(() => dom.window.close());
+  dom.window.HTMLDialogElement.prototype.showModal = function () { this.open = true; };
+  dom.window.HTMLDialogElement.prototype.close = function () { this.open = false; };
+  dom.window.fetch = (url, options) => fetch(new URL(url, origin), options);
+  dom.window.sharedBuildPrompt = buildPrompt;
+  const source = await fs.readFile(fileURLToPath(new URL('../public/app.js', import.meta.url)), 'utf8');
+  await dom.window.eval(`(async () => { ${source.replace("import { buildPrompt } from '/prompts.mjs';", 'const buildPrompt = window.sharedBuildPrompt;')} })()`);
+  const doc = dom.window.document;
+  doc.getElementById('card-crop').click();
+  assert.equal(new URL(doc.getElementById('crop-image').src).searchParams.get('id'), `job:${job.id}`);
+  doc.getElementById('crop-save').click();
+  const deadline = Date.now() + 3000;
+  while ((doc.getElementById('crop-dialog').open || doc.getElementById('crop-save').disabled) && Date.now() < deadline) await new Promise(resolve => setTimeout(resolve, 20));
+  assert.equal(doc.getElementById('crop-dialog').open, false);
+  const photo = await library.photo(originalId);
+  assert.equal(photo.active, before);
+  assert.equal(photo.recipeCrop, null);
+  const exported = photo.variants.find(v => v.id === `job:${job.id}`).appliedFilename;
+  assert.equal(photo.crops.recipe[0].filename, exported);
+  assert.match(doc.getElementById('toast').textContent, /geselecteerde variant/);
+  assert.equal(doc.querySelector('.variant-delete').disabled, false);
+  await library.apply(originalId, `job:${job.id}`);
+  assert.equal((await library.photo(originalId)).recipeCrop.filename, exported);
+});
+
+test('deleting an unused generated variant archives its job and exported copy while preserving originals', async t => {
+  const { library, original, dir } = await fixture(t);
+  const before = await fs.readFile(original);
+  const queue = new JobQueue(library); t.after(() => queue.stop());
+  const [job] = await queue.enqueue(request()); await finished(library, [job.id]);
+  const saved = await library.cardCrop({ photoId: originalId, imageId: `job:${job.id}`, crop: { ratio: '4:3', x: 50, y: 40 } });
+  const output = await fs.readFile((await library.image(`job:${job.id}`)).file);
+  const result = await library.deleteVariant({ photoId: originalId, imageId: `job:${job.id}` });
+  assert.equal(result.deleted, true);
+  assert.equal((await library.photo(originalId)).variants.length, 0);
+  assert.equal((await library.jobs()).length, 0);
+  await assert.rejects(fs.access(path.join(dir, 'images', saved.filename)));
+  const trash = path.join(library.dataRoot, 'trash', result.trashId);
+  assert.deepEqual(await fs.readFile(path.join(trash, 'job', 'enhanced.jpg')), output);
+  assert.deepEqual(await fs.readFile(path.join(trash, 'images', saved.filename)), output);
+  assert.equal(JSON.parse(await fs.readFile(path.join(trash, 'manifest.json'), 'utf8')).imageId, `job:${job.id}`);
+  assert.deepEqual(await fs.readFile(original), before);
+  await fs.access(path.join(dir, 'images/extra.png'));
+  await assert.rejects(library.deleteVariant({ photoId: originalId, imageId: originalId }), /Originele/);
+  await assert.rejects(library.deleteVariant({ photoId: originalId, imageId: 'mousse/extra.png' }), /niet gevonden/);
+});
+
+test('deleting variants is blocked by every locale, carousel membership and active edits', async t => {
+  const { library, dir } = await fixture(t);
+  const queue = new JobQueue(library); t.after(() => queue.stop());
+  const [job] = await queue.enqueue(request()); await finished(library, [job.id]);
+  const reference = { photoId: originalId, imageId: `job:${job.id}` };
+  const applied = await library.apply(originalId, reference.imageId);
+  await assert.rejects(library.deleteVariant(reference), /receptgalerij/);
+  await library.apply(originalId, originalId);
+  const enFile = path.join(dir, 'index.en.md');
+  const en = await fs.readFile(enFile, 'utf8');
+  await fs.writeFile(enFile, en.replace('"original.png"', JSON.stringify(applied.filename)));
+  await assert.rejects(library.deleteVariant(reference), /receptgalerij/);
+  await fs.writeFile(enFile, en);
+  await library.highlights({ ...reference, action: 'add' });
+  await assert.rejects(library.deleteVariant(reference), /homepagecarousel/);
+  await library.highlights({ action: 'remove', slug: 'mousse', filename: applied.filename });
+  let started;
+  const ready = new Promise(resolve => { started = resolve; });
+  const active = new JobQueue(library, async ({ signal }) => {
+    started();
+    await new Promise((resolve, reject) => signal.addEventListener('abort', () => reject(new Error('cancelled')), { once: true }));
+  }); t.after(() => active.stop());
+  const [edit] = await active.enqueue(request({ mode: 'codex', baseId: reference.imageId }));
+  await ready;
+  await assert.rejects(library.deleteVariant(reference), /lopende bewerking/);
+  await active.cancel(edit.id);
+  await finished(library, [edit.id]);
+  assert.equal((await library.deleteVariant(reference)).deleted, true);
+});
+
+test('delete endpoint requires authentication and supports existing generated files without local history', async t => {
+  const { post, library, dir, original } = await runningStudio(t);
+  await fs.copyFile(original, path.join(dir, 'images/original-artistic.png'));
+  const reference = { photoId: originalId, imageId: 'mousse/original-artistic.png' };
+  assert.equal((await post('/api/delete-variant', reference, { 'X-Studio-Token': 'bad' })).status, 403);
+  assert.equal((await post('/api/delete-variant', { photoId: originalId, imageId: '../private.png' })).status, 400);
+  assert.equal((await post('/api/delete-variant', reference)).status, 200);
+  assert.equal((await library.photo(originalId)).variants.length, 0);
+  await fs.access(original);
+});
+
+test('free selection resizes width independently, while presets lock proportions and persist after saving', async t => {
+  const { origin, library } = await runningStudio(t);
+  const dom = new JSDOM(await (await fetch(origin + '/')).text(), { url: origin + '/?photo=' + encodeURIComponent(originalId), runScripts: 'outside-only' });
+  t.after(() => dom.window.close());
+  dom.window.HTMLDialogElement.prototype.showModal = function () { this.open = true; };
+  dom.window.HTMLDialogElement.prototype.close = function () { this.open = false; };
+  dom.window.HTMLElement.prototype.setPointerCapture = function () {};
+  dom.window.fetch = (url, options) => fetch(new URL(url, origin), options);
+  dom.window.sharedBuildPrompt = buildPrompt;
+  const source = await fs.readFile(fileURLToPath(new URL('../public/app.js', import.meta.url)), 'utf8');
+  await dom.window.eval(`(async () => { ${source.replace("import { buildPrompt } from '/prompts.mjs';", 'const buildPrompt = window.sharedBuildPrompt;')} })()`);
+  const doc = dom.window.document;
+  const image = doc.getElementById('crop-source-image');
+  Object.defineProperties(image, { naturalWidth: { value: 400 }, naturalHeight: { value: 400 } });
+  const stage = doc.getElementById('crop-source');
+  stage.getBoundingClientRect = () => ({ left: 0, top: 0, width: 400, height: 400 });
+  const pointer = (element, type, x, y) => element.dispatchEvent(new dom.window.PointerEvent(type, { bubbles: true, button: 0, pointerId: 1, clientX: x, clientY: y }));
+  const waitForClose = async () => {
+    const deadline = Date.now() + 3000;
+    while ((doc.getElementById('crop-dialog').open || doc.getElementById('crop-save').disabled) && Date.now() < deadline) await new Promise(resolve => setTimeout(resolve, 20));
+    assert.equal(doc.getElementById('crop-dialog').open, false);
+  };
+  doc.getElementById('card-crop').click();
+  assert.equal(doc.getElementById('crop-ratio').value, 'free');
+  pointer(doc.getElementById('crop-handle-right'), 'pointerdown', 400, 200);
+  pointer(stage, 'pointermove', 200, 200); pointer(stage, 'pointerup', 200, 200);
+  assert.equal(doc.getElementById('crop-selection').style.width, '50%');
+  assert.equal(doc.getElementById('crop-selection').style.height, '100%');
+  doc.getElementById('crop-save').click(); await waitForClose();
+  assert.equal((await library.photo(originalId)).cardCrop.ratio, '0.5:1');
+  doc.getElementById('card-crop').click();
+  assert.equal(doc.getElementById('crop-ratio').value, 'free');
+  doc.getElementById('crop-ratio').value = '4:3';
+  doc.getElementById('crop-ratio').dispatchEvent(new dom.window.Event('change'));
+  assert.ok(doc.getElementById('crop-handle-right').hidden);
+  pointer(doc.getElementById('crop-handle'), 'pointerdown', 400, 350);
+  pointer(stage, 'pointermove', 300, 275); pointer(stage, 'pointerup', 300, 275);
+  const selection = doc.getElementById('crop-selection');
+  assert.ok(Math.abs(parseFloat(selection.style.width) / parseFloat(selection.style.height) - 4 / 3) < .001);
+  doc.getElementById('crop-save').click(); await waitForClose();
+  assert.equal((await library.photo(originalId)).cardCrop.ratio, '4:3');
+});
+
+test('failed variant archiving rolls previously moved image files back into place', async t => {
+  const { library, dir } = await fixture(t);
+  const queue = new JobQueue(library); t.after(() => queue.stop());
+  const [job] = await queue.enqueue(request()); await finished(library, [job.id]);
+  const imageId = `job:${job.id}`;
+  const saved = await library.cardCrop({ photoId: originalId, imageId, crop: { ratio: '1:1', x: 50, y: 50 } });
+  const rename = fs.rename;
+  t.mock.method(fs, 'rename', async (source, target) => {
+    if (source === library.jobDir(job.id)) throw new Error('simulated archive failure');
+    return rename(source, target);
+  });
+  await assert.rejects(library.deleteVariant({ photoId: originalId, imageId }), /simulated archive failure/);
+  await fs.access(path.join(dir, 'images', saved.filename));
+  await fs.access((await library.image(imageId)).file);
+  assert.equal((await library.photo(originalId)).variants.length, 1);
 });

@@ -42,7 +42,7 @@ export async function createStudio({ projectRoot = root, dataRoot, generate, sta
     response.setHeader('Cache-Control', 'no-store');
     response.setHeader('X-Content-Type-Options', 'nosniff');
     response.setHeader('Referrer-Policy', 'no-referrer');
-    response.setHeader('Content-Security-Policy', "default-src 'self'; img-src 'self' blob:; style-src 'self'; script-src 'self'; connect-src 'self'; frame-ancestors 'none'; base-uri 'none'; form-action 'self'");
+    response.setHeader('Content-Security-Policy', "default-src 'self'; img-src 'self' blob: https:; style-src 'self'; script-src 'self'; connect-src 'self'; frame-ancestors 'none'; base-uri 'none'; form-action 'self'");
     if (!allowedHosts.includes(request.headers.host)) return send(403, { error: 'Alleen lokaal bereikbaar.' });
     const origin = request.headers.origin;
     if (origin && !allowedHosts.map(host => `http://${host}`).includes(origin)) return send(403, { error: 'Andere oorsprong geweigerd.' });
@@ -69,11 +69,13 @@ export async function createStudio({ projectRoot = root, dataRoot, generate, sta
         const body = await jsonBody(request);
         if (url.pathname === '/api/generate') {
           if (body.mode === 'codex' && !status().available) throw new Error('Codex CLI is niet gevonden. Installeer Codex en voer codex login uit.');
-          return send(202, { jobs: await queue.enqueue(body) });
+          const generate = applyChain.then(() => queue.enqueue(body));
+          applyChain = generate.catch(() => {});
+          return send(202, { jobs: await generate });
         }
         if (url.pathname === '/api/cancel') { await queue.cancel(body.id); return send(200, { ok: true }); }
-        if (url.pathname === '/api/apply') {
-          const apply = applyChain.then(() => library.apply(body.photoId, body.imageId));
+        if (url.pathname === '/api/apply' || url.pathname === '/api/gallery' || url.pathname === '/api/highlights' || url.pathname === '/api/card-crop' || url.pathname === '/api/recipe-crop' || url.pathname === '/api/delete-variant') {
+          const apply = applyChain.then(() => url.pathname === '/api/delete-variant' ? library.deleteVariant(body) : url.pathname === '/api/recipe-crop' ? library.recipeCrop(body) : url.pathname === '/api/card-crop' ? library.cardCrop(body) : url.pathname === '/api/highlights' ? library.highlights(body) : url.pathname === '/api/gallery' ? library.gallery(body) : library.apply(body.photoId, body.imageId));
           applyChain = apply.catch(() => {});
           return send(200, await apply);
         }

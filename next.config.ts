@@ -4,6 +4,9 @@ import createNextIntlPlugin from 'next-intl/plugin';
 const withNextIntl = createNextIntlPlugin('./src/i18n.ts');
 
 const nextConfig: NextConfig = {
+  // Recipe roots can be overridden by tests; production only needs this content.
+  outputFileTracingIncludes: { '/*': ['./content/**/*'] },
+  outputFileTracingExcludes: { '/*': ['./.local/**/*', './tools/image-enhancements/**/*', './output/**/*'] },
   async headers() {
     return [{
       source: '/:path*',

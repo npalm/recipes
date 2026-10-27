@@ -30,12 +30,13 @@ import { useState } from 'react';
 interface RecipeDetailProps {
   recipe: Recipe;
   locale: string;
+  imageCrop?: import('@/lib/card-image-crops').CardImageCrop;
 }
 
 /**
  * Full recipe detail view
  */
-export function RecipeDetail({ recipe, locale }: RecipeDetailProps) {
+export function RecipeDetail({ recipe, locale, imageCrop }: RecipeDetailProps) {
   const t = useTranslations();
   const difficulty = getDifficultyConfig(t)[recipe.difficulty];
   const [servings, setServings] = useState(recipe.servings);
@@ -79,12 +80,13 @@ export function RecipeDetail({ recipe, locale }: RecipeDetailProps) {
       </div>
 
       {/* Header section with image */}
-      <div className="mb-8 overflow-hidden rounded-2xl bg-card shadow-sm">
+      <div className="mb-8 overflow-hidden rounded-2xl border border-border/60 bg-card shadow-sm">
         <ImageGallery
           images={recipe.images}
           slug={recipe.slug}
           title={recipe.title}
           autoRotate={recipe.headerImageRotation}
+          crop={imageCrop}
         />
 
         <div className="p-6 md:p-8">

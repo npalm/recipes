@@ -7,6 +7,8 @@ import { createRecipeService } from '@/modules/recipe/services';
 import { config } from '@/lib/config';
 import { getBaseUrl } from '@/lib/server-utils';
 import { getVersionedRecipeImageUrl } from '@/lib/server-image-utils';
+import path from 'node:path';
+import { getRecipeImageCrops } from '@/lib/card-image-crops';
 import { locales } from '@/routing';
 
 interface RecipePageProps {
@@ -88,9 +90,11 @@ export default async function RecipePage({ params }: RecipePageProps) {
     notFound();
   }
 
+  const imageCrop = (await getRecipeImageCrops(path.join(process.cwd(), 'content', 'recipes'))).find(crop => crop.slug === slug && crop.filename === recipe.images[0]);
+
   return (
     <Layout>
-      <RecipeDetail recipe={recipe} locale={locale} />
+      <RecipeDetail recipe={recipe} locale={locale} imageCrop={imageCrop} />
     </Layout>
   );
 }
