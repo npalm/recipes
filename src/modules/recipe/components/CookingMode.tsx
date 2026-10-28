@@ -260,7 +260,7 @@ export function CookingMode({ recipe, locale, servings, onClose }: Props) {
                     <p className="text-xl leading-relaxed text-muted-foreground">{recipeT('enjoyCreation')}</p>
                   </> : currentStep ? <>
                     <div className="mb-3 flex flex-wrap items-center justify-between gap-x-4 gap-y-1">
-                      {currentStep.sectionName && <p className="text-sm font-semibold uppercase tracking-wider text-primary">{currentStep.sectionName}</p>}
+                      {currentStep.sectionName && <p className="text-lg font-semibold tracking-tight text-primary sm:text-xl">{currentStep.sectionName}</p>}
                       <h2 ref={stepHeading} tabIndex={-1} className="flex items-center gap-3 text-sm font-medium text-muted-foreground outline-none">
                         {t('step', { current: currentIndex + 1, total })}
                         {currentComplete && <span className="inline-flex items-center gap-1 text-primary"><Check className="h-4 w-4" />{t('completed')}</span>}
