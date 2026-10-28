@@ -111,7 +111,7 @@ export class Library {
         const id = `${slug}/${filename}`;
         const stem = filename.replace(imageExtension, '');
         const appliedJobs = new Set(jobs.filter(j => j.photoId === id && j.status === 'completed').map(j => j.appliedFilename));
-        const variants = images.filter(name => name.startsWith(`${stem}-artistic.`) || (name.startsWith(`${stem}-enhanced-`) && !appliedJobs.has(name))).map(name => ({
+        const variants = images.filter(name => !originals.includes(name) && (name.startsWith(`${stem}-artistic.`) || (name.startsWith(`${stem}-enhanced-`) && !appliedJobs.has(name)))).map(name => ({
           id: `${slug}/${name}`, filename: name, kind: 'existing', label: name.startsWith(`${stem}-artistic.`) ? 'Eerdere AI-bewerking' : 'Bewaarde bewerking', imageUrl: `/api/image?id=${encodeURIComponent(`${slug}/${name}`)}`,
         }));
         for (const job of jobs.filter(j => j.photoId === id && j.status === 'completed')) {
@@ -151,7 +151,8 @@ export class Library {
       if (job.appliedFilename) filenames.add(job.appliedFilename);
       filenames.add(exportedName(job));
     }
-    if ([...filenames].some(name => !component.test(name) || !imageExtension.test(name) || name === photo.filename)) throw new Error('Ongeldige variantbestanden.');
+    if ([...filenames].some(name => catalog.photos.some(p => p.slug === photo.slug && p.filename === name))) throw new Error('Originele foto’s kunnen niet worden verwijderd.');
+    if ([...filenames].some(name => !component.test(name) || !imageExtension.test(name))) throw new Error('Ongeldige variantbestanden.');
     const aliases = new Set([imageId, ...(job ? [`job:${job.id}`] : []), ...[...filenames].map(name => `${photo.slug}/${name}`)]);
     if (catalog.jobs.some(j => ['queued', 'running'].includes(j.status) && aliases.has(j.baseId))) throw new Error('Deze variant wordt nog gebruikt voor een lopende bewerking. Wacht tot die klaar is.');
     const entries = await fs.readdir(this.recipes, { withFileTypes: true });
@@ -349,7 +350,9 @@ export class Library {
 
   async apply(photoId, imageId) {
     const { photo, image, filename } = await this.prepareImage(photoId, imageId);
-    const locales = await this.writeImages(photo.slug, images => [filename, ...images.slice(1).filter(name => name !== filename)]);
+    const names = photo.gallery.map(item => item.filename);
+    const images = [filename, ...(names.includes(filename) ? names : names.slice(1)).filter(name => name !== filename)];
+    const locales = await this.writeImages(photo.slug, () => images);
     await this.markApplied(image, filename);
     return { filename, locales };
   }
@@ -378,6 +381,7 @@ export class Library {
       if (target < 0 || target >= names.length) throw new Error('Foto kan niet verder worden verplaatst.');
       [names[index], names[target]] = [names[target], names[index]];
     }
+    // Gallery selection and ordering are shared across languages, using the catalog's preferred locale.
     const locales = await this.writeImages(photo.slug, () => names);
     if (image) await this.markApplied(image, filename);
     return { filename, locales, images: names };

@@ -12,6 +12,8 @@ De URL onthoudt de geopende foto, geselecteerde variant en kaartweergave. Herlad
 
 ## Gebruik
 
+Foto's, galerijselectie en volgorde zijn gedeeld door alle talen. De editor toont de Nederlandse galerij (of de eerste beschikbare taal als Nederlands ontbreekt) en schrijft wijzigingen naar alle taalbestanden. Eventuele afwijkende afbeeldingslijsten worden daarbij gelijkgetrokken; de recepttekst blijft per taal behouden.
+
 1. Kies links een originele foto. Eerdere `-artistic`-bewerkingen staan bij de varianten.
 2. Kies **Fotocorrectie** voor lokale correcties aan helderheid, contrast, kleur en detail. Er worden geen objecten gegenereerd of verwijderd. Er wordt niet bijgesneden.
 3. Kies **AI met Codex** voor eigen instructies. Bijvoorbeeld: “Maak het licht zachter. Behoud de rumfles, het etiket, de glazen en de achtergrond exact.” Vul belangrijke elementen ook in bij **Dit moet zeker blijven**.

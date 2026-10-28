@@ -89,6 +89,25 @@ test('applying and restoring updates all locales, preserves other images and rec
   assert.deepEqual(matter(await fs.readFile(path.join(dir, 'index.nl.md'), 'utf8')).data.images, ['original.png', 'extra.png']);
 });
 
+test('applying an existing gallery variant retains the previous hero and synchronizes locales', async t => {
+  const { library, dir, original } = await fixture(t);
+  await fs.copyFile(original, path.join(dir, 'images/original-artistic.png'));
+  const nlFile = path.join(dir, 'index.nl.md');
+  const nl = await fs.readFile(nlFile, 'utf8');
+  await fs.writeFile(nlFile, nl.replace('  - extra.png', '  - original-artistic.png\n  - extra.png'));
+  const enFile = path.join(dir, 'index.en.md');
+  const en = await fs.readFile(enFile, 'utf8');
+  await fs.writeFile(enFile, en.replace('extra.png', 'english-only.png'));
+  const variantId = 'mousse/original-artistic.png';
+  await library.apply(originalId, variantId);
+  await library.apply(originalId, variantId); // Selecting the current hero is idempotent.
+  for (const locale of ['nl', 'en']) {
+    const content = await fs.readFile(path.join(dir, `index.${locale}.md`), 'utf8');
+    assert.deepEqual(matter(content).data.images, ['original-artistic.png', 'original.png', 'extra.png']);
+    assert.equal(matter(content).content, matter(locale === 'nl' ? nl : en).content);
+  }
+});
+
 test('partial locale writes and failed replacements preserve every locale and clean temporary files', async t => {
   for (const operation of ['writeFile', 'rename']) {
     await t.test(operation, async t => {
@@ -225,6 +244,9 @@ test('browser interface loads originals, creates a variant and selects it withou
   const source = await fs.readFile(fileURLToPath(new URL('../public/app.js', import.meta.url)), 'utf8');
   await dom.window.eval(`(async () => { ${source.replace("import { buildPrompt } from '/prompts.mjs';", 'const buildPrompt = window.sharedBuildPrompt;')} })()`);
   const document = dom.window.document;
+  const confirmation = document.getElementById('apply-dialog');
+  assert.equal(confirmation.getAttribute('aria-labelledby'), 'confirm-title');
+  assert.equal(confirmation.getAttribute('aria-describedby'), 'confirm-description');
   assert.equal(document.querySelectorAll('.photo-item').length, 2);
   const originalButton = [...document.querySelectorAll('.photo-item')].find(b => b.textContent.includes('varianten') && b.querySelector('img').src.includes('original.png'));
   originalButton.click();
@@ -345,6 +367,31 @@ test('gallery additions, hero choice, ordering and removal persist in all locale
   await assert.rejects(library.gallery({ photoId: originalId, action: 'move', filename: 'original.png', direction: 1 }), /niet verder/);
   await assert.rejects(library.gallery({ photoId: originalId, action: 'move', filename: 'original.png', direction: 12 }), /Ongeldige/);
   assert.equal((await library.photo(originalId)).active, 'original.png');
+});
+
+test('gallery actions intentionally synchronize divergent locale lists using the Dutch gallery', async t => {
+  for (const action of ['add', 'hero', 'remove', 'move', 'apply']) {
+    await t.test(action, async t => {
+      const { library, dir, original } = await fixture(t);
+      await fs.copyFile(original, path.join(dir, 'images/original-artistic.png'));
+      const enFile = path.join(dir, 'index.en.md');
+      await fs.writeFile(enFile, (await fs.readFile(enFile, 'utf8')).replace('extra.png', 'english-only.png'));
+      if (action === 'apply') await library.apply(originalId, 'mousse/original-artistic.png');
+      else await library.gallery({ photoId: originalId, action, imageId: 'mousse/original-artistic.png', filename: 'extra.png', direction: -1 });
+      const expected = {
+        add: ['original.png', 'extra.png', 'original-artistic.png'],
+        hero: ['extra.png', 'original.png'],
+        remove: ['original.png'],
+        move: ['extra.png', 'original.png'],
+        apply: ['original-artistic.png', 'extra.png'],
+      }[action];
+      for (const locale of ['nl', 'en']) {
+        const content = await fs.readFile(path.join(dir, `index.${locale}.md`), 'utf8');
+        assert.deepEqual(matter(content).data.images, expected);
+        assert.ok(content.endsWith('\n\nLaat de recepttekst exact staan.\n'));
+      }
+    });
+  }
 });
 
 test('gallery endpoint requires a token and rejects unrelated image references', async t => {
@@ -594,6 +641,26 @@ test('cropping an unselected site variant stores its own crop without changing t
   assert.equal(doc.querySelector('.variant-delete').disabled, false);
   await library.apply(originalId, `job:${job.id}`);
   assert.equal((await library.photo(originalId)).recipeCrop.filename, exported);
+});
+
+test('originals with variant-like filenames cannot be listed or deleted as variants', async t => {
+  const { library, dir, original } = await fixture(t);
+  const filename = 'original-enhanced-detail.png';
+  const imageId = `mousse/${filename}`;
+  const secondOriginal = path.join(dir, 'images', filename);
+  await fs.copyFile(original, secondOriginal);
+  const before = await fs.readFile(secondOriginal);
+  const catalog = await library.catalog();
+  const photo = catalog.photos.find(p => p.id === originalId);
+  assert.ok(catalog.photos.some(p => p.id === imageId));
+  assert.ok(!photo.variants.some(v => v.id === imageId));
+  await assert.rejects(library.deleteVariant({ photoId: originalId, imageId }), /niet gevonden/);
+  // Server protection also rejects an original if stale or malformed variant metadata exposes it.
+  photo.variants.push({ id: imageId, filename, kind: 'existing' });
+  t.mock.method(library, 'catalog', async () => catalog);
+  await assert.rejects(library.deleteVariant({ photoId: originalId, imageId }), /Originele/);
+  assert.deepEqual(await fs.readFile(secondOriginal), before);
+  assert.deepEqual(await fs.readFile(original), before);
 });
 
 test('deleting an unused generated variant archives its job and exported copy while preserving originals', async t => {
