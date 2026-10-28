@@ -167,54 +167,54 @@ export function CookingMode({ recipe, locale, servings, onClose }: Props) {
       }}
     >
       <div ref={surface} className="flex h-full w-full flex-col bg-background text-foreground">
-        <header className="shrink-0 border-b bg-card px-4 py-4 sm:px-8">
+        <header className="shrink-0 border-b bg-card px-4 py-2 sm:px-8">
           <div className="mx-auto flex max-w-7xl items-center justify-between gap-4">
-            <div className="min-w-0">
-              <p className="mb-1 flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-primary">
+            <div className="flex min-w-0 flex-col gap-1 sm:flex-row sm:items-center sm:gap-3">
+              <p className="flex shrink-0 items-center gap-2 text-xs font-semibold uppercase tracking-widest text-primary">
                 <ChefHat className="h-4 w-4" aria-hidden="true" />{t('title')}
               </p>
-              <h1 id={`${id}-title`} className="truncate text-lg font-semibold sm:text-2xl">{recipe.title}</h1>
+              <h1 id={`${id}-title`} className="truncate text-lg font-semibold sm:text-xl">{recipe.title}</h1>
             </div>
             <div className="flex shrink-0 items-center gap-2">
-              <Button variant={presenterView ? 'secondary' : 'outline'} className="h-12 gap-2" aria-label={t('presenterView')} aria-pressed={presenterView} onClick={() => { setPresenterView(value => !value); setIngredientsOpen(false); }}>
+              <Button variant={presenterView ? 'secondary' : 'outline'} className="h-11 gap-2" aria-label={t('presenterView')} aria-pressed={presenterView} onClick={() => { setPresenterView(value => !value); setIngredientsOpen(false); }}>
                 <MonitorPlay className="h-4 w-4" aria-hidden="true" /><span className="hidden sm:inline">{t('presenterView')}</span>
               </Button>
-              <Button variant="outline" className="h-12 w-12" aria-label={t(fullscreen ? 'exitFullscreen' : 'enterFullscreen')} title={t(fullscreenSupported ? (fullscreen ? 'exitFullscreen' : 'enterFullscreen') : 'fullscreenUnsupported')} disabled={!fullscreenSupported} onClick={() => void toggleFullscreen()}>
+              <Button variant="outline" className="h-11 w-11" aria-label={t(fullscreen ? 'exitFullscreen' : 'enterFullscreen')} title={t(fullscreenSupported ? (fullscreen ? 'exitFullscreen' : 'enterFullscreen') : 'fullscreenUnsupported')} disabled={!fullscreenSupported} onClick={() => void toggleFullscreen()}>
                 {fullscreen ? <Minimize className="h-4 w-4" aria-hidden="true" /> : <Maximize className="h-4 w-4" aria-hidden="true" />}
               </Button>
-            <Button variant="outline" className="h-12 shrink-0 gap-2" aria-label={t('exit')} onClick={() => onClose(progress.servings)}>
-              <X className="h-4 w-4" aria-hidden="true" /><span className="hidden sm:inline">{t('exit')}</span>
-            </Button>
+              <Button variant="outline" className="h-11 shrink-0 gap-2" aria-label={t('exit')} onClick={() => onClose(progress.servings)}>
+                <X className="h-4 w-4" aria-hidden="true" /><span className="hidden sm:inline">{t('exit')}</span>
+              </Button>
             </div>
           </div>
         </header>
 
         <div ref={scrollArea} className="min-h-0 flex-1 overflow-y-auto overscroll-contain">
-          <div className="mx-auto max-w-7xl px-4 py-6 sm:px-8 lg:py-10">
-            <div className={`flex flex-wrap items-center justify-between ${presenterView ? 'mb-3 gap-2 lg:mb-6' : 'mb-6 gap-4'}`}>
+          <div className="mx-auto max-w-7xl px-4 py-3 sm:px-8 lg:py-4">
+            <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
               <Button
                 variant={ingredientsOpen ? 'secondary' : 'outline'}
-                className={`h-12 gap-2 ${presenterView ? '' : 'lg:hidden'}`}
+                className={`h-11 gap-2 ${presenterView ? '' : 'lg:hidden'}`}
                 aria-expanded={ingredientsOpen}
                 aria-controls={`${id}-ingredients`}
                 onClick={() => setIngredientsOpen(value => !value)}
               ><ListChecks className="h-4 w-4" aria-hidden="true" />{recipeT('ingredients')}</Button>
               <p className={`text-sm text-muted-foreground ${presenterView && storageAvailable ? 'hidden lg:block' : ''}`}>{t(storageAvailable ? 'saveHint' : 'storageUnavailable')}</p>
-              <div className="flex flex-col gap-1">
-                <Button variant="outline" className="h-12 gap-2" disabled={!wakeLock.supported} aria-pressed={wakeLock.enabled} onClick={wakeLock.toggle}>
+              <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
+                <Button variant="outline" className="h-11 gap-2" disabled={!wakeLock.supported} aria-pressed={wakeLock.enabled} onClick={wakeLock.toggle}>
                   <Sun className="h-4 w-4" aria-hidden="true" />{t('keepAwake')}
                 </Button>
-                <span role="status" className="text-xs text-muted-foreground">{t(wakeLock.supported ? `wake.${wakeLock.status}` : 'wake.unsupported')}</span>
+                <span role="status" className={wakeLock.supported && wakeLock.status === 'off' ? 'sr-only text-xs text-muted-foreground sm:not-sr-only' : 'text-xs text-muted-foreground'}>{t(wakeLock.supported ? `wake.${wakeLock.status}` : 'wake.unsupported')}</span>
               </div>
             </div>
 
             {fullscreenError && <p role="alert" className="mb-4 text-sm text-muted-foreground">{t('fullscreenError')}</p>}
 
-            {presenterView && <nav ref={mobileOverview} aria-label={t('overview')} className="sticky top-0 z-10 -mx-4 mb-5 flex gap-2 overflow-x-auto bg-background px-4 py-3 lg:hidden">
+            {presenterView && <nav ref={mobileOverview} aria-label={t('overview')} className="sticky top-0 z-10 -mx-4 mb-3 flex gap-2 overflow-x-auto bg-background px-4 py-1 lg:hidden">
               {cooking.steps.map((step, index) => <button key={step.id} type="button" aria-label={t('goToStep', { number: index + 1 })} aria-current={!finished && index === currentIndex ? 'step' : undefined} className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-full border text-sm font-semibold ${!finished && index === currentIndex ? 'border-primary bg-primary text-primary-foreground' : progress.completedSteps.includes(step.id) ? 'border-primary/30 bg-primary/10 text-primary' : 'bg-card'}`} onClick={() => goToStep(index)}>{progress.completedSteps.includes(step.id) ? <Check className="h-4 w-4" /> : index + 1}</button>)}
             </nav>}
 
-            <div className={`grid items-start gap-6 lg:gap-10 ${presenterView ? 'lg:grid-cols-[minmax(0,1fr)_minmax(16rem,22rem)]' : 'lg:grid-cols-[minmax(16rem,20rem)_minmax(0,1fr)]'}`}>
+            <div className={`grid items-start gap-4 lg:gap-6 ${presenterView ? 'lg:grid-cols-[minmax(0,1fr)_minmax(16rem,22rem)]' : 'lg:grid-cols-[minmax(16rem,20rem)_minmax(0,1fr)]'}`}>
               <aside id={`${id}-ingredients`} aria-label={recipeT('ingredients')} className={`${presenterView ? (ingredientsOpen ? 'block max-h-[45dvh] overflow-y-auto lg:col-span-2' : 'hidden') : ingredientsOpen ? 'block' : 'hidden lg:block'} rounded-2xl border bg-card p-5 sm:p-6`}>
                 <h2 className="mb-5 text-xl font-semibold">{recipeT('ingredients')}</h2>
                 <div className="mb-6 flex items-center justify-between gap-3 rounded-xl bg-muted/60 p-3">
@@ -248,33 +248,35 @@ export function CookingMode({ recipe, locale, servings, onClose }: Props) {
               </aside>
 
               <section className="min-w-0">
-                <div className="mb-5 flex items-center justify-between gap-3 text-sm">
+                <div className="mb-1 flex items-center justify-between gap-3 text-sm">
                   <span className="font-medium">{recipeT('stepsCount', { completed: completedCount, total })}</span>
                   <button type="button" className="flex min-h-11 items-center gap-2 rounded-md px-2 text-muted-foreground hover:text-foreground focus-visible:outline-2 focus-visible:outline-ring" onClick={restart}><RotateCcw className="h-4 w-4" aria-hidden="true" />{t('restart')}</button>
                 </div>
-                <progress className="cooking-progress mb-6 block h-2 w-full overflow-hidden rounded-full" value={completedCount} max={Math.max(1, total)} aria-label={recipeT('progress')} />
-                <div className={`rounded-3xl border border-primary/15 bg-card p-6 shadow-sm sm:p-10 lg:p-12 ${presenterView ? 'lg:flex lg:min-h-[50dvh] lg:flex-col lg:justify-center' : 'lg:min-h-80'}`}>
+                <progress className="cooking-progress mb-3 block h-2 w-full overflow-hidden rounded-full" value={completedCount} max={Math.max(1, total)} aria-label={recipeT('progress')} />
+                <div className="rounded-2xl border border-primary/15 bg-card p-4 shadow-sm sm:p-6">
                   {finished ? <>
                     <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-primary/10 text-primary"><Check className="h-8 w-8" aria-hidden="true" /></div>
                     <h2 ref={stepHeading} tabIndex={-1} className="mb-4 text-3xl font-semibold outline-none sm:text-4xl">{recipeT('allDone')}</h2>
                     <p className="text-xl leading-relaxed text-muted-foreground">{recipeT('enjoyCreation')}</p>
                   </> : currentStep ? <>
-                    {currentStep.sectionName && <p className="mb-3 text-sm font-semibold uppercase tracking-wider text-primary">{currentStep.sectionName}</p>}
-                    <h2 ref={stepHeading} tabIndex={-1} className="mb-6 flex items-center gap-3 text-sm font-medium text-muted-foreground outline-none">
-                      {t('step', { current: currentIndex + 1, total })}
-                      {currentComplete && <span className="inline-flex items-center gap-1 text-primary"><Check className="h-4 w-4" />{t('completed')}</span>}
-                    </h2>
-                    <p className={`whitespace-pre-line leading-relaxed tracking-tight ${presenterView ? 'text-3xl sm:text-4xl sm:leading-relaxed lg:text-5xl lg:leading-relaxed' : 'text-2xl sm:text-3xl sm:leading-relaxed'}`}>{scaleInstructionText(currentStep.text, currentStep.originalServings, progress.servings)}</p>
-                    {!!currentSection?.ingredients.length && <section className="mt-8 border-t border-primary/15 pt-5" aria-label={t(currentSection.name ? 'sectionIngredients' : 'recipeIngredients')}>
+                    <div className="mb-3 flex flex-wrap items-center justify-between gap-x-4 gap-y-1">
+                      {currentStep.sectionName && <p className="text-sm font-semibold uppercase tracking-wider text-primary">{currentStep.sectionName}</p>}
+                      <h2 ref={stepHeading} tabIndex={-1} className="flex items-center gap-3 text-sm font-medium text-muted-foreground outline-none">
+                        {t('step', { current: currentIndex + 1, total })}
+                        {currentComplete && <span className="inline-flex items-center gap-1 text-primary"><Check className="h-4 w-4" />{t('completed')}</span>}
+                      </h2>
+                    </div>
+                    <p className={`whitespace-pre-line leading-snug tracking-tight ${presenterView ? 'text-3xl sm:text-4xl lg:text-[2.5rem]' : 'text-2xl sm:text-3xl'}`}>{scaleInstructionText(currentStep.text, currentStep.originalServings, progress.servings)}</p>
+                    {!!currentSection?.ingredients.length && <section className="mt-5 border-t border-primary/15 pt-3" aria-label={t(currentSection.name ? 'sectionIngredients' : 'recipeIngredients')}>
                       <div className="flex flex-wrap items-center justify-between gap-2 text-sm text-muted-foreground">
                         <h3 className="font-medium">{t(currentSection.name ? 'sectionIngredients' : 'recipeIngredients')}</h3>
                         <span>{recipeT('metadataServings', { count: progress.servings })}</span>
                       </div>
-                      <ul className="mt-3 grid gap-2 sm:grid-cols-2">
-                        {scaleIngredients(currentSection.ingredients, currentSection.originalServings, progress.servings).map((ingredient, index) => <li key={index} className="rounded-xl bg-primary/5 px-4 py-3 text-base leading-relaxed sm:text-lg">{formatScaledIngredient(ingredient)}</li>)}
+                      <ul className="mt-2 grid gap-2 sm:grid-cols-2">
+                        {scaleIngredients(currentSection.ingredients, currentSection.originalServings, progress.servings).map((ingredient, index) => <li key={index} className="rounded-xl bg-primary/5 px-3 py-2 text-base leading-snug sm:text-lg">{formatScaledIngredient(ingredient)}</li>)}
                       </ul>
                     </section>}
-                    {currentComplete && <Button variant="ghost" className="mt-6 h-12" onClick={() => updateProgress({ completedSteps: progress.completedSteps.filter(value => value !== currentStep.id) })}>{t('markIncomplete')}</Button>}
+                    {currentComplete && <Button variant="ghost" className="mt-3 h-11" onClick={() => updateProgress({ completedSteps: progress.completedSteps.filter(value => value !== currentStep.id) })}>{t('markIncomplete')}</Button>}
                   </> : <p>{recipeT('noInstructions')}</p>}
                 </div>
 
@@ -283,21 +285,21 @@ export function CookingMode({ recipe, locale, servings, onClose }: Props) {
                   <div className="mt-4">{stepList}</div>
                 </details>}
               </section>
-              {presenterView && <nav ref={overview} aria-label={t('overview')} className="sticky top-0 hidden max-h-[calc(100dvh-14rem)] overflow-y-auto overscroll-contain rounded-2xl border bg-card p-4 lg:block">
-                <h2 className="mb-4 px-3 text-lg font-semibold">{t('overview')}</h2>
+              {presenterView && <nav ref={overview} aria-label={t('overview')} className="sticky top-0 hidden max-h-[calc(100dvh-12rem)] overflow-y-auto overscroll-contain rounded-2xl border bg-card p-4 lg:block">
+                <h2 className="mb-2 px-3 text-lg font-semibold">{t('overview')}</h2>
                 {stepList}
               </nav>}
             </div>
           </div>
         </div>
 
-        <footer className="shrink-0 border-t bg-card px-4 pt-4 pb-[max(1rem,env(safe-area-inset-bottom))] sm:px-8">
-          <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-end gap-3">
+        <footer className="shrink-0 border-t bg-card px-4 pt-2 pb-[max(0.5rem,env(safe-area-inset-bottom))] sm:px-8">
+          <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-end gap-2 sm:gap-3">
             {presenterView && <p className="mr-auto hidden text-xs text-muted-foreground lg:block">{t('keyboardHint')}</p>}
-            <Button variant="outline" className="h-12 gap-2" disabled={!total || (!finished && currentIndex === 0)} onClick={() => goToStep(finished ? total - 1 : currentIndex - 1)}><ArrowLeft className="h-4 w-4" aria-hidden="true" />{t('previous')}</Button>
-            {!finished && currentIndex < total - 1 && <Button variant="ghost" className="h-12" onClick={() => goToStep(currentIndex + 1)}>{t('skip')}</Button>}
-            {finished ? <Button className="h-12 gap-2 px-6" onClick={() => onClose(progress.servings)}><Check className="h-4 w-4" aria-hidden="true" />{t('finish')}</Button>
-              : <Button className="h-12 gap-2 px-6" disabled={!currentStep} onClick={completeStep}><Check className="h-4 w-4" aria-hidden="true" />{t('completeNext')}<ArrowRight className="h-4 w-4" aria-hidden="true" /></Button>}
+            <Button variant="outline" className="h-11 w-11 gap-2 sm:w-auto" aria-label={t('previous')} disabled={!total || (!finished && currentIndex === 0)} onClick={() => goToStep(finished ? total - 1 : currentIndex - 1)}><ArrowLeft className="h-4 w-4" aria-hidden="true" /><span className="hidden sm:inline">{t('previous')}</span></Button>
+            {!finished && currentIndex < total - 1 && <Button variant="ghost" className="h-11 px-2 sm:px-4" onClick={() => goToStep(currentIndex + 1)}>{t('skip')}</Button>}
+            {finished ? <Button className="h-11 gap-2 px-3 sm:px-6" onClick={() => onClose(progress.servings)}><Check className="h-4 w-4" aria-hidden="true" />{t('finish')}</Button>
+              : <Button className="h-11 gap-2 px-3 sm:px-6" disabled={!currentStep} onClick={completeStep}><Check className="h-4 w-4" aria-hidden="true" />{t('completeNext')}<ArrowRight className="hidden h-4 w-4 sm:block" aria-hidden="true" /></Button>}
           </div>
         </footer>
       </div>
