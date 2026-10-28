@@ -54,7 +54,13 @@ function RecipeGallery({ images, slug, title, autoRotate = false, crop }: ImageG
   }, [paused, interacting, expanded, reducedMotion, images.length]);
 
   useEffect(() => {
-    thumbnails.current?.querySelector('[aria-current="true"]')?.scrollIntoView?.({ block: 'nearest', inline: 'nearest', behavior: 'instant' });
+    const strip = thumbnails.current;
+    const selected = strip?.querySelector<HTMLElement>('[aria-current="true"]');
+    if (!strip || !selected) return;
+    const bounds = strip.getBoundingClientRect();
+    const thumbnail = selected.getBoundingClientRect();
+    if (thumbnail.left < bounds.left) strip.scrollLeft += thumbnail.left - bounds.left;
+    else if (thumbnail.right > bounds.right) strip.scrollLeft += thumbnail.right - bounds.right;
   }, [currentIndex]);
 
   function select(index: number) {

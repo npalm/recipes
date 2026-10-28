@@ -22,6 +22,24 @@ beforeEach(() => {
 afterEach(() => { cleanup(); vi.useRealTimers(); vi.restoreAllMocks(); });
 
 describe('recipe image gallery', () => {
+  it('scrolls only the thumbnail strip during rotation and manual navigation', () => {
+    vi.useFakeTimers();
+    const scrollIntoView = vi.fn();
+    Object.defineProperty(HTMLElement.prototype, 'scrollIntoView', { configurable: true, value: scrollIntoView });
+    render(gallery({ autoRotate: true }));
+    const first = screen.getByRole('button', { name: 'Bekijk afbeelding 1' });
+    const second = screen.getByRole('button', { name: 'Bekijk afbeelding 2' });
+    const strip = first.parentElement!;
+    vi.spyOn(strip, 'getBoundingClientRect').mockReturnValue({ left: 0, right: 100 } as DOMRect);
+    vi.spyOn(second, 'getBoundingClientRect').mockReturnValue({ left: 90, right: 170 } as DOMRect);
+    act(() => { vi.advanceTimersByTime(config.imageRotationInterval); });
+    expect(strip.scrollLeft).toBe(70);
+    vi.spyOn(first, 'getBoundingClientRect').mockReturnValue({ left: -70, right: 10 } as DOMRect);
+    fireEvent.click(first);
+    expect(strip.scrollLeft).toBe(0);
+    expect(scrollIntoView).not.toHaveBeenCalled();
+  });
+
   it('opens the hero first and supports thumbnails, arrows and keyboard navigation', () => {
     render(gallery());
     expect(screen.getByAltText('Mousse met rum — Foto 1')).toHaveAttribute('src', '/content/recipes/mousse/images/hero.jpg');

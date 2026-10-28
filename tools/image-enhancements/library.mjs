@@ -12,9 +12,17 @@ export const imageMime = { '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.png': 
 
 export async function atomicJson(file, value) {
   await fs.mkdir(path.dirname(file), { recursive: true });
+  await atomicWrite(file, JSON.stringify(value, null, 2) + '\n');
+}
+
+async function atomicWrite(file, content) {
   const temporary = `${file}.${randomUUID()}.tmp`;
-  await fs.writeFile(temporary, JSON.stringify(value, null, 2) + '\n');
-  await fs.rename(temporary, file);
+  try {
+    await fs.writeFile(temporary, content, { flag: 'wx' });
+    await fs.rename(temporary, file);
+  } finally {
+    await fs.rm(temporary, { force: true });
+  }
 }
 
 export async function inside(root, file) {
@@ -320,11 +328,13 @@ export class Library {
     const written = [];
     try {
       for (const update of updates) {
-        await fs.writeFile(update.file, update.next);
+        await atomicWrite(update.file, update.next);
         written.push(update);
       }
     } catch (error) {
-      for (const update of written) await fs.writeFile(update.file, update.content);
+      const rollback = await Promise.allSettled(written.map(update => atomicWrite(update.file, update.content)));
+      const failures = rollback.filter(result => result.status === 'rejected').map(result => result.reason);
+      if (failures.length) throw new AggregateError([error, ...failures], 'Receptupdate en herstel mislukt.');
       throw error;
     }
     return files.length;

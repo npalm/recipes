@@ -288,7 +288,7 @@ async function updateHighlights(body) {
   state.applying = true; renderSelection(); renderHighlights();
   try { await api('/api/highlights', body); await refresh(); toast('Homepagecarousel opgeslagen. Ververs de site om de wijziging te zien.'); return true; }
   catch (error) { toast(error.message, true); }
-  finally { state.applying = false; renderSelection(); renderVariants(); renderHighlights(); }
+  finally { state.applying = false; renderSelection(); renderVariants(); renderHighlights(); renderGallery(); }
 }
 
 let cropItem;
@@ -420,7 +420,14 @@ function openCrop(item, target = 'highlight') {
   const position = selected ? choiceCrop(item, selected, target) : item.desktopPosition;
   cropZoom = position?.zoom ?? 1; cropDrag = null;
   cropFreeRatio = position?.ratio ? position.ratio.split(':').map(Number).reduce((a, b) => a / b) : undefined;
-  const preset = !position?.free && [...$('crop-ratio').options].some(option => option.value === position?.ratio);
+  const ratios = $('crop-ratio');
+  ratios.querySelector('[data-saved-ratio]')?.remove();
+  if (position?.ratio && !position.free && ![...ratios.options].some(option => option.value === position.ratio)) {
+    const option = node('option', '', `Opgeslagen verhouding (${position.ratio})`);
+    option.value = position.ratio; option.dataset.savedRatio = '';
+    ratios.append(option);
+  }
+  const preset = !position?.free && [...ratios.options].some(option => option.value === position?.ratio);
   $('crop-ratio').value = preset ? position.ratio : 'free';
   $('crop-x').value = position?.x ?? 50; $('crop-y').value = position?.y ?? 50;
   renderCrop(); $('crop-dialog').showModal();
@@ -517,7 +524,7 @@ async function confirmApply(imageId) {
     await refresh();
     toast(`Foto toegepast in ${result.locales} talen. Het origineel is bewaard.`);
   } catch (error) { toast(error.message, true); }
-  finally { state.applying = false; renderSelection(); renderVariants(); renderGallery(); syncLocation(); }
+  finally { state.applying = false; renderSelection(); renderVariants(); renderGallery(); renderHighlights(); syncLocation(); }
 }
 
 async function confirmChange(title, description, action = 'Bevestigen') {
@@ -536,7 +543,7 @@ async function updateGallery(body) {
     await refresh();
     toast(`Galerij bijgewerkt in ${result.locales} talen.`);
   } catch (error) { toast(error.message, true); }
-  finally { state.applying = false; renderSelection(); renderVariants(); renderGallery(); }
+  finally { state.applying = false; renderSelection(); renderVariants(); renderGallery(); renderHighlights(); }
 }
 
 window.addEventListener('popstate', restoreLocation);

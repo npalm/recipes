@@ -89,6 +89,30 @@ test('applying and restoring updates all locales, preserves other images and rec
   assert.deepEqual(matter(await fs.readFile(path.join(dir, 'index.nl.md'), 'utf8')).data.images, ['original.png', 'extra.png']);
 });
 
+test('partial locale writes and failed replacements preserve every locale and clean temporary files', async t => {
+  for (const operation of ['writeFile', 'rename']) {
+    await t.test(operation, async t => {
+      const { library, dir } = await fixture(t);
+      const files = await library.recipeFiles('mousse');
+      const target = files[1].file;
+      const original = fs[operation];
+      let failed = false;
+      t.mock.method(fs, operation, async (file, ...args) => {
+        if (!failed && (operation === 'writeFile' ? file.startsWith(target + '.') : args[0] === target)) {
+          failed = true;
+          if (operation === 'writeFile') await original(file, 'partial content', args[1]);
+          throw new Error('simulated locale failure');
+        }
+        return original(file, ...args);
+      });
+      await assert.rejects(library.writeImages('mousse', () => ['extra.png']), /simulated locale failure/);
+      assert.ok(failed);
+      for (const file of files) assert.equal(await fs.readFile(file.file, 'utf8'), file.content);
+      assert.deepEqual((await fs.readdir(dir)).filter(name => name.endsWith('.tmp')), []);
+    });
+  }
+});
+
 test('AI receives explicit instructions and can start from a previous variant', async t => {
   const { library } = await fixture(t);
   const calls = [];
@@ -538,6 +562,7 @@ test('recipe crops are independent of card and carousel crops and bind to the ac
   await library.recipeCrop({ ...reference, crop: null });
   assert.equal((await library.photo(originalId)).recipeCrop, null);
   assert.equal((await library.photo(originalId)).cardCrop.ratio, '4:3');
+
 });
 
 test('cropping an unselected site variant stores its own crop without changing the site photo', async t => {
@@ -634,6 +659,40 @@ test('delete endpoint requires authentication and supports existing generated fi
   await fs.access(original);
 });
 
+test('highlight, gallery, apply and restore actions reenable controls after refreshing', async t => {
+  const { origin } = await runningStudio(t);
+  const dom = new JSDOM(await (await fetch(origin + '/')).text(), { url: origin + '/?photo=' + encodeURIComponent(originalId), runScripts: 'outside-only' });
+  t.after(() => dom.window.close());
+  dom.window.HTMLDialogElement.prototype.showModal = function () { this.open = true; };
+  dom.window.fetch = (url, options) => fetch(new URL(url, origin), options);
+  dom.window.sharedBuildPrompt = buildPrompt;
+  const source = await fs.readFile(fileURLToPath(new URL('../public/app.js', import.meta.url)), 'utf8');
+  await dom.window.eval(`(async () => { ${source.replace("import { buildPrompt } from '/prompts.mjs';", 'const buildPrompt = window.sharedBuildPrompt;')} })()`);
+  const doc = dom.window.document;
+  const waitFor = async predicate => {
+    const deadline = Date.now() + 3000;
+    while (!predicate() && Date.now() < deadline) await new Promise(resolve => setTimeout(resolve, 20));
+    assert.ok(predicate());
+  };
+  const enabled = selector => [...doc.querySelectorAll(selector)].some(button => !button.disabled);
+  const controlsReady = () => !doc.getElementById('recipe-crop').disabled && enabled('#site-gallery .gallery-actions button') && enabled('#highlights .gallery-actions button');
+  doc.getElementById('add-highlight').click();
+  await waitFor(controlsReady);
+  doc.querySelector('#site-gallery button[title="Naar achteren"]').click();
+  await waitFor(controlsReady);
+  assert.equal(doc.querySelector('#site-gallery .gallery-image img').src.includes('extra.png'), true);
+  const confirm = async filename => {
+    await waitFor(() => doc.getElementById('apply-dialog').open);
+    const dialog = doc.getElementById('apply-dialog');
+    dialog.returnValue = 'apply'; dialog.open = false;
+    dialog.dispatchEvent(new dom.window.Event('close'));
+    await waitFor(() => doc.querySelector('#site-gallery .gallery-image img').src.includes(filename) && controlsReady());
+  };
+  doc.getElementById('restore').click(); await confirm('original.png');
+  doc.querySelectorAll('#site-gallery .gallery-image')[1].click();
+  doc.getElementById('apply').click(); await confirm('extra.png');
+});
+
 test('free selection resizes width independently, while presets lock proportions and persist after saving', async t => {
   const { origin, library } = await runningStudio(t);
   const dom = new JSDOM(await (await fetch(origin + '/')).text(), { url: origin + '/?photo=' + encodeURIComponent(originalId), runScripts: 'outside-only' });
@@ -647,7 +706,7 @@ test('free selection resizes width independently, while presets lock proportions
   await dom.window.eval(`(async () => { ${source.replace("import { buildPrompt } from '/prompts.mjs';", 'const buildPrompt = window.sharedBuildPrompt;')} })()`);
   const doc = dom.window.document;
   const image = doc.getElementById('crop-source-image');
-  Object.defineProperties(image, { naturalWidth: { value: 400 }, naturalHeight: { value: 400 } });
+  Object.defineProperties(image, { naturalWidth: { value: 400, configurable: true }, naturalHeight: { value: 400, configurable: true } });
   const stage = doc.getElementById('crop-source');
   stage.getBoundingClientRect = () => ({ left: 0, top: 0, width: 400, height: 400 });
   const pointer = (element, type, x, y) => element.dispatchEvent(new dom.window.PointerEvent(type, { bubbles: true, button: 0, pointerId: 1, clientX: x, clientY: y }));
@@ -675,6 +734,26 @@ test('free selection resizes width independently, while presets lock proportions
   assert.ok(Math.abs(parseFloat(selection.style.width) / parseFloat(selection.style.height) - 4 / 3) < .001);
   doc.getElementById('crop-save').click(); await waitForClose();
   assert.equal((await library.photo(originalId)).cardCrop.ratio, '4:3');
+  doc.getElementById('card-crop').click();
+  doc.getElementById('crop-ratio').value = 'original';
+  doc.getElementById('crop-ratio').dispatchEvent(new dom.window.Event('change'));
+  doc.getElementById('crop-save').click(); await waitForClose();
+  assert.equal((await library.photo(originalId)).cardCrop.free, false);
+  doc.getElementById('card-crop').click();
+  assert.equal(doc.getElementById('crop-ratio').value, '1:1');
+  assert.ok(doc.getElementById('crop-handle-right').hidden);
+  doc.getElementById('crop-cancel').click();
+  Object.defineProperties(image, { naturalWidth: { value: 96, configurable: true }, naturalHeight: { value: 64, configurable: true } });
+  doc.getElementById('card-crop').click();
+  doc.getElementById('crop-ratio').value = 'original';
+  doc.getElementById('crop-ratio').dispatchEvent(new dom.window.Event('change'));
+  doc.getElementById('crop-save').click(); await waitForClose();
+  doc.getElementById('card-crop').click();
+  assert.equal(doc.getElementById('crop-ratio').value, '1.5:1');
+  assert.ok(doc.getElementById('crop-handle-right').hidden);
+  assert.ok(doc.getElementById('crop-handle-bottom').hidden);
+  doc.getElementById('crop-save').click(); await waitForClose();
+  assert.equal((await library.photo(originalId)).cardCrop.free, false);
 });
 
 test('failed variant archiving rolls previously moved image files back into place', async t => {
