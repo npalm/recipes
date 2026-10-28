@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Fotostudio — lokale fotoverbetering</title>
+  <link rel="stylesheet" href="/style.css">
+  <script src="/app.js" type="module"></script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="/" aria-label="Fotostudio start"><span class="brand-icon">◉</span> fotostudio<span class="local-tag">LOKAAL</span></a>
+    <span class="top-note">Jouw foto, zorgvuldig verbeterd.</span>
+    <span id="connection" class="connection">Verbinden…</span>
+  </header>
+  <div class="workspace">
+    <aside class="library">
+      <div class="library-heading"><h2>Je foto's</h2><span id="photo-count" class="count">—</span></div>
+      <label class="sr-only" for="search">Zoek een gerecht</label>
+      <input id="search" type="search" placeholder="Zoek een gerecht…" autocomplete="off">
+      <nav id="photo-list" aria-label="Originele foto's"><p class="muted">Foto's laden…</p></nav>
+      <div class="library-footer"><span class="small-dot"></span> Originelen blijven altijd bewaard</div>
+    </aside>
+    <main>
+      <div id="empty" hidden><h1>Geen foto's gevonden</h1><p>Voeg een foto toe aan een receptmap onder content/recipes.</p></div>
+      <div id="editor" hidden>
+        <div class="page-heading"><div><div class="eyebrow">FOTO VERFIJNEN</div><h1 id="photo-title"></h1><p id="photo-filename" class="muted"></p></div><button id="restore" class="text-button" type="button">Origineel gebruiken op site</button></div>
+        <div class="editor-grid">
+          <section class="visuals" aria-label="Fotovergelijking">
+            <div class="compare-header"><h2>Vergelijk met je origineel</h2><label class="checkbox"><input id="zoom" type="checkbox"> Details vergroten</label></div>
+            <div class="preview-toolbar">
+              <label for="preview-mode">Weergave <select id="preview-mode" aria-describedby="preview-explanation"><option value="full">Volledige foto</option><option value="card">Receptkaart</option><option value="hero">Receptpagina (grote foto)</option></select></label>
+            </div>
+            <p id="preview-explanation" class="helper">De volledige foto, zonder uitsnede. Bekijk ook hoe de foto op een kaart of als hoofdfoto wordt weergegeven.</p>
+            <div class="comparison" id="photo-comparison">
+              <figure class="photo-panel"><figcaption><span>Origineel</span><span class="mini-tag">BEWAARD</span></figcaption><div class="image-stage"><img id="original-image" alt="Originele gerechtfoto"></div></figure>
+              <figure class="photo-panel"><figcaption><span id="preview-label">Huidige foto op de site</span><span id="preview-tag" class="mini-tag"></span></figcaption><div class="image-stage"><img id="preview-image" alt="Geselecteerde fotovariant"></div></figure>
+            </div>
+            <div class="selection-bar"><span id="selection-note" class="muted">Selecteer een variant om te vergelijken.</span><div class="selection-actions"><button id="card-crop" class="secondary" type="button">Kaartuitsnede</button><button id="add-highlight" class="secondary" type="button" disabled>Uitlichten op homepage</button><button id="add-gallery" class="secondary" type="button" disabled>Toevoegen aan galerij</button><button id="apply" class="primary" type="button" disabled>Als receptfoto gebruiken</button></div></div>
+            <section class="gallery-section" aria-label="Homepagecarousel"><div class="section-heading"><h2>Homepagecarousel</h2><span id="highlight-count" class="muted"></span></div><p class="helper">Kies maximaal vijf foto’s. De volgorde geldt voor de homepage in alle talen. Origineel en varianten blijven bewaard. Carouseluitsnede werkt alleen op desktop; de mobiele banner behoudt de volledige foto. Ververs de site na een wijziging.</p><div id="highlights" class="site-gallery"></div></section>
+            <section class="gallery-section" aria-label="Galerij op de site"><div class="section-heading"><h2>Foto’s op de receptpagina</h2><span id="gallery-count" class="muted"></span></div><p class="helper">De eerste foto verschijnt op de receptpagina en het receptkaartje. Pas de volgorde aan of kies een andere hoofdfoto.</p><button id="recipe-crop" class="secondary" type="button">Receptuitsnede — grote foto</button><p class="helper">Bepaal hier de uitsnede van de grote foto bovenaan de receptpagina. Deze instelling staat los van Kaartuitsnede en Carouseluitsnede.</p><div id="site-gallery" class="site-gallery"></div></section>
+            <section class="variants-section"><div class="section-heading"><h2>Varianten</h2><span id="variant-count" class="muted"></span></div><div id="variants" class="variant-grid"></div></section>
+            <section id="jobs-section" class="jobs-section" hidden><div class="section-heading"><h2>Opdrachten</h2><span class="muted">Blijft bewaard na herstart</span></div><div id="jobs"></div></section>
+          </section>
+          <aside class="controls">
+            <div class="eyebrow">MAAK EEN NIEUWE VARIANT</div><h2>Een beetje mooier.<br>Nog steeds jouw foto.</h2>
+            <form id="generate-form">
+              <label for="base">Begin met</label><select id="base"></select>
+              <fieldset class="mode-picker"><legend>Bewerking</legend><label><input type="radio" name="mode" value="local" checked><span><strong>Fotocorrectie</strong><small>Licht, kleur en scherpte. Volledig lokaal.</small></span></label><label><input type="radio" name="mode" value="codex"><span><strong>AI met Codex</strong><small>Bewerk met je eigen instructies.</small></span></label></fieldset>
+              <div id="local-options">
+                <p class="helper">De inhoud en compositie blijven behouden. Alleen de beeldwaarden veranderen.</p>
+                <div class="slider-field"><label for="brightness">Helderheid <output id="brightness-value">+3%</output></label><input id="brightness" type="range" min="0.7" max="1.3" step="0.01" value="1.03"></div>
+                <div class="slider-field"><label for="contrast">Contrast <output id="contrast-value">+3%</output></label><input id="contrast" type="range" min="0.8" max="1.25" step="0.01" value="1.03"></div>
+                <div class="slider-field"><label for="saturation">Kleur <output id="saturation-value">+2%</output></label><input id="saturation" type="range" min="0.5" max="1.5" step="0.01" value="1.02"></div>
+                <div class="slider-field"><label for="sharpness">Detail <output id="sharpness-value">0.4</output></label><input id="sharpness" type="range" min="0" max="2" step="0.1" value="0.4"></div>
+              </div>
+              <div id="ai-options" hidden>
+                <label for="style">Afwerking</label><select id="style"><option value="subtle">Subtiel — zo dicht mogelijk bij origineel</option><option value="editorial">Culinair — verfijnd licht en contrast</option></select>
+                <label for="instructions">Extra instructies</label><textarea id="instructions" rows="5" maxlength="4000" placeholder="Bijvoorbeeld: maak het licht zachter. Behoud de rumfles en het etiket precies zoals ze zijn."></textarea>
+                <label for="preserve">Dit moet zeker blijven</label><input id="preserve" maxlength="1000" placeholder="Bijv. rumfles, etiket, glazen en achtergrond">
+                <div class="preserve-note"><strong>Behoud staat voorop</strong><p>Gerecht, servies, flessen, etiketten en compositie blijven onderdeel van de opdracht. AI kan toch details veranderen; vergelijk het resultaat altijd.</p></div>
+                <p class="helper" id="codex-note">Codex gebruikt je lokale aanmelding. De AI-verwerking gebeurt online en gebruikt je Codex-limiet.</p>
+              </div>
+              <label for="count">Aantal varianten</label><select id="count"><option value="1">1 variant</option><option value="2">2 varianten</option><option value="3">3 varianten</option><option value="4">4 varianten</option></select>
+              <p id="count-note" class="helper">Elke variant wordt apart bewaard.</p>
+              <button id="generate" class="primary generate-button" type="submit">✧ Maak een variant</button>
+              <p class="helper centered">Je kiest zelf wat er op de site verschijnt.</p>
+              <details class="prompt-details"><summary>Bekijk de AI-opdracht</summary><pre id="prompt-preview"></pre></details>
+            </form>
+          </aside>
+        </div>
+      </div>
+    </main>
+  </div>
+  <div id="toast" role="status" aria-live="polite" hidden></div>
+  <dialog id="crop-dialog" aria-labelledby="crop-title">
+    <form id="crop-form">
+      <div id="crop-eyebrow" class="eyebrow">HOMEPAGECAROUSEL · DESKTOP</div>
+      <h2 id="crop-title">Uitsnede aanpassen</h2>
+      <p id="crop-description" class="helper">Verplaats de foto binnen de brede desktopbanner. Het origineel, de receptfoto en de mobiele weergave blijven behouden. Het voorbeeld toont de verhoudingen bij een brede desktop; de exacte uitsnede hangt af van de schermbreedte.</p>
+      <div id="crop-ratio-field" hidden><label for="crop-ratio">Verhouding</label><select id="crop-ratio"><option value="free">Vrij — breedte en hoogte apart aanpassen</option><option value="original">Oorspronkelijke verhouding vastzetten</option><option value="4:3">Liggend (4:3)</option><option value="3:2">Breed (3:2)</option><option value="1:1">Vierkant (1:1)</option><option value="2:3">Portret (2:3)</option><option value="3:4">Portret (3:4)</option><option value="16:9">Panorama (16:9)</option></select><p class="helper">Vrij: pas breedte en hoogte onafhankelijk aan. Kies een standaardverhouding om die vast te zetten.</p></div>
+      <p class="helper">Sleep het kader om de uitsnede te verplaatsen. Sleep de hoek rechtsonder om het kader te verkleinen of vergroten. Je kunt ook de pijltoetsen en de zoomknoppen gebruiken.</p>
+      <div id="crop-source" class="crop-source">
+        <img id="crop-source-image" alt="Volledige foto voor uitsnede" draggable="false">
+        <div id="crop-selection" class="crop-selection" tabindex="0" role="group" aria-label="Uitsnede verplaatsen met de pijltoetsen">
+          <span class="crop-grid" aria-hidden="true"></span><button id="crop-handle-right" class="crop-side-handle" type="button" aria-label="Breedte van de uitsnede aanpassen" title="Sleep om de breedte aan te passen">↔</button><button id="crop-handle-bottom" class="crop-side-handle" type="button" aria-label="Hoogte van de uitsnede aanpassen" title="Sleep om de hoogte aan te passen">↕</button><button id="crop-handle" type="button" aria-label="Uitsnede vergroten of verkleinen" title="Sleep om de grootte aan te passen">↘</button>
+        </div>
+      </div>
+      <div class="crop-zoom-actions"><button id="crop-zoom-out" type="button" class="secondary">Groter kader</button><button id="crop-zoom-in" type="button" class="secondary">Kleiner kader</button><span id="crop-zoom-label" class="helper"></span></div>
+      <h3>Voorbeeld op de site</h3>
+      <div id="crop-preview" class="crop-preview"><img id="crop-image" alt=""><div class="crop-shade"></div><div class="crop-caption"><small>Een voorproefje</small><strong id="crop-caption"></strong></div></div>
+      <input id="crop-x" type="hidden" value="50"><input id="crop-y" type="hidden" value="50">
+      <p id="crop-help" class="helper">Bij deze beeldverhouding heeft meestal één schuif effect. Opslaan geldt alleen voor deze foto in de desktopcarousel.</p>
+      <p id="crop-error" role="alert" hidden></p>
+      <div class="dialog-actions"><button id="crop-reset" type="button" class="secondary">Herstel oorspronkelijke weergave</button><button id="crop-cancel" type="button" class="secondary">Annuleren</button><button id="crop-save" type="submit" class="primary">Uitsnede opslaan</button></div>
+    </form>
+  </dialog>
+  <dialog id="apply-dialog" aria-labelledby="confirm-title" aria-describedby="confirm-description"><form method="dialog"><div class="eyebrow">JOUW KEUZE</div><h2 id="confirm-title">Deze foto als hoofdfoto gebruiken?</h2><p id="confirm-description">De hoofdfoto wordt aangepast voor alle talen van dit recept. Het origineel en je varianten blijven bewaard.</p><div class="dialog-actions"><button value="cancel" class="secondary">Terug</button><button value="apply" class="primary">Bevestigen</button></div></form></dialog>
+</body>
+</html>

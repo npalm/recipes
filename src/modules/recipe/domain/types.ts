@@ -114,6 +114,8 @@ export interface RecipeCard {
   totalTime: number;
   tags: string[];
   images: string[];
+  imageCrop?: import('@/lib/card-image-crops').CardImageCrop;
+  imageDimensions?: { width: number; height: number };
   status: RecipeStatus;
   createdAt: string;
 }

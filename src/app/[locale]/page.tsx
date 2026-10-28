@@ -1,3 +1,4 @@
+import { randomInt } from 'node:crypto';
 import Link from 'next/link';
 import { getTranslations } from 'next-intl/server';
 import { Metadata } from 'next';
@@ -7,6 +8,8 @@ import { RecipeGrid } from '@/modules/recipe/components';
 import { Button } from '@/components/ui/button';
 import { createRecipeService } from '@/modules/recipe/services';
 import { config } from '@/lib/config';
+import { HomeCarousel } from '@/modules/recipe/components/HomeCarousel';
+import { getHomeHighlights } from '@/lib/home-highlights';
 import { getBaseUrl } from '@/lib/server-utils';
 
 type Props = {
@@ -43,16 +46,18 @@ export default async function HomePage({ params }: Props) {
     { field: 'createdAt', direction: 'desc' }
   );
 
+  const highlights = await getHomeHighlights(recipes);
+
   return (
     <Layout>
-      {/* Hero Section */}
+      {highlights.length > 0 ? <HomeCarousel key={JSON.stringify(highlights)} slides={highlights} locale={locale} initialIndex={randomInt(highlights.length)} /> : (
       <section className="relative mb-12 overflow-hidden rounded-3xl bg-gradient-to-br from-primary/10 via-primary/5 to-background p-8 md:p-12">
         <div className="relative z-10">
           <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-primary/10 px-3 py-1 text-sm font-medium text-primary">
             <Sparkles className="h-4 w-4" />
             {t('home.personalCollection')}
           </div>
-          <h1 className="mb-4 text-4xl font-bold tracking-tight md:text-5xl lg:text-6xl">
+          <h1 className="mb-4 font-display text-4xl font-semibold leading-[1.1] tracking-tight md:text-5xl lg:text-6xl">
             {t('home.myRecipes')}
           </h1>
           <p className="mb-8 max-w-2xl text-lg text-muted-foreground md:text-xl">
@@ -72,6 +77,7 @@ export default async function HomePage({ params }: Props) {
         <div className="absolute -right-20 -top-20 h-64 w-64 rounded-full bg-primary/10 blur-3xl" />
         <div className="absolute -bottom-32 -left-32 h-96 w-96 rounded-full bg-primary/5 blur-3xl" />
       </section>
+      )}
 
       {/* Stats Section (if recipes exist) */}
       {recipes.length > 0 && (
@@ -95,7 +101,7 @@ export default async function HomePage({ params }: Props) {
       {/* Recipes Section */}
       <section>
         <div className="mb-6 flex items-center justify-between">
-          <h2 className="text-2xl font-semibold tracking-tight">{t('home.latestRecipes')}</h2>
+          <h2 className="font-display text-[1.75rem] font-semibold leading-tight tracking-tight sm:text-3xl">{t('home.latestRecipes')}</h2>
           <Button variant="ghost" size="sm" asChild>
             <Link href={`/${locale}/search`}>{t('home.viewAll')}</Link>
           </Button>

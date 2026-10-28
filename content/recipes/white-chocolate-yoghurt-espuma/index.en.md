@@ -8,8 +8,7 @@ cookTime: 5
 waitTime: 120
 difficulty: medium
 tags: ["siphon", "espuma", "white chocolate"]
-images: 
-  - white-chocolate-yoghurt-espuma.jpg
+images: ["white-chocolate-yoghurt-espuma-enhanced-89741207-31c4-4fbf-b30e-64b2c648c4ef.jpg"]
 createdAt: "2026-10-04"
 ---
 

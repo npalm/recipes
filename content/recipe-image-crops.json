@@ -1,0 +1,38 @@
+{
+  "crops": [
+    {
+      "slug": "strawberries-lime-white-chocolate-foam",
+      "filename": "strawberries-enhanced-e149f487-b053-4ffd-b5b9-5aa4e6a0afcc.jpg",
+      "ratio": "1:1",
+      "x": 50,
+      "y": 66.29164814725513,
+      "zoom": 1
+    },
+    {
+      "slug": "mushroom-tartare",
+      "filename": "mushroom-tartare-enhanced-a9bd417b-de1f-4019-bae0-5b325fc8285d.jpg",
+      "ratio": "3:2",
+      "x": 50,
+      "y": 42.738767069087416,
+      "zoom": 1
+    },
+    {
+      "slug": "strawberries-lime-white-chocolate-foam",
+      "filename": "strawberries-enhanced-f23d4ba7-0487-4ff7-a604-f17dc3b2bb92.jpg",
+      "ratio": "3:2",
+      "x": 50,
+      "y": 30.181154034366365,
+      "zoom": 1,
+      "free": false
+    },
+    {
+      "slug": "chocolate-panna-cotta-orange",
+      "filename": "panna-cotta-chock-enhanced-271d7eaa-bc60-4106-ad99-d36f9d585f59.jpg",
+      "ratio": "1.21648509:1",
+      "x": 50,
+      "y": 17.95212765957447,
+      "zoom": 1,
+      "free": true
+    }
+  ]
+}

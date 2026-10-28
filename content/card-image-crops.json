@@ -1,0 +1,55 @@
+{
+  "crops": [
+    {
+      "slug": "chocolate-panna-cotta-orange",
+      "filename": "panna-cotta-chock-enhanced-271d7eaa-bc60-4106-ad99-d36f9d585f59.jpg",
+      "ratio": "4:3",
+      "x": 50,
+      "y": 11.975607872503085,
+      "zoom": 1
+    },
+    {
+      "slug": "mushroom-tartare",
+      "filename": "mushroom-tartare-enhanced-a9bd417b-de1f-4019-bae0-5b325fc8285d.jpg",
+      "ratio": "3:2",
+      "x": 50,
+      "y": 42.738767069087416,
+      "zoom": 1
+    },
+    {
+      "slug": "spicy-white-chocolate-mousse",
+      "filename": "spicy-white-cholate-mouse-enhanced-f3fee15f-9aa7-48dc-8c42-8cd371bee04c.jpg",
+      "ratio": "1:1",
+      "x": 100,
+      "y": 62.73454789524383,
+      "zoom": 1.0287674862371572
+    },
+    {
+      "slug": "white-chocolate-yoghurt-espuma",
+      "filename": "white-chocolate-yoghurt-espuma-enhanced-89741207-31c4-4fbf-b30e-64b2c648c4ef.jpg",
+      "ratio": "1.08588014:1",
+      "x": 35.87556235403887,
+      "y": 53.39366886105774,
+      "zoom": 1.07879089148655,
+      "free": true
+    },
+    {
+      "slug": "strawberries-lime-white-chocolate-foam",
+      "filename": "strawberries-enhanced-e149f487-b053-4ffd-b5b9-5aa4e6a0afcc.jpg",
+      "ratio": "0.94206349:1",
+      "x": 50,
+      "y": 81.58242005580895,
+      "zoom": 1,
+      "free": true
+    },
+    {
+      "slug": "strawberries-lime-white-chocolate-foam",
+      "filename": "strawberries-enhanced-f23d4ba7-0487-4ff7-a604-f17dc3b2bb92.jpg",
+      "ratio": "0.92252661:1",
+      "x": 50,
+      "y": 88.7415740931152,
+      "zoom": 1,
+      "free": true
+    }
+  ]
+}

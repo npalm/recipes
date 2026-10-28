@@ -7,7 +7,7 @@ prepTime: 15
 cookTime: 15
 difficulty: medium
 tags: ["salmon", "sous-vide", "japanese", "main", "noodles"]
-images: ["salmon.jpg"]
+images: ["salmon-artistic.jpg"]
 createdAt: "2026-05-31"
 ---
 

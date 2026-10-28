@@ -9,6 +9,8 @@ import path from 'path';
 import { Recipe, RecipeCard } from '@/modules/recipe/domain';
 import { parseRecipe, RecipeParseError } from '@/lib/markdown/parser';
 import { resolveComponentReferences } from '@/modules/recipe/services/componentResolver';
+import { getCardImageCrops } from '@/lib/card-image-crops';
+import { getRecipeImageDimensions } from '@/lib/recipe-image-metadata';
 
 /**
  * Configuration for the recipe repository
@@ -36,11 +38,11 @@ export function getRecipeSlugs(
   const contentDir = config.contentDir;
 
   try {
-    if (!fs.existsSync(contentDir)) {
+    if (!fs.existsSync(/* turbopackIgnore: true */ contentDir)) {
       return [];
     }
 
-    const entries = fs.readdirSync(contentDir, { withFileTypes: true });
+    const entries = fs.readdirSync(/* turbopackIgnore: true */ contentDir, { withFileTypes: true });
     return entries
       .filter((entry) => entry.isDirectory())
       .map((entry) => entry.name)
@@ -153,7 +155,12 @@ export async function getAllRecipeCards(
   config = DEFAULT_CONFIG
 ): Promise<RecipeCard[]> {
   const recipes = await getAllRecipes(locale, config);
-  return recipes.map(recipeToCard);
+  const crops = await getCardImageCrops(config.contentDir);
+  return Promise.all(recipes.map(async recipe => ({
+    ...recipeToCard(recipe),
+    imageCrop: crops.find(crop => crop.slug === recipe.slug && crop.filename === recipe.images[0]),
+    imageDimensions: await getRecipeImageDimensions(recipe.slug, recipe.images[0], config.contentDir),
+  })));
 }
 
 /**

@@ -58,7 +58,7 @@ export function SearchPageClient({
   return (
     <Layout>
       <div className="mb-8">
-        <h1 className="text-3xl font-bold tracking-tight md:text-4xl">
+        <h1 className="font-display text-3xl font-semibold leading-tight tracking-tight md:text-4xl">
           {t('search.title')}
         </h1>
         <p className="mt-2 text-muted-foreground">

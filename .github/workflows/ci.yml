@@ -44,6 +44,9 @@ jobs:
       - name: Run ESLint
         run: pnpm lint
 
+      - name: Validate recipes
+        run: pnpm lint:recipes
+
   typecheck:
     name: Type Check
     runs-on: ubuntu-latest
@@ -95,9 +98,6 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Run tests
-        run: pnpm test -- --run
-
       - name: Run tests with coverage
         run: pnpm test:coverage
 
@@ -139,13 +139,56 @@ jobs:
           fi
           echo "Build successful!"
 
+  image-editor:
+    name: Image Editor
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@ea17c68df8912ef543352723c149a84f56e3d413 # v6.1.0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: '24'
+          cache: 'pnpm'
+          cache-dependency-path: pnpm-lock.yaml
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Lint image editor
+        run: pnpm images:lint
+
+      - name: Test image editor without AI calls
+        run: pnpm images:test
+
   # Summary job to check all required jobs passed
   ci-success:
     name: CI Success
     runs-on: ubuntu-latest
-    needs: [lint, typecheck, test, build]
+    needs: [lint, typecheck, test, build, image-editor]
+    if: ${{ always() }}
     permissions:
       contents: read
     steps:
-      - name: All checks passed
-        run: echo "All CI checks passed successfully!"
+      - name: Verify all required jobs succeeded
+        env:
+          REQUIRED_JOB_RESULTS: ${{ toJSON(needs) }}
+        run: |
+          node <<'NODE'
+          const results = JSON.parse(process.env.REQUIRED_JOB_RESULTS);
+          const failed = Object.entries(results).filter(([, job]) => job.result !== 'success');
+          if (failed.length) {
+            console.error('Required jobs did not succeed:', failed.map(([name, job]) => `${name}: ${job.result}`).join(', '));
+            process.exit(1);
+          }
+          console.log('All CI checks passed successfully!');
+          NODE

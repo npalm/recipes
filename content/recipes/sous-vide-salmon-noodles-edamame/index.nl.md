@@ -7,7 +7,7 @@ prepTime: 15
 cookTime: 15
 difficulty: medium
 tags: ["zalm", "sous-vide", "japans", "hoofdgerecht", "noedels"]
-images: ["salmon.jpg"]
+images: ["salmon-artistic.jpg"]
 createdAt: "2026-05-31"
 ---
 

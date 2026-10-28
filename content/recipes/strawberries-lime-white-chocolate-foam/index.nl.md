@@ -7,7 +7,7 @@ prepTime: 20
 cookTime: 5
 difficulty: medium
 tags: ["dessert", "aardbei", "limoen", "witte-chocolade", "espuma"]
-images: ["strawberries.jpg"]
+images: ["strawberries-enhanced-f23d4ba7-0487-4ff7-a604-f17dc3b2bb92.jpg"]
 createdAt: "2026-05-31"
 ---
 

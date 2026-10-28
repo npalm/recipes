@@ -7,8 +7,7 @@ prepTime: 15
 cookTime: 5
 difficulty: medium
 tags: ["vegetarian", "tartare", "asian"]
-images: 
-  - mushroom-tartare.jpg
+images: ["mushroom-tartare-enhanced-a9bd417b-de1f-4019-bae0-5b325fc8285d.jpg"]
 createdAt: "2026-10-04"
 ---
 

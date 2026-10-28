@@ -1,11 +1,12 @@
 import { Link } from '@/navigation';
-import { Clock, ChefHat, Flame } from 'lucide-react';
+import { Clock, ChefHat, Flame, Images } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { RecipeCard as RecipeCardType, Difficulty } from '@/modules/recipe/domain';
+import { LocalImageEditorLink } from './LocalImageEditorLink';
 import { RecipeThumbnail } from './ImageGallery';
-import { formatTime, truncate } from '@/modules/shared/utils';
+import { formatTime } from '@/modules/shared/utils';
 
 /**
  * Difficulty badge configuration
@@ -56,23 +57,17 @@ export function RecipeCard({ recipe }: RecipeCardProps) {
   const difficulty = difficultyConfig[recipe.difficulty];
 
   return (
-    <Link href={href} className="group block">
-      <Card className="h-full overflow-hidden border-0 bg-card shadow-sm transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
+    <div className="relative mb-6 break-inside-avoid lg:mb-8">
+    <Link href={href} className="group block rounded-2xl outline-offset-4 focus-visible:outline-2 focus-visible:outline-primary">
+      <Card className="gap-0 overflow-hidden rounded-2xl border border-border/60 bg-card py-0 shadow-none transition-[border-color,box-shadow] duration-200 group-hover:border-primary/30 group-hover:shadow-md">
         <div className="relative">
           <RecipeThumbnail
             images={recipe.images}
             slug={recipe.slug}
             title={recipe.title}
+            dimensions={recipe.imageDimensions}
+            crop={recipe.imageCrop}
           />
-          {/* Overlay gradient */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 transition-opacity group-hover:opacity-100" />
-          
-          {/* Time badge on image */}
-          <div className="absolute bottom-3 left-3 flex items-center gap-1.5 rounded-full bg-white/95 px-2.5 py-1 text-xs font-medium text-gray-800 shadow-sm backdrop-blur-sm dark:bg-black/80 dark:text-gray-200">
-            <Clock className="h-3.5 w-3.5" />
-            {formatTime(recipe.totalTime)}
-          </div>
-
           {/* Draft indicator */}
           {recipe.status === 'draft' && (
             <div className="absolute right-3 top-3">
@@ -81,49 +76,43 @@ export function RecipeCard({ recipe }: RecipeCardProps) {
           )}
         </div>
 
-        <CardContent className="p-5">
+        <CardContent className="flex flex-col p-5">
+          <div className="mb-3 flex flex-wrap items-center gap-x-3 gap-y-1.5 text-xs text-muted-foreground">
+            <span className="inline-flex items-center gap-1.5" aria-label={`${t('recipe.totalTime')}: ${formatTime(recipe.totalTime)}`}>
+              <Clock className="h-3.5 w-3.5" aria-hidden="true" />
+              {formatTime(recipe.totalTime)}
+            </span>
+            <span aria-hidden="true">·</span><span>{difficulty.label}</span>
+            {recipe.images.length > 1 && <span className="ml-auto inline-flex items-center gap-1.5" aria-label={t('recipe.photosCount', { count: recipe.images.length })}><Images className="h-3.5 w-3.5" aria-hidden="true" />{recipe.images.length}</span>}
+          </div>
           {/* Title */}
-          <h3 className="mb-2 text-lg font-semibold leading-snug tracking-tight transition-colors group-hover:text-primary">
+          <h3 className="mb-2 font-display text-lg font-semibold leading-[1.3] tracking-[-0.025em] transition-colors group-hover:text-primary sm:text-xl">
             {recipe.title}
           </h3>
 
           {/* Description */}
-          <p className="mb-4 text-sm leading-relaxed text-muted-foreground line-clamp-2">
-            {truncate(recipe.description, 100)}
+          <p className="line-clamp-2 text-sm leading-relaxed text-muted-foreground">
+            {recipe.description}
           </p>
-
-          {/* Meta row */}
-          <div className="mb-4 flex items-center gap-3">
-            <Badge
-              variant="secondary"
-              className={`${difficulty.className} flex items-center gap-0.5 border-0 text-xs font-medium`}
-            >
-              {difficulty.icon}
-              <span className="ml-1">{difficulty.label}</span>
-            </Badge>
-          </div>
 
           {/* Tags */}
           {recipe.tags.length > 0 && (
-            <div className="flex flex-wrap gap-1.5">
+            <div className="mt-4 flex flex-wrap gap-x-3 gap-y-1 text-[11px] text-muted-foreground">
               {recipe.tags.slice(0, 3).map((tag) => (
                 <span
                   key={tag}
-                  className="rounded-full bg-muted px-2.5 py-0.5 text-xs text-muted-foreground"
+                  className="lowercase"
                 >
                   {tag}
                 </span>
               ))}
-              {recipe.tags.length > 3 && (
-                <span className="rounded-full bg-muted px-2.5 py-0.5 text-xs text-muted-foreground">
-                  +{recipe.tags.length - 3}
-                </span>
-              )}
             </div>
           )}
         </CardContent>
       </Card>
     </Link>
+    <LocalImageEditorLink slug={recipe.slug} image={recipe.images[0]} view="card" className="left-3 top-3" />
+    </div>
   );
 }
 
@@ -148,7 +137,7 @@ export function RecipeGrid({ recipes }: { recipes: RecipeCardType[] }) {
   }
 
   return (
-    <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+    <div className="columns-1 gap-6 sm:columns-2 lg:columns-3 lg:gap-8">
       {recipes.map((recipe) => (
         <RecipeCard key={recipe.slug} recipe={recipe} />
       ))}

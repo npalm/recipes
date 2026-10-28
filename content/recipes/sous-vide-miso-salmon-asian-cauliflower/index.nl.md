@@ -7,7 +7,7 @@ cookTime: 45
 difficulty: medium
 tags: ["hoofdgerecht", "vis", "zalm", "sous-vide", "aziatisch", "miso"]
 images:
-  - miso-salmon.jpg
+  - miso-salmon-artistic.jpg
 headerImageRotation: true
 createdAt: "2026-03-22"
 ---

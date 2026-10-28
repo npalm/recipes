@@ -47,7 +47,7 @@
     "description": "Een zorgvuldig samengestelde collectie van culinaire hoogstandjes, van klassieke comfortgerechten tot innovatieve creaties.",
     "browseRecipes": "Recepten Bekijken",
     "generateDinner": "Diner Ideeën Genereren",
-    "featuredRecipes": "Uitgelichte Recepten",
+    "featuredRecipes": "Een voorproefje",
     "recentRecipes": "Recente Recepten",
     "popularRecipes": "Populaire Recepten",
     "noRecipes": "Geen recepten gevonden",
@@ -59,7 +59,12 @@
     "latestRecipes": "Laatste Recepten",
     "viewAll": "Bekijk alles",
     "noRecipesYet": "Nog geen recepten",
-    "addFirstRecipe": "Voeg je eerste recept toe om te beginnen!"
+    "addFirstRecipe": "Voeg je eerste recept toe om te beginnen!",
+    "carousel": "Carousel",
+    "viewRecipe": "Bekijk het recept",
+    "previousHighlight": "Vorige uitgelichte foto",
+    "nextHighlight": "Volgende uitgelichte foto",
+    "showHighlight": "Bekijk foto {number}: {title}"
   },
   "recipe": {
     "title": "Recept",
@@ -90,6 +95,11 @@
     "backToRecipes": "Terug naar Recepten",
     "gallery": "Galerij",
     "viewFullImage": "Volledig beeld bekijken",
+    "closeImage": "Afbeelding sluiten",
+    "pauseGallery": "Diavoorstelling pauzeren",
+    "playGallery": "Diavoorstelling afspelen",
+    "photoNumber": "Foto {number}",
+    "photosCount": "{count, plural, one {# foto} other {# foto's}}",
     "draft": "Concept",
     "print": "Afdrukken",
     "parts": "onderdelen",
@@ -245,5 +255,11 @@
     "generatedBy": "Gemaakt met {name}",
     "description": "Boodschappenlijst voor {count} recept(en)",
     "notFound": "Boodschappenlijst niet gevonden"
+  },
+  "imageEditor": {
+    "open": "Bewerk foto",
+    "card": "Open deze kaartfoto in de lokale editor",
+    "hero": "Open deze receptfoto in de lokale editor",
+    "full": "Open deze carouselfoto in de lokale editor"
   }
 }

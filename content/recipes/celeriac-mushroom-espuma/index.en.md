@@ -10,7 +10,7 @@ difficulty: "medium"
 servings: 2
 status: published
 images:
-  - celeriac-espuma.jpg
+  - celeriac-espuma-artistic.jpg
 headerImageRotation: true
 createdAt: "2026-02-08"
 ---

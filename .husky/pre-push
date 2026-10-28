@@ -5,7 +5,7 @@ echo ""
 
 # Type check
 echo "📝 Type checking..."
-pnpm typecheck
+corepack pnpm typecheck
 if [ $? -ne 0 ]; then
   echo "❌ Type check failed! Fix type errors before pushing."
   exit 1
@@ -15,7 +15,7 @@ echo ""
 
 # Run tests
 echo "🧪 Running tests..."
-pnpm test -- --run
+corepack pnpm exec vitest run
 if [ $? -ne 0 ]; then
   echo "❌ Tests failed! Fix failing tests before pushing."
   exit 1
@@ -23,9 +23,19 @@ fi
 echo "✅ Tests passed"
 echo ""
 
+# Check the standalone local editor
+echo "🖼️  Checking image editor..."
+corepack pnpm images:lint && corepack pnpm images:test
+if [ $? -ne 0 ]; then
+  echo "❌ Image editor checks failed!"
+  exit 1
+fi
+echo "✅ Image editor checks passed"
+echo ""
+
 # Build check
 echo "🔨 Running build check..."
-pnpm build
+corepack pnpm build
 if [ $? -ne 0 ]; then
   echo "❌ Build failed! Fix the build before pushing."
   exit 1

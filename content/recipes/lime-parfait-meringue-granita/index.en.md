@@ -9,8 +9,7 @@ waitTime: 675
 totalTime: 420
 difficulty: medium
 tags: ["dessert", "lime", "parfait", "meringue", "mango", "passionfruit"]
-images:
-  - lime-parfait-mango-granita.jpg
+images: ["lime-parfait-mango-granita-artistic.jpg"]
 headerImageRotation: false
 createdAt: "2026-05-23"
 ---

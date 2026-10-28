@@ -56,8 +56,7 @@ function NavLink({
 export function Header() {
   const t = useTranslations();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const { resolvedTheme, toggleTheme } = useTheme();
-  const isDark = resolvedTheme === 'dark';
+  const { toggleTheme } = useTheme();
 
   const closeMobileMenu = () => setMobileMenuOpen(false);
 
@@ -105,7 +104,7 @@ export function Header() {
               onClick={toggleTheme}
               className="hidden h-9 w-9 md:flex"
             >
-              {isDark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+              <Sun className="hidden h-4 w-4 dark:block" /><Moon className="h-4 w-4 dark:hidden" />
               <span className="sr-only">{t('theme.toggle')}</span>
             </Button>
 
@@ -158,8 +157,8 @@ export function Header() {
                 }}
                 className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground"
               >
-                {isDark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
-                {isDark ? t('theme.lightMode') : t('theme.darkMode')}
+                <Sun className="hidden h-4 w-4 dark:block" /><Moon className="h-4 w-4 dark:hidden" />
+                <span className="hidden dark:inline">{t('theme.lightMode')}</span><span className="dark:hidden">{t('theme.darkMode')}</span>
               </button>
             </nav>
           </div>

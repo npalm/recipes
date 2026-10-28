@@ -9,7 +9,7 @@ waitTime: 5
 difficulty: medium
 tags: ["hoofdgerecht", "vegetarisch", "knolselderij", "champignons", "sjalotten"]
 images: 
-  - celeriac-steak.jpg
+  - celeriac-steak-artistic.jpg
 headerImageRotation: true
 createdAt: "2026-02-08"
 ---

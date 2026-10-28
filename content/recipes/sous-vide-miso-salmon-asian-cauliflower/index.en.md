@@ -7,7 +7,7 @@ cookTime: 45
 difficulty: medium
 tags: ["main", "fish", "salmon", "sous-vide", "asian", "miso"]
 images:
-  - miso-salmon.jpg
+  - miso-salmon-artistic.jpg
 headerImageRotation: true
 createdAt: "2026-03-22"
 ---

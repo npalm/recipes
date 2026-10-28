@@ -8,7 +8,7 @@ cookTime: 0
 waitTime: 45
 difficulty: easy
 tags: ["ei", "japans", "voorgerecht", "sous-vide", "dashi"]
-images: ["onsen-tamago.jpg"]
+images: ["onsen-tamago-artistic.jpg"]
 createdAt: "2026-05-31"
 ---
 

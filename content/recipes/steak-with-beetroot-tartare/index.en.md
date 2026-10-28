@@ -8,7 +8,7 @@ cookTime: 60
 difficulty: medium
 tags: ["game", "venison", "main course", "sous vide", "gastronomic"]
 images: 
-  - ree.jpg
+  - ree-artistic.jpg
 headerImageRotation: true
 createdAt: "2026-01-24"
 ---

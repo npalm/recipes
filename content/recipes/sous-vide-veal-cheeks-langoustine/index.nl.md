@@ -8,7 +8,7 @@ cookTime: 0
 difficulty: hard
 tags: ["sous vide", "kalfsvlees", "langoustine", "hoofdgerecht", "gastronomisch"]
 images: 
-  - veal-cheeks.jpg
+  - veal-cheeks-artistic.jpg
 headerImageRotation: true
 createdAt: "2026-01-18"
 ---

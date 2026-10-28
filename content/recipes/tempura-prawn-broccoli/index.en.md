@@ -8,7 +8,7 @@ cookTime: 10
 difficulty: medium
 tags: ["starter", "side-dish", "tempura", "prawns", "broccoli", "miso", "japanese"]
 images:
-  - tempura-prawn-broccoli.jpg
+  - tempura-prawn-broccoli-artistic.jpg
 createdAt: "2026-10-16"
 ---
 
