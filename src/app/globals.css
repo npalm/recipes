@@ -130,6 +130,23 @@
   }
 }
 
+.cooking-progress {
+  appearance: none;
+  background: var(--muted);
+}
+.cooking-progress::-webkit-progress-bar {
+  background: var(--muted);
+  border-radius: 9999px;
+}
+.cooking-progress::-webkit-progress-value {
+  background: var(--primary);
+  border-radius: 9999px;
+}
+.cooking-progress::-moz-progress-bar {
+  background: var(--primary);
+  border-radius: 9999px;
+}
+
 /* Custom scrollbar for webkit browsers */
 @layer base {
   ::-webkit-scrollbar {

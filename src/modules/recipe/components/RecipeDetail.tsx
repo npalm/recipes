@@ -26,6 +26,7 @@ import { formatTime, formatDate } from '@/modules/shared/utils';
 import { getDifficultyConfig } from './RecipeCard';
 import { GenerateShoppingListButton } from '@/modules/shopping/components/GenerateShoppingListButton';
 import { useState } from 'react';
+import { CookingMode } from './CookingMode';
 
 interface RecipeDetailProps {
   recipe: Recipe;
@@ -40,6 +41,7 @@ export function RecipeDetail({ recipe, locale, imageCrop }: RecipeDetailProps) {
   const t = useTranslations();
   const difficulty = getDifficultyConfig(t)[recipe.difficulty];
   const [servings, setServings] = useState(recipe.servings);
+  const [cookingModeOpen, setCookingModeOpen] = useState(false);
 
   // Calculate totals from components if present, otherwise use recipe-level values
   const totalPrepTime = recipe.components
@@ -109,7 +111,10 @@ export function RecipeDetail({ recipe, locale, imageCrop }: RecipeDetailProps) {
                 {recipe.title}
               </h1>
             </div>
-            <div className="flex gap-2 print:hidden">
+            <div className="flex flex-wrap gap-2 print:hidden">
+              <Button size="sm" className="gap-2" onClick={() => setCookingModeOpen(true)} disabled={!recipe.instructions.length && !recipe.components?.some(component => component.instructions.length)}>
+                <ChefHat className="h-4 w-4" aria-hidden="true" />{t('cooking.start')}
+              </Button>
               <GenerateShoppingListButton
                 recipes={[{ slug: recipe.slug, servings }]}
                 title={`Shopping List - ${recipe.title}`}
@@ -385,6 +390,7 @@ export function RecipeDetail({ recipe, locale, imageCrop }: RecipeDetailProps) {
           </Link>
         </Button>
       </div>
+      {cookingModeOpen && <CookingMode key={`${locale}-${recipe.slug}`} recipe={recipe} locale={locale} servings={servings} onClose={value => { setServings(value); setCookingModeOpen(false); }} />}
     </article>
   );
 }
