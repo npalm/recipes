@@ -163,7 +163,7 @@ export function CookingMode({ recipe, locale, servings, onClose }: Props) {
         if (target.closest('input, textarea, select, [contenteditable="true"]')) return;
         if (event.key === 'ArrowRight' && !finished && currentIndex < total - 1) { event.preventDefault(); goToStep(currentIndex + 1); }
         else if (event.key === 'ArrowLeft' && (finished || currentIndex > 0)) { event.preventDefault(); goToStep(finished ? total - 1 : currentIndex - 1); }
-        else if (event.key === ' ' && !finished && !target.closest('button, a, summary')) { event.preventDefault(); completeStep(); }
+        else if (event.key === ' ' && !finished && !target.closest('button, a, summary')) { event.preventDefault(); if (!event.repeat) completeStep(); }
       }}
     >
       <div ref={surface} className="flex h-full w-full flex-col bg-background text-foreground">
@@ -211,7 +211,7 @@ export function CookingMode({ recipe, locale, servings, onClose }: Props) {
             {fullscreenError && <p role="alert" className="mb-4 text-sm text-muted-foreground">{t('fullscreenError')}</p>}
 
             {presenterView && <nav ref={mobileOverview} aria-label={t('overview')} className="sticky top-0 z-10 -mx-4 mb-3 flex gap-2 overflow-x-auto bg-background px-4 py-1 lg:hidden">
-              {cooking.steps.map((step, index) => <button key={step.id} type="button" aria-label={t('goToStep', { number: index + 1 })} aria-current={!finished && index === currentIndex ? 'step' : undefined} className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-full border text-sm font-semibold ${!finished && index === currentIndex ? 'border-primary bg-primary text-primary-foreground' : progress.completedSteps.includes(step.id) ? 'border-primary/30 bg-primary/10 text-primary' : 'bg-card'}`} onClick={() => goToStep(index)}>{progress.completedSteps.includes(step.id) ? <Check className="h-4 w-4" /> : index + 1}</button>)}
+              {cooking.steps.map((step, index) => <button key={step.id} type="button" aria-label={`${t('goToStep', { number: index + 1 })}${progress.completedSteps.includes(step.id) ? ` — ${t('completed')}` : ''}`} aria-current={!finished && index === currentIndex ? 'step' : undefined} className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-full border text-sm font-semibold ${!finished && index === currentIndex ? 'border-primary bg-primary text-primary-foreground' : progress.completedSteps.includes(step.id) ? 'border-primary/30 bg-primary/10 text-primary' : 'bg-card'}`} onClick={() => goToStep(index)}>{progress.completedSteps.includes(step.id) ? <Check className="h-4 w-4" /> : index + 1}</button>)}
             </nav>}
 
             <div className={`grid items-start gap-4 lg:gap-6 ${presenterView ? 'lg:grid-cols-[minmax(0,1fr)_minmax(16rem,22rem)]' : 'lg:grid-cols-[minmax(16rem,20rem)_minmax(0,1fr)]'}`}>

@@ -136,6 +136,41 @@ describe('cooking mode', () => {
     expect(screen.getByRole('progressbar')).toHaveAttribute('value', '1');
   });
 
+  it('completes only one step per Space press and prevents scrolling on repeated keydown', () => {
+    openCooking({ ...recipe, instructions: ['Mix.', 'Bake.', 'Serve.'] });
+    fireEvent.click(screen.getByRole('button', { name: en.cooking.presenterView }));
+    fireEvent.keyDown(document.activeElement!, { key: ' ' });
+    for (let repeat = 0; repeat < 5; repeat++) {
+      expect(fireEvent.keyDown(document.activeElement!, { key: ' ', repeat: true })).toBe(false);
+      expect(screen.getByRole('heading', { name: 'Step 2 of 3' })).toHaveFocus();
+      expect(screen.getByRole('progressbar')).toHaveAttribute('value', '1');
+    }
+    fireEvent.keyUp(document.activeElement!, { key: ' ' });
+    fireEvent.keyDown(document.activeElement!, { key: ' ' });
+    expect(screen.getByRole('heading', { name: 'Step 3 of 3' })).toHaveFocus();
+    expect(screen.getByRole('progressbar')).toHaveAttribute('value', '2');
+  });
+
+  it.each(['en', 'nl'])('announces mobile step completion in %s and updates labels after undo and restart', locale => {
+    const messages = locale === 'nl' ? nl : en;
+    const label = (number: number) => messages.cooking.goToStep.replace('{number}', String(number));
+    const completedLabel = `${label(1)} — ${messages.cooking.completed}`;
+    openCooking(recipe, locale);
+    fireEvent.click(screen.getByRole('button', { name: messages.cooking.presenterView }));
+    expect(screen.getByRole('button', { name: label(1) })).toHaveAttribute('aria-current', 'step');
+    fireEvent.click(screen.getByRole('button', { name: messages.cooking.completeNext }));
+    expect(screen.getByRole('button', { name: completedLabel })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: label(2) })).toHaveAttribute('aria-current', 'step');
+    fireEvent.click(screen.getByRole('button', { name: completedLabel }));
+    fireEvent.click(screen.getByRole('button', { name: messages.cooking.markIncomplete }));
+    expect(screen.getByRole('button', { name: label(1) })).toHaveAttribute('aria-current', 'step');
+    expect(screen.queryByRole('button', { name: completedLabel })).not.toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button', { name: messages.cooking.completeNext }));
+    fireEvent.click(screen.getByRole('button', { name: messages.cooking.restart }));
+    expect(screen.getByRole('button', { name: label(1) })).toHaveAttribute('aria-current', 'step');
+    expect(screen.queryByRole('button', { name: completedLabel })).not.toBeInTheDocument();
+  });
+
   it('enters fullscreen on the presentation surface and releases it on exit', async () => {
     const state: { active: Element | null } = { active: null };
     Object.defineProperty(document, 'fullscreenEnabled', { configurable: true, value: true });
