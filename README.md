@@ -52,3 +52,16 @@ This repo is managed with pnpm 11 and a single `pnpm-lock.yaml`.
 - CI runs lint, type checks, tests, coverage, builds, recipe validation, OSV Scanner, OSSF Scorecard, zizmor, and CodeQL.
 
 When pnpm reports a new dependency with an ignored build, review it before adding it to `allowBuilds` with `true` or `false`.
+
+## License
+
+Original recipe text and photographs by Niek Palm in `content/recipes/` are
+licensed under [Creative Commons Attribution-NonCommercial 4.0 International
+(CC BY-NC 4.0)](https://creativecommons.org/licenses/by-nc/4.0/), except where
+otherwise noted. You may share and adapt this content for noncommercial purposes
+with appropriate credit, a link to the license, and an indication of any changes.
+
+See [LICENSE.md](LICENSE.md) for the scope, exclusions, and attribution guidance,
+and [LICENSES/CC-BY-NC-4.0.txt](LICENSES/CC-BY-NC-4.0.txt) for the full license text.
+This content license does not cover the application or CLI code; code licensing
+remains unchanged. Third-party material retains its own terms.
