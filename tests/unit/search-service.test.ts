@@ -100,10 +100,10 @@ describe('RecipeSearchIndex', () => {
 
     it('accepts custom fuse options', () => {
       const customIndex = new RecipeSearchIndex(mockRecipes, {
-        threshold: 0.2,
+        threshold: 0.1,
       });
       
-      // Custom threshold should make search more strict
+      // A threshold below the typo's edit ratio rejects the match.
       const results = customIndex.search('spageti'); // Typo
       expect(results.length).toBe(0); // Stricter threshold rejects typos
     });
@@ -143,6 +143,21 @@ describe('RecipeSearchIndex', () => {
       
       expect(results.length).toBeGreaterThan(0);
       expect(results[0].item.slug).toBe('chicken-curry');
+    });
+
+    it('keeps exact description matches when their weighted relevance score exceeds the matching threshold', () => {
+      const results = searchIndex.search('tender chicken', { threshold: 0 });
+
+      expect(results.map(result => result.item.slug)).toContain('chicken-curry');
+      expect(results.find(result => result.item.slug === 'chicken-curry')!.score).toBeGreaterThan(0.4);
+    });
+
+    it('applies per-query typo tolerance without changing the configured default', () => {
+      const index = new RecipeSearchIndex(mockRecipes, { threshold: 0.1 });
+
+      expect(index.search('spageti')).toEqual([]);
+      expect(index.search('spageti', { threshold: 0.6 }).map(result => result.item.slug)).toContain('spaghetti-carbonara');
+      expect(index.search('spageti')).toEqual([]);
     });
 
     it('searches by tags', () => {
@@ -214,7 +229,7 @@ describe('RecipeSearchIndex', () => {
       const lenientResults = searchIndex.search('spageti', { threshold: 0.6 });
       
       // Lenient should find more results (typo tolerance)
-      expect(lenientResults.length).toBeGreaterThanOrEqual(strictResults.length);
+      expect(lenientResults.length).toBeGreaterThan(strictResults.length);
     });
 
     it('includes match information when includeMatches is true', () => {
