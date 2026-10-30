@@ -76,17 +76,18 @@ export class RecipeSearchIndex {
 
     const {
       limit = 20,
-      threshold = DEFAULT_FUSE_OPTIONS.threshold,
+      threshold = this.fuse.options.threshold,
       includeMatches = true,
     } = options;
 
-    // Update fuse options for this search
-    this.fuse.setCollection(this.recipes);
-
-    const results = this.fuse.search(query, { limit });
+    // Fuse applies typo tolerance while matching. Its weighted relevance score
+    // also includes key weights and field length, so it is not a match threshold.
+    const fuse = threshold === this.fuse.options.threshold
+      ? this.fuse
+      : new Fuse(this.recipes, { ...this.fuse.options, threshold }, this.fuse.getIndex());
+    const results = fuse.search(query, { limit });
 
     return results
-      .filter((result: FuseResult<RecipeCard>) => (result.score ?? 1) <= (threshold ?? 1))
       .map((result: FuseResult<RecipeCard>) => ({
         item: result.item,
         score: result.score ?? 0,
