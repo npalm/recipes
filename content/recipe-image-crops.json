@@ -33,6 +33,24 @@
       "y": 17.95212765957447,
       "zoom": 1,
       "free": true
+    },
+    {
+      "slug": "vongole-ginger-white-wine",
+      "filename": "vongole-enhanced-66ef8eba-f42b-40b2-ae25-b8c907742e76.jpg",
+      "ratio": "1.33333333:1",
+      "x": 25.072736934482403,
+      "y": 50,
+      "zoom": 1,
+      "free": true
+    },
+    {
+      "slug": "vongole-ginger-white-wine",
+      "filename": "vongole-enhanced-87df9381-e54a-466f-b68b-a7095ff87618.jpg",
+      "ratio": "1.35260814:1",
+      "x": 20.500818271452793,
+      "y": 50,
+      "zoom": 1,
+      "free": true
     }
   ]
 }
