@@ -50,6 +50,60 @@
       "y": 88.7415740931152,
       "zoom": 1,
       "free": true
+    },
+    {
+      "slug": "vongole-ginger-white-wine",
+      "filename": "vongole-enhanced-54a0e356-ed9d-4249-9aff-0378b476e609.jpg",
+      "ratio": "1.36895111:1",
+      "x": 19.78915413173428,
+      "y": 50,
+      "zoom": 1,
+      "free": true
+    },
+    {
+      "slug": "vongole-ginger-white-wine",
+      "filename": "vongole-enhanced-66ef8eba-f42b-40b2-ae25-b8c907742e76.jpg",
+      "ratio": "1.437908:1",
+      "x": 14.87074185168042,
+      "y": 50,
+      "zoom": 1,
+      "free": true
+    },
+    {
+      "slug": "vongole-ginger-white-wine",
+      "filename": "vongole-enhanced-da3bfc51-ad6d-46c1-8a07-126fb9bd7a11.jpg",
+      "ratio": "1.31223023:1",
+      "x": 23.673681045963114,
+      "y": 50,
+      "zoom": 1,
+      "free": true
+    },
+    {
+      "slug": "vongole-ginger-white-wine",
+      "filename": "vongole-enhanced-a9f014c6-17e5-4cd2-afd5-9d26b3b94f45.jpg",
+      "ratio": "1.55880446:1",
+      "x": 0,
+      "y": 50,
+      "zoom": 1,
+      "free": true
+    },
+    {
+      "slug": "sous-vide-venison-rosti-root-vegetables",
+      "filename": "hert-enhanced-3ccbdbcd-c268-4e09-a669-6f1a0457989c.jpg",
+      "ratio": "1.33775111:1",
+      "x": 50,
+      "y": 36.692365908020115,
+      "zoom": 1,
+      "free": true
+    },
+    {
+      "slug": "sous-vide-venison-rosti-root-vegetables",
+      "filename": "hert-enhanced-ddeb690d-0c27-45fa-a436-05602117f714.jpg",
+      "ratio": "1.50149774:1",
+      "x": 50,
+      "y": 41.83891462739458,
+      "zoom": 1,
+      "free": true
     }
   ]
 }
