@@ -104,6 +104,42 @@
       "y": 41.83891462739458,
       "zoom": 1,
       "free": true
+    },
+    {
+      "slug": "sous-vide-venison-rack-cauliflower-port-jus",
+      "filename": "venison-rack-enhanced-b688e5cd-e1cd-448b-bb7c-2eccf71f0c8d.jpg",
+      "ratio": "1.63702605:1",
+      "x": 55.50070877331371,
+      "y": 94.41128212140117,
+      "zoom": 1.0457628397934948,
+      "free": true
+    },
+    {
+      "slug": "sous-vide-venison-rack-cauliflower-port-jus",
+      "filename": "venison-rack-enhanced-67027b00-5fda-4f12-948a-9d262abea9f0.jpg",
+      "ratio": "3:2",
+      "x": 52.82633856734811,
+      "y": 50,
+      "zoom": 1,
+      "free": false
+    },
+    {
+      "slug": "scallops-sake-lemongrass-coconut-foam",
+      "filename": "scallops-enhanced-b54f064e-61a0-4d27-a85d-ae18f21eff91.jpg",
+      "ratio": "1.57437853:1",
+      "x": 0,
+      "y": 50,
+      "zoom": 1,
+      "free": true
+    },
+    {
+      "slug": "vongole-ginger-white-wine",
+      "filename": "vongole-enhanced-7c7b64a6-f011-4349-9331-12f79669f76a.jpg",
+      "ratio": "1.7245593:1",
+      "x": 72.46694365857826,
+      "y": 76.11641787638104,
+      "zoom": 1.0701328637746117,
+      "free": true
     }
   ]
 }
