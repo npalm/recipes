@@ -104,6 +104,24 @@
       "y": 41.83891462739458,
       "zoom": 1,
       "free": true
+    },
+    {
+      "slug": "sous-vide-venison-rack-cauliflower-port-jus",
+      "filename": "venison-rack-enhanced-b688e5cd-e1cd-448b-bb7c-2eccf71f0c8d.jpg",
+      "ratio": "1.63702605:1",
+      "x": 55.50070877331371,
+      "y": 94.41128212140117,
+      "zoom": 1.0457628397934948,
+      "free": true
+    },
+    {
+      "slug": "sous-vide-venison-rack-cauliflower-port-jus",
+      "filename": "venison-rack-enhanced-67027b00-5fda-4f12-948a-9d262abea9f0.jpg",
+      "ratio": "3:2",
+      "x": 52.82633856734811,
+      "y": 50,
+      "zoom": 1,
+      "free": false
     }
   ]
 }
