@@ -122,6 +122,15 @@
       "y": 50,
       "zoom": 1,
       "free": false
+    },
+    {
+      "slug": "scallops-sake-lemongrass-coconut-foam",
+      "filename": "scallops-enhanced-b54f064e-61a0-4d27-a85d-ae18f21eff91.jpg",
+      "ratio": "1.57437853:1",
+      "x": 0,
+      "y": 50,
+      "zoom": 1,
+      "free": true
     }
   ]
 }
