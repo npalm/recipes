@@ -9,7 +9,7 @@ waitTime: 960
 totalTime: 1465
 difficulty: medium
 tags: ["hoofdgerecht", "buikspek", "varkensvlees", "sous vide", "Aziatisch"]
-images: ["pork-belly.jpg"]
+images: ["pork-belly-enhanced-2220a4db-7090-4b97-822b-cb92c2f40e1e.jpg"]
 sources:
   - url: "https://recipes.anovaculinary.com/recipe/sous-vide-pork-belly"
     title: "Sous Vide Pork Belly — Anova"
